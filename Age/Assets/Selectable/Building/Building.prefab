@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4267676464722948}
   - component: {fileID: 119472856504194262}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SelectionProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4165299638329462}
   - component: {fileID: 114943609370517548}
-  m_Layer: 0
+  - component: {fileID: 65942974868437884}
+  m_Layer: 10
   m_Name: Building
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +73,7 @@ GameObject:
   - component: {fileID: 33384322979130886}
   - component: {fileID: 65367990269104632}
   - component: {fileID: 23254019851118608}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Floor2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +87,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1290759734880566}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -20}
+  m_LocalPosition: {x: -2.04, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4257333305751454}
@@ -240,6 +241,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65942974868437884
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1290759734880566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 8, z: 10}
+  m_Center: {x: 0, y: 4, z: -0}
 --- !u!114 &114943609370517548
 MonoBehaviour:
   m_ObjectHideFlags: 1
