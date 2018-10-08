@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Age;
 
 public class PlayerInputOptions : MonoBehaviour {
 

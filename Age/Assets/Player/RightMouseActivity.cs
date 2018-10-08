@@ -1,17 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Age;
+﻿using UnityEngine;
 
 public class RightMouseActivity : MouseActivity {
 
-	// Use this for initialization
 	protected override void Start ()
     {
         base.Start();
 	}
 	
-	// Update is called once per frame
 	void Update ()
     {
 		if (Input.GetMouseButtonDown(1))
@@ -25,11 +20,16 @@ public class RightMouseActivity : MouseActivity {
         Vector3 hitPoint = FindHitPoint();
         if (!hitObject || !player.SelectedObject)
             return;
-        // player is not the owner
         if (player != player.SelectedObject.owner)
             return;
+        Selectable objectOfInterest = hitObject.GetComponent<Selectable>();
         if (hitObject.name == "Map")
-            player.SelectedObject.RightMouseClick(hitObject, hitPoint);
+            player.SelectedObject.RightMouseClickGround(hitObject, hitPoint);
+        else if (objectOfInterest != null)
+        {
+            player.SelectedObject.RightMouseClickObject(hitPoint);
+        }
+
 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Age;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +6,7 @@ public class LeftMouseActivity : MouseActivity {
 
     public RectTransform selectionSquare;
 
-    float maxClickTime = 0.2f;
+    float maxClickTime = 0.3f;
     float lastClickTime = 0;
     GameObject hitObject = null;
     Vector3 hitPoint = Vector3.zero;
@@ -42,7 +41,7 @@ public class LeftMouseActivity : MouseActivity {
         lastClickTime = Time.time;
         hitObject = FindHitObject();
         hitPoint = FindHitPoint();
-        if (hitPoint == GameWindow.InvalidPosition)
+        if (hitPoint == player.gameWindow.InvalidPosition)
             return;
         isClicking = true;
         squareStartPosition = Input.mousePosition;
@@ -61,17 +60,17 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (!hitObject || hitPoint == GameWindow.InvalidPosition)
+        if (!hitObject || hitPoint == player.gameWindow.InvalidPosition)
             return;
         if (hitObject.name == "Map")
             player.SelectedObject = null;
         else
         {
-            Selectable worldObject = hitObject.transform.GetComponent<Selectable>();
-            if (!worldObject)
+            Selectable selectedObject = hitObject.transform.GetComponent<Selectable>();
+            if (!selectedObject)
                 return;
-            player.SelectedObject = worldObject;
-            worldObject.SetSelection(true, player);
+            player.SelectedObject = selectedObject;
+            selectedObject.SetSelection(true, player);
         }
     }
     private void LeftMouseDrag()
@@ -88,11 +87,12 @@ public class LeftMouseActivity : MouseActivity {
                 selectedUnits.Add(unit);
 
         if (selectedUnits.Count > 0)
+        {
             player.SelectedObject = null;
-
-        Regiment regiment = player.factory.CreateRegiment(player, selectedUnits);
-        player.SelectedObject = regiment;
-        regiment.SetSelection(true, player);
+            Regiment regiment = player.factory.CreateRegiment(player, selectedUnits);
+            player.SelectedObject = regiment;
+            regiment.SetSelection(true, player);
+        }
     }
 
     private void DrawRectangle()
@@ -120,10 +120,10 @@ public class LeftMouseActivity : MouseActivity {
     {
         Vector3 squareEndPosition = Input.mousePosition;
 
-        squareEndPosition.x = Math.Max(GameWindow.LeftBorder, squareEndPosition.x);
-        squareEndPosition.y = Math.Max(GameWindow.BottomBorder, squareEndPosition.y);
-        squareEndPosition.x = Math.Min(GameWindow.RightBorder, squareEndPosition.x);
-        squareEndPosition.y = Math.Min(GameWindow.TopBorder, squareEndPosition.y);
+        squareEndPosition.x = Math.Max(player.gameWindow.LeftBorder, squareEndPosition.x);
+        squareEndPosition.y = Math.Max(player.gameWindow.BottomBorder, squareEndPosition.y);
+        squareEndPosition.x = Math.Min(player.gameWindow.RightBorder, squareEndPosition.x);
+        squareEndPosition.y = Math.Min(player.gameWindow.TopBorder, squareEndPosition.y);
 
         topLeft = new Vector3(Math.Min(squareStartPosition.x, squareEndPosition.x), Math.Min(squareStartPosition.y, squareEndPosition.y), 0);
         bottomRight = new Vector3(Math.Max(squareStartPosition.x, squareEndPosition.x), Math.Max(squareStartPosition.y, squareEndPosition.y), 0);

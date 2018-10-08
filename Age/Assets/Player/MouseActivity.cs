@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Age;
+﻿using UnityEngine;
 
 public class MouseActivity : MonoBehaviour {
 
@@ -13,7 +10,6 @@ public class MouseActivity : MonoBehaviour {
         player = transform.root.GetComponent<Player>();
     }
 
-    // Update is called once per frame
     void Update ()
     {
 		
@@ -22,7 +18,7 @@ public class MouseActivity : MonoBehaviour {
     {
         Vector3 mousePosition = Input.mousePosition;
         bool insideWidth = mousePosition.x >= 0 && mousePosition.x <= Screen.width;
-        bool insideHeight = mousePosition.y >= GameWindow.BottomBarHeight && mousePosition.y <= Screen.height;
+        bool insideHeight = mousePosition.y >= player.gameWindow.BottomBorder && mousePosition.y <= Screen.height;
         return insideWidth && insideHeight;
     }
 
@@ -40,6 +36,6 @@ public class MouseActivity : MonoBehaviour {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit)) return hit.point;
-        return GameWindow.InvalidPosition;
+        return player.gameWindow.InvalidPosition;
     }
 }

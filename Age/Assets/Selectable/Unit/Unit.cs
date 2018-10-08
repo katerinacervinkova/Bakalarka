@@ -1,67 +1,55 @@
-﻿using Age;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class Unit : Selectable
 {
-    public float moveSpeed, rotateSpeed;
-    protected bool moving = false, rotating = false;
+    public int Strength { get; set; }
+    public int MaxHealth { get; set; }
+    public int Health { get; set; }
+    public int Intelligence { get; set; }
+    public int Agility { get; set; }
+    public int Healing { get; set; }
+    public int Crafting { get; set; }
+    public int Accuracy { get; set; }
 
-    private Vector3 destination;
-    private Quaternion targetRotation;
+    protected NavMeshAgent navMeshAgent;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
+        buttons = new List<Button>();
+        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
     }
 
     protected override void Update()
     {
 
     }
-    protected void FixedUpdate()
+
+    public void SetDestination(Vector3 destination)
     {
-        base.Update();
-        if (rotating)
-            TurnToTarget();
-        else if (moving)
-            MakeMove();
+        navMeshAgent.SetDestination(destination);
     }
 
-    private void MakeMove()
+    public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
     {
-        transform.position = Vector3.MoveTowards(transform.position, destination, Time.fixedDeltaTime * moveSpeed);
-        if (transform.position == destination) moving = false;
-    }
-
-
-    private void TurnToTarget()
-    {
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed);
-        Quaternion inverseTargetRotation = new Quaternion(-targetRotation.x, -targetRotation.y, -targetRotation.z, -targetRotation.w);
-        if (transform.rotation == targetRotation || transform.rotation == inverseTargetRotation)
+        if (hitObject.name == "Map" && hitPoint != owner.gameWindow.InvalidPosition)
         {
-            rotating = false;
-            moving = true;
-        }
-    }
-
-    public override void RightMouseClick(GameObject hitObject, Vector3 hitPoint)
-    {
-        if (hitObject.name == "Map" && hitPoint != GameWindow.InvalidPosition)
-        {
-            hitPoint.y = 0;
-            StartMove(hitPoint);
+            SetDestination(hitPoint);
         }
         else
         {
 
         }
     }
-    private void StartMove(Vector3 destination)
+    public override void DrawBottomBar()
     {
-        this.destination = destination;
-        targetRotation = Quaternion.LookRotation(destination - transform.position);
-        rotating = true;
-        moving = false;
+        nameText.text = Name;
+        selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth)
+        + "\nStrength: " + Strength + "\nIntelligence: " + Intelligence
+        + "\nAgility: " + Agility + "\nHealing: " + Healing
+        + "\nCrafting: " + Crafting + "\nAccuracy: " + Accuracy;
     }
 }

@@ -1,32 +1,27 @@
-﻿using Age;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
-    public int startFood, startWood, startCoin;
     public string Name;
     public bool IsHuman;
     public Color color;
     public Selectable SelectedObject { get; set; }
-    public Selectable[] units;
+    public List<Selectable> units;
     public PlayerInputOptions inputOptions;
     public Factory factory;
-    public Dictionary<Globals.ResourceType, int> Resources { get; private set; }
-
+    public GameWindow gameWindow;
 
     void Start () {
         inputOptions = gameObject.GetComponent<PlayerInputOptions>();
+        gameWindow = gameObject.GetComponent<GameWindow>();
+        foreach (Unit unit in units)
+            unit.owner = this;
     }
 	
 
 	void Update () {
 
-    }
-
-    private void AddResource(Globals.ResourceType resourceType, int amount)
-    {
-        Resources[resourceType] += amount;
     }
 }

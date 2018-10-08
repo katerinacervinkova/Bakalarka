@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Age;
+using UnityEngine.UI;
 
 public class Regiment : Selectable {
 
     public List<Unit> units;
     
-    protected override void Start()
+    protected override void Awake()
     {
-        
+        buttons = new List<Button>();
     }
 
     protected override void Update()
@@ -25,9 +24,16 @@ public class Regiment : Selectable {
             Destroy(gameObject);
     }
 
-    public override void RightMouseClick(GameObject hitObject, Vector3 hitPoint)
+    public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
     {
         foreach (var unit in units)
-            unit.RightMouseClick(hitObject, hitPoint);
+            unit.RightMouseClickGround(hitObject, hitPoint);
+    }
+
+    public override void DrawBottomBar()
+    {
+        if (units.Count == 0)
+            return;
+        units[0].DrawBottomBar();
     }
 }
