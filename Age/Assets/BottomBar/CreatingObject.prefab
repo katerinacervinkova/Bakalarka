@@ -36,15 +36,15 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224591825283554734}
-  - component: {fileID: 95677116783538018}
   - component: {fileID: 114579649446729468}
+  - component: {fileID: 95873768975140746}
   m_Layer: 5
   m_Name: CreatingObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1732276792950274
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &95677116783538018
+--- !u!95 &95873768975140746
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -71,10 +71,10 @@ Animator:
   m_GameObject: {fileID: 1161923684244982}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e364e8d185155c545ac22103946d0057, type: 2}
+  m_Controller: {fileID: 9100000, guid: f1d766940d4185446a2cdd850188b81a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -119,6 +119,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 0
   image: {fileID: 0}
+  schedulers: []
+  animator: {fileID: 0}
 --- !u!114 &114804287220816304
 MonoBehaviour:
   m_ObjectHideFlags: 1

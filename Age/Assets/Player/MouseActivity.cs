@@ -4,7 +4,6 @@ public class MouseActivity : MonoBehaviour {
 
     protected Player player;
 
-    // Use this for initialization
     protected virtual void Start()
     {
         player = transform.root.GetComponent<Player>();
@@ -14,6 +13,7 @@ public class MouseActivity : MonoBehaviour {
     {
 		
 	}
+
     protected bool MouseInBounds()
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -24,18 +24,25 @@ public class MouseActivity : MonoBehaviour {
 
     protected GameObject FindHitObject()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (FindRaycastHit(out hit))
             return hit.collider.gameObject;
         return null;
     }
 
     protected Vector3 FindHitPoint()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit)) return hit.point;
+        if (FindRaycastHit(out hit))
+            return hit.point;
         return player.gameWindow.InvalidPosition;
+    }
+
+    private bool FindRaycastHit(out RaycastHit hit)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+            return true;
+        return false;
     }
 }
