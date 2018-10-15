@@ -23,6 +23,11 @@ public class Unit : Selectable
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
     }
 
+    protected override void Start()
+    {
+        
+    }
+
     protected override void Update()
     {
 
@@ -30,7 +35,7 @@ public class Unit : Selectable
 
     public void SetDestination(Vector3 destination)
     {
-        navMeshAgent.SetDestination(destination);
+        gridGraph.SetDestination(destination, navMeshAgent);
     }
 
     public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)

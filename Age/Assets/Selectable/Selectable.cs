@@ -9,6 +9,7 @@ public abstract class Selectable : MonoBehaviour {
     public List<Button> buttons;
     public Text selectedObjectText;
     public Text nameText;
+    public GridGraph gridGraph;
 
     public Player owner;
     protected GameObject selector;
@@ -17,6 +18,13 @@ public abstract class Selectable : MonoBehaviour {
     {
         selector = transform.Find("SelectionProjector").gameObject;
         selector.GetComponent<Projector>().material.color = owner.color;
+        gridGraph = GameObject.Find("Map").GetComponent<GridGraph>();
+
+    }
+    
+    protected virtual void Start()
+    {
+        gridGraph.AddSelectable(this);
     }
 
     protected virtual void Update()

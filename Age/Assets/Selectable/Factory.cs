@@ -60,7 +60,7 @@ public class Factory : MonoBehaviour
         Scheduler scheduler = Instantiate(schedulerPrefab, position, Quaternion.identity);
         scheduler.transform.SetParent(panel.transform, false);
         scheduler.schedulers = schedulers;
-        scheduler.action = action;
+        scheduler.ActionToPerform = action;
         scheduler.image = image;
         scheduler.Speed = 1f / 5;
 

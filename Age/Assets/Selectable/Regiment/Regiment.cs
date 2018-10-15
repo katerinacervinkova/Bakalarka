@@ -11,6 +11,11 @@ public class Regiment : Selectable {
         buttons = new List<Button>();
     }
 
+    protected override void Start()
+    {
+        
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -27,7 +32,9 @@ public class Regiment : Selectable {
     public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
     {
         foreach (var unit in units)
+        {
             unit.RightMouseClickGround(hitObject, hitPoint);
+        }
     }
 
     public override void DrawBottomBar()

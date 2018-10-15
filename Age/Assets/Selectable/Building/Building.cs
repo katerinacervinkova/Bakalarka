@@ -51,7 +51,7 @@ public class Building : Selectable {
         Scheduler scheduler = factory.CreateScheduler(schedulers, () => factory.CreateUnit(owner, spawnPoint, defaultDestination), null);
         schedulers.Add(scheduler);
         if (!animating)
-        {
+        { 
             scheduler.Animate();
             animating = true;
         }
@@ -60,5 +60,17 @@ public class Building : Selectable {
     {
         nameText.text = "Building";
         selectedObjectText.text = "";
+    }
+
+    protected override void BottomBarUI(bool selected, Player player)
+    {
+        base.BottomBarUI(selected, player);
+        schedulers.ForEach(scheduler => 
+        {
+            CanvasGroup canvasGroup = scheduler.gameObject.GetComponent<CanvasGroup>();
+            canvasGroup.blocksRaycasts = selected;
+            canvasGroup.alpha = selected ? 1 : 0;
+            
+        });
     }
 }

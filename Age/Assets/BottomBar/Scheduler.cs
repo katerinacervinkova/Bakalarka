@@ -7,25 +7,23 @@ public class Scheduler : MonoBehaviour {
 
     public float Speed;
     public Image image;
-    public Action action { get; set; }
+    public Action ActionToPerform { get; set; }
     public List<Scheduler> schedulers;
 
     public Animator animator;
 
-
-	// Use this for initialization
 	void Awake () {
         animator = GetComponent<Animator>();
         animator.SetFloat("duration", Speed);
-	}
+    }
     public void Animate()
     {
-        if (animator != null)
-            animator.SetBool("creating", true);
+        if (animator != null & animator.isActiveAndEnabled)
+            animator.Play("Creating", 0);
     }
 	public void PerformAction()
     {
-        action();
+        ActionToPerform();
         Destroy(gameObject);
     }
     public void OnDestroy()
