@@ -39,10 +39,7 @@ public class Building : Selectable {
     private void SetSpawnPoint()
     {
         Bounds bounds = gameObject.GetComponent<BoxCollider>().bounds;
-        Vector3 ext = bounds.extents;
-        ext.x = -ext.x - 1;
-        ext.z = ext.z + 1;
-        spawnPoint = bounds.center - ext;
+        spawnPoint = bounds.center;
         defaultDestination = spawnPoint;
     }
 

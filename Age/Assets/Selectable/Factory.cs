@@ -11,11 +11,11 @@ public class Factory : MonoBehaviour
     public Regiment regimentPrefab;
     public Unit unitPrefab;
     public Scheduler schedulerPrefab;
+    public GridGraph gridGraph;
 
     public Image panel;
     protected Text selectedAttributesText;
     protected Text nameText;
-    // Use this for initialization
 
     protected virtual void Start()
     {
@@ -31,7 +31,8 @@ public class Factory : MonoBehaviour
     {
         Regiment regiment = Instantiate(regimentPrefab);
         regiment.owner = owner;
-        regiment.units = units;
+        regiment.SetUnits(units);
+        regiment.gridGraph = gridGraph;
         regiment.Name = string.Format("Units({0})", units.Count);
         regiment.gameObject.SetActive(true);
         return regiment;
@@ -39,7 +40,8 @@ public class Factory : MonoBehaviour
 
     public Unit CreateUnit(Player owner, Vector3 position, Vector3 destination)
     {
-        Unit unit = Instantiate(unitPrefab, position, Quaternion.identity);
+
+        Unit unit = Instantiate(unitPrefab, gridGraph.ClosestDestination(position), Quaternion.identity);
 
         unit.Name = "Unit";
         unit.owner = owner;
@@ -49,7 +51,8 @@ public class Factory : MonoBehaviour
         owner.units.Add(unit);
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
-        unit.SetDestination(destination);
+        if (destination != position)
+            unit.SetDestination(destination);
         return unit;
     }
 
@@ -62,7 +65,7 @@ public class Factory : MonoBehaviour
         scheduler.schedulers = schedulers;
         scheduler.ActionToPerform = action;
         scheduler.image = image;
-        scheduler.Speed = 1f / 5;
+        scheduler.Speed = 1f / 1;
 
         scheduler.gameObject.SetActive(true);
         return scheduler;
