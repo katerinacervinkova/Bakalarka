@@ -1,31 +1,24 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Linq;
 
-public class Regiment : Selectable {
+public class Regiment : Commandable {
     protected enum RState { Standing, Assembling, Moving }
 
     protected RState state;
 
     protected Vector3 destination;
     protected List<Unit> units;
-    
-    protected override void Awake()
-    {
-        buttons = new List<Button>();
-    }
 
-    protected override void Start()
-    {
-        
-    }
+    public override bool Arrived { get { return units.TrueForAll(u => u.Arrived); } }
 
+    protected override void Awake() { }
+    protected override void Start() { }
     protected override void Update()
     {
         if (units.Count == 0)
             Destroy(gameObject);
-        else if (units.TrueForAll(u => u.IsStanding))
+        else if (units.TrueForAll(u => u.Arrived))
             if (state == RState.Assembling)
                 CoordinatedMovement();
             else if (state == RState.Moving)
@@ -43,15 +36,15 @@ public class Regiment : Selectable {
             Destroy(gameObject);
     }
 
-    public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
+    public override void RightMouseClickGround(Vector3 hitPoint)
     {
         destination = hitPoint;
         units.ForEach(
             u =>
             {
-                if (u.regiment != this && u.regiment != null)
-                    u.regiment.Remove(u);
-                u.regiment = this;
+                if (u.Reg != this && u.Reg != null)
+                    u.Reg.Remove(u);
+                u.Reg = this;
             });
         Vector3 mean = new Vector3(units.Sum(u => u.transform.position.x), units.Sum(u => u.transform.position.y), units.Sum(u => u.transform.position.z)) / units.Count;
         mean += (hitPoint - mean).normalized * units.Max(u => Vector3.Distance(u.transform.position, mean));
@@ -69,7 +62,7 @@ public class Regiment : Selectable {
         state = RState.Moving;
     }
 
-    private void SetDestination(Vector3 destination)
+    public override void SetDestination(Vector3 destination)
     {
         gridGraph.SetDestination(destination, units);
     }

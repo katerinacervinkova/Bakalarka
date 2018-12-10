@@ -1,19 +1,25 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public abstract class Selectable : MonoBehaviour {
 
     public string Name;
     public Texture2D Image;
-    public List<Button> buttons;
     public Text selectedObjectText;
     public Text nameText;
     public GridGraph gridGraph;
+    public BottomBar bottomBar;
 
     public Player owner;
     protected GameObject selector;
     protected bool selected = false;
+    protected bool selectedByOwner = false;
+
+    public abstract void DrawBottomBar();
+    protected abstract Job CreateOwnJob(Commandable worker);
+    protected abstract Job CreateEnemyJob(Commandable worker);
+
     protected virtual void Awake()
     {
         selector = transform.Find("SelectionProjector").gameObject;
@@ -27,10 +33,7 @@ public abstract class Selectable : MonoBehaviour {
         gridGraph.AddSelectable(this);
     }
 
-    protected virtual void Update()
-    {
-
-    }
+    protected virtual void Update() { }
 
     public virtual void SetSelection(bool selected, Player player)
     {
@@ -43,20 +46,30 @@ public abstract class Selectable : MonoBehaviour {
 
     protected virtual void BottomBarUI(bool selected, Player player)
     {
-        foreach(var button in buttons)
-            button.gameObject.SetActive(selected);
         if (selected)
             DrawBottomBar();
         nameText.gameObject.SetActive(selected);
         selectedObjectText.gameObject.SetActive(selected);
     }
-    public virtual void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
+    public virtual void RightMouseClickGround(Vector3 hitPoint)
     {
 
     }
-    public virtual void RightMouseClickObject(Vector3 hitpoint)
+    public virtual void RightMouseClickObject(Selectable hitObject)
     {
         
     }
-    public abstract void DrawBottomBar();
+    public virtual Job CreateJob(Commandable worker)
+    {
+        if (owner == worker.owner)
+            return CreateOwnJob(worker);
+        return CreateEnemyJob(worker);
+    }
+
+    protected virtual void DrawProgressBar(float value)
+    {
+        Bounds b = GetComponent<Collider>().bounds;
+        Vector3 position = Camera.main.WorldToScreenPoint(new Vector3(b.center.x, b.center.y + b.extents.y, b.center.z));
+        EditorGUI.ProgressBar(new Rect(position.x - 30, owner.gameWindow.TopBorder - (position.y), 60, 8), value, "");
+    }
 }

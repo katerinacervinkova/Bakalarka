@@ -3,49 +3,30 @@ using UnityEngine;
 
 public class Building : Selectable {
 
-    protected Vector3 spawnPoint;
+    public Vector3 spawnPoint;
     protected Vector3 defaultDestination;
-    public Factory factory;
 
     bool animating = false;
     protected List<Scheduler> schedulers = new List<Scheduler>();
-
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
-        SetSpawnPoint();
-        SetDefaultButtonEvents();
+        base.Start();
+        defaultDestination = spawnPoint = transform.position;
     }
-
-    private void SetDefaultButtonEvents()
-    {
-        for (int i = 0; i < buttons.Count; i++)
-        {
-            buttons[i].onClick.AddListener(CreateUnit);
-        }
-    }
-
     protected override void Update()
     {
         if (animating && schedulers.Count == 0)
             animating = false;
         base.Update();
     }
-    public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
+    public override void RightMouseClickGround(Vector3 hitPoint)
     {
         defaultDestination = hitPoint;
     }
 
-    private void SetSpawnPoint()
-    {
-        Bounds bounds = gameObject.GetComponent<BoxCollider>().bounds;
-        spawnPoint = bounds.center;
-        defaultDestination = spawnPoint;
-    }
-
     public void CreateUnit()
     {
-        Scheduler scheduler = factory.CreateScheduler(schedulers, () => factory.CreateUnit(owner, spawnPoint, defaultDestination), null);
+        Scheduler scheduler = owner.factory.CreateScheduler(schedulers, () => owner.factory.CreateUnit(owner, spawnPoint, defaultDestination), null);
         schedulers.Add(scheduler);
         if (!animating)
         { 
@@ -59,6 +40,12 @@ public class Building : Selectable {
         selectedObjectText.text = "";
     }
 
+    public override void SetSelection(bool selected, Player player)
+    {
+        base.SetSelection(selected, player);
+        bottomBar.SetActive(this, selected);
+    }
+
     protected override void BottomBarUI(bool selected, Player player)
     {
         base.BottomBarUI(selected, player);
@@ -69,5 +56,15 @@ public class Building : Selectable {
             canvasGroup.alpha = selected ? 1 : 0;
             
         });
+    }
+
+    protected override Job CreateOwnJob(Commandable worker)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected override Job CreateEnemyJob(Commandable worker)
+    {
+        return new AttackJob(worker, this);
     }
 }

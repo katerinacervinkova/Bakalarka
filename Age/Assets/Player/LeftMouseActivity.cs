@@ -5,23 +5,22 @@ using System.Collections.Generic;
 public class LeftMouseActivity : MouseActivity {
 
     public RectTransform selectionSquare;
-
-    float maxClickTime = 0.3f;
+    readonly float maxClickTime = 0.3f;
     float lastClickTime = 0;
     GameObject hitObject = null;
     Vector3 hitPoint = Vector3.zero;
     Vector3 squareStartPosition = Vector3.zero;
     bool isClicking = false;
 
-    // Use this for initialization
-    protected override void Start ()
-    {
-        base.Start();
-    }
 	
-	// Update is called once per frame
 	private void Update ()
     {
+        if (player.BuildingToBuild != null)
+        {
+            Vector3 hitPoint = FindHitPoint();
+            hitPoint.y = 0;
+            player.BuildingToBuild.transform.position = hitPoint;
+        }
         if (!isClicking && !MouseInBounds())
             return;
         if (Input.GetMouseButtonUp(0))
@@ -50,7 +49,7 @@ public class LeftMouseActivity : MouseActivity {
     private void LeftMouseRelease()
     {
         isClicking = false;
-        if (player.SelectedObject)
+        if (player.SelectedObject && player.BuildingToBuild == null)
             player.SelectedObject.SetSelection(false, player);
         if (Time.time - lastClickTime < maxClickTime)
             LeftMouseClick();
@@ -60,6 +59,13 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
+        if (player.BuildingToBuild != null && hitPoint != player.gameWindow.InvalidPosition)
+        {
+            player.BuildingToBuild.PlaceBuilding();
+            player.Worker.SetGoal(player.BuildingToBuild);
+            player.RemoveWorkerAndBuilding();
+            return;
+        }
         if (!hitObject || hitPoint == player.gameWindow.InvalidPosition)
             return;
         if (hitObject.name == "Map")

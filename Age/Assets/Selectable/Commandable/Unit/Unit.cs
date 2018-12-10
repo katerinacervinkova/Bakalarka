@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.AI;
-using System.Collections.Generic;
 
-public class Unit : Selectable
+public class Unit : Commandable
 {
     protected enum UState { Standing, Moving, MovingClose, MovingVeryClose }
 
@@ -11,7 +9,7 @@ public class Unit : Selectable
     protected UState state;
     protected float closeDistance = 5;
     protected float veryCloseDistance = 1;
-    public Regiment regiment { get; set; }
+    public Regiment Reg { get; set; }
     public int Strength { get; set; }
     public int MaxHealth { get; set; }
     public int Health { get; set; }
@@ -21,15 +19,15 @@ public class Unit : Selectable
     public int Crafting { get; set; }
     public int Accuracy { get; set; }
 
-    public NavMeshAgent navMeshAgent { get; set; }
+    protected NavMeshAgent Agent { get; set; }
 
-    public bool IsStanding { get { return state == UState.Standing; } }
+    public override bool Arrived => state == UState.Standing;
+
     protected override void Awake()
     {
         base.Awake();
-        buttons = new List<Button>();
-        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        navMeshAgent.stoppingDistance = 0;
+        Agent = gameObject.GetComponent<NavMeshAgent>();
+        Agent.stoppingDistance = 0;
         gridGraph.AddSelectable(this);
     }
 
@@ -39,10 +37,16 @@ public class Unit : Selectable
 
     protected override void Update()
     {
-        if (state == UState.Moving && navMeshAgent.remainingDistance < closeDistance)
+        Move();
+        base.Update();
+    }
+
+    protected void Move()
+    {
+        if (state == UState.Moving && Agent.remainingDistance < closeDistance)
             SetExactDestination();
 
-        else if (state != UState.Standing && navMeshAgent.remainingDistance < veryCloseDistance)
+        else if (state != UState.Standing && Agent.remainingDistance < veryCloseDistance)
         {
             gridGraph.AddSelectable(this);
             state = UState.Standing;
@@ -53,45 +57,51 @@ public class Unit : Selectable
             if (veryCloseDistance > 1)
             {
                 veryCloseDistance -= 1;
-                gridGraph.SetDestination(navMeshAgent.destination, navMeshAgent);
+                gridGraph.SetDestination(Agent.destination, Agent);
             }
         }
     }
 
-    public void SetExactDestination()
+    private void SetExactDestination()
     {
-        gridGraph.SetDestination(navMeshAgent.destination, navMeshAgent);
+        gridGraph.SetDestination(Agent.destination, Agent);
         state = UState.MovingClose;
     }
 
-    public void SetExactDestination(Vector3 destination)
+    private void SetExactDestination(Vector3 destination)
     {
-        gridGraph.SetDestination(destination, navMeshAgent);
+        gridGraph.SetDestination(destination, Agent);
         state = UState.MovingClose;
     }
 
-    public void SetDestination(Vector3 destination)
+    public override void SetDestination(Vector3 destination)
     {
-        navMeshAgent.SetDestination(destination);
+        Agent.SetDestination(destination);
         state = UState.Moving;
     }
 
-    public override void RightMouseClickGround(GameObject hitObject, Vector3 hitPoint)
+    public override void RightMouseClickGround(Vector3 hitPoint)
     {
-        if (hitObject.name == "Map" && hitPoint != owner.gameWindow.InvalidPosition)
+        if (hitPoint != owner.gameWindow.InvalidPosition)
         {
-            if (regiment != null)
-            {
-                regiment.Remove(this);
-                regiment = null;
-            }
+            Reg?.Remove(this);
+            Reg = null;
             if (state == UState.Standing)
                 gridGraph.RemoveSelectable(this);
-            if (Vector3.Distance(transform.position, hitPoint) < closeDistance)
-                SetExactDestination(hitPoint);
-            else
-                SetDestination(hitPoint);
+            job = new JobGo(this, hitPoint);
         }
+    }
+
+    public override void RightMouseClickObject(Selectable hitObject)
+    {
+        SetGoal(hitObject);
+    }
+
+
+    public override void SetSelection(bool selected, Player player)
+    {
+        base.SetSelection(selected, player);
+        bottomBar.SetActive(this, selected);
     }
     public override void DrawBottomBar()
     {

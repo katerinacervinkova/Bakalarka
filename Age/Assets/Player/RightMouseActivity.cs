@@ -24,12 +24,8 @@ public class RightMouseActivity : MouseActivity {
             return;
         Selectable objectOfInterest = hitObject.GetComponent<Selectable>();
         if (hitObject.name == "Map")
-            player.SelectedObject.RightMouseClickGround(hitObject, hitPoint);
+            player.SelectedObject.RightMouseClickGround(hitPoint);
         else if (objectOfInterest != null)
-        {
-            player.SelectedObject.RightMouseClickObject(hitPoint);
-        }
-
-
+            player.SelectedObject.RightMouseClickObject(hitObject.GetComponent<Selectable>());
     }
 }

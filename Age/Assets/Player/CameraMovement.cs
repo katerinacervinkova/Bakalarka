@@ -4,10 +4,10 @@ public class CameraMovement : MonoBehaviour {
 
     Player player;
 
-    float ScrollSpeed = 25;
-    int ScrollWidth = 50;
-    float MinHeight = 10;
-    float MaxHeight = 40;
+    readonly float ScrollSpeed = 25;
+    readonly int ScrollWidth = 50;
+    readonly float MinHeight = 10;
+    readonly float MaxHeight = 40;
 
     protected void Start ()
     {

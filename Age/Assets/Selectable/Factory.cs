@@ -5,13 +5,18 @@ using UnityEngine.UI;
 
 public class Factory : MonoBehaviour
 {
+    public Player player;
+
     protected System.Random rnd;
     protected int sumOfProperties = 35;
 
+    public TemporaryBuilding temporaryBuildingPrefab;
+    public Building mainBuildingPrefab;
     public Regiment regimentPrefab;
     public Unit unitPrefab;
     public Scheduler schedulerPrefab;
     public GridGraph gridGraph;
+    public BottomBar bottomBar;
 
     public Image panel;
     protected Text selectedAttributesText;
@@ -30,6 +35,7 @@ public class Factory : MonoBehaviour
     public Regiment CreateRegiment(Player owner, List<Unit> units)
     {
         Regiment regiment = Instantiate(regimentPrefab);
+        regiment.bottomBar = bottomBar;
         regiment.owner = owner;
         regiment.SetUnits(units);
         regiment.gridGraph = gridGraph;
@@ -40,20 +46,44 @@ public class Factory : MonoBehaviour
 
     public Unit CreateUnit(Player owner, Vector3 position, Vector3 destination)
     {
-
         Unit unit = Instantiate(unitPrefab, gridGraph.ClosestDestination(position), Quaternion.identity);
 
         unit.Name = "Unit";
         unit.owner = owner;
         unit.selectedObjectText = selectedAttributesText;
         unit.nameText = nameText;
+        unit.bottomBar = bottomBar;
 
         owner.units.Add(unit);
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
         if (destination != position)
-            unit.SetDestination(destination);
+            unit.SetGo(destination);
         return unit;
+    }
+
+    public TemporaryBuilding CreateTemporaryMainBuilding()
+    {
+        TemporaryBuilding building = Instantiate(temporaryBuildingPrefab, Vector3.zero, Quaternion.identity);
+        building.bottomBar = bottomBar;
+        building.owner = player;
+        building.nameText = nameText;
+        building.selectedObjectText = selectedAttributesText;
+        building.gameObject.SetActive(true);
+        return building;
+    }
+
+    public Building CreateMainBuilding(TemporaryBuilding tempBuilding)
+    {
+        Building building = Instantiate(mainBuildingPrefab, tempBuilding.transform.position, Quaternion.identity);
+        
+        building.gridGraph = gridGraph;
+        building.name = "Building";
+        building.owner = player;
+        building.nameText = nameText;
+        building.selectedObjectText = selectedAttributesText;
+        building.gameObject.SetActive(true);
+        return building;
     }
 
     public Scheduler CreateScheduler(List<Scheduler> schedulers, Action action, Image image)
