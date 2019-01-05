@@ -6,14 +6,13 @@ public class JobGo : Job
 
     public JobGo(Unit worker, Vector3 destination, Job following = null)
     {
-        this.worker = worker;
         this.following = following;
         worker.SetDestination(destination);
     }
 
     public override Job Following => following;
 
-    public override void Do()
+    public override void Do(Unit worker)
     {
         if (worker.Arrived)
             Completed = true;

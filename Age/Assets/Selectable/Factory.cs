@@ -30,6 +30,7 @@ public class Factory : MonoBehaviour
         rnd = new System.Random();
         selectedAttributesText = panel.transform.Find("selectableAttributesText").GetComponent<Text>();
         nameText = panel.transform.Find("nameText").GetComponent<Text>();
+        CreateMainBuilding(new Vector3());
     }
 
     public Regiment CreateRegiment(Player owner, List<Unit> units)
@@ -41,6 +42,8 @@ public class Factory : MonoBehaviour
         regiment.gridGraph = gridGraph;
         regiment.Name = string.Format("Units({0})", units.Count);
         regiment.gameObject.SetActive(true);
+        EventManager.StartListening(regiment, Selectable.selectOwnEvent, () => bottomBar.SetActive(regiment, true));
+        EventManager.StartListening(regiment, Selectable.deselectOwnEvent, () => bottomBar.SetActive(regiment, false));
         return regiment;
     }
 
@@ -57,6 +60,8 @@ public class Factory : MonoBehaviour
         owner.units.Add(unit);
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
+        EventManager.StartListening(unit, Selectable.selectOwnEvent, () => bottomBar.SetActive(unit, true));
+        EventManager.StartListening(unit, Selectable.deselectOwnEvent, () => bottomBar.SetActive(unit, false));
         if (destination != position)
             unit.SetGo(destination);
         return unit;
@@ -75,14 +80,22 @@ public class Factory : MonoBehaviour
 
     public Building CreateMainBuilding(TemporaryBuilding tempBuilding)
     {
-        Building building = Instantiate(mainBuildingPrefab, tempBuilding.transform.position, Quaternion.identity);
-        
+        return CreateMainBuilding(tempBuilding.transform.position);
+    }
+
+    private Building CreateMainBuilding(Vector3 position)
+    {
+        Building building = Instantiate(mainBuildingPrefab, position, Quaternion.identity);
+
         building.gridGraph = gridGraph;
         building.name = "Building";
         building.owner = player;
         building.nameText = nameText;
         building.selectedObjectText = selectedAttributesText;
         building.gameObject.SetActive(true);
+        EventManager.StartListening(building, Selectable.selectOwnEvent, () => bottomBar.SetActive(building, true));
+        EventManager.StartListening(building, Selectable.deselectOwnEvent, () => bottomBar.SetActive(building, false));
+
         return building;
     }
 

@@ -1,9 +1,8 @@
 ﻿public class AttackJob : Job {
 
     readonly Selectable target;
-    public AttackJob(Commandable worker, Selectable target)
+    public AttackJob(Selectable target)
     {
-        this.worker = worker as Unit;
         this.target = target;
     }
 
@@ -15,7 +14,7 @@
         }
     }
 
-    public override void Do()
+    public override void Do(Unit worker)
     {
         throw new System.NotImplementedException();
     }

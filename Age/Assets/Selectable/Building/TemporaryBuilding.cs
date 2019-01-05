@@ -1,39 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEditor;
-using UnityEngine;
-
-public class TemporaryBuilding : Selectable
+﻿public class TemporaryBuilding : Selectable
 {
-    float progress = 0;
-    readonly int maxProgress = 100;
+    static readonly int maxProgress = 100;
     public bool placed = false;
+    public static readonly string progressEvent = "progressChanged";
 
-    protected void OnGUI()
+    float progress = 0;
+
+    private Job buildJob = null;
+
+    public float Progress
     {
-        if (placed)
-            DrawProgressBar(progress / maxProgress);
+        get { return progress; }
+        set { progress = value; EventManager.TriggerEvent(this, progressEvent); }
     }
-    public void Build(JobBuild job)
+
+    protected override void RemoveEvents()
     {
-        progress += job.worker.Strength;
-        if (progress >= maxProgress)
-        { 
+        EventManager.StopListening(this, progressEvent, DrawHealthBar);
+        EventManager.StopListening(this, progressEvent, DrawSelectedObjectText);
+        EventManager.StopListening(this, progressEvent, ControlProgress);
+
+    }
+    protected override void SetEvents()
+    {
+        EventManager.StartListening(this, progressEvent, DrawHealthBar);
+        EventManager.StartListening(this, progressEvent, DrawSelectedObjectText);
+        EventManager.StartListening(this, progressEvent, ControlProgress);
+
+    }
+
+    public void Build(Unit worker)
+    {
+        Progress += worker.Strength;
+    }
+
+    private void ControlProgress()
+    {
+        buildJob.Completed = Progress >= maxProgress;
+        if (buildJob.Completed)
+        {
             Building building = owner.factory.CreateMainBuilding(this);
             if (selected)
             {
                 // špatně!! musí se jinak řešit ten player
-                SetSelection(false, owner);
-                building.SetSelection(true, owner);
+                EventManager.TriggerEvent(this, deselectOwnEvent);
+                EventManager.TriggerEvent(building, selectOwnEvent);
                 owner.SelectedObject = building;
             }
-            job.Completed = true;
             Destroy(gameObject);
         }
-        if (selected)
-            DrawSelectedObjectText();
     }
 
     public void PlaceBuilding()
@@ -41,25 +56,30 @@ public class TemporaryBuilding : Selectable
         placed = true;
     }
 
-    public override void DrawBottomBar()
+    protected override void DrawNameText()
     {
-        nameText.text = "Building";
-        DrawSelectedObjectText();
+        nameText.text = "Temporary Building";
     }
 
-    private void DrawSelectedObjectText()
+    protected override void DrawSelectedObjectText()
     {
-        selectedObjectText.text = string.Format("progress {0}/{1}", progress, maxProgress);
-
+        if (selected)
+            selectedObjectText.text = string.Format("progress {0}/{1}", Progress, maxProgress);
     }
 
     protected override Job CreateOwnJob(Commandable worker)
     {
-        return new JobBuild(worker as Unit, this);
+        if (buildJob == null)
+            buildJob = new JobBuild(this);
+        return buildJob;
     }
 
     protected override Job CreateEnemyJob(Commandable worker)
     {
-        return new AttackJob(worker, this);
+        return new AttackJob(this);
+    }
+    public override void DrawHealthBar()
+    {
+        DrawProgressBar(Progress / maxProgress);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class BottomBar : MonoBehaviour {
@@ -13,14 +12,11 @@ public class BottomBar : MonoBehaviour {
     // main building buttons
     public Button CreateUnitButton;
 
-    // Use this for initialization
-    void Start () {
-    }
 
-    public void SetActive(Unit unit, bool active)
+    public void SetActive(Commandable worker, bool active)
     {
         if (active)
-            CreateMainBuildingButton.onClick.AddListener(() => player.SetWorkerAndBuilding(player.factory.CreateTemporaryMainBuilding(), unit));
+            CreateMainBuildingButton.onClick.AddListener(() => player.SetWorkerAndBuilding(player.factory.CreateTemporaryMainBuilding(), worker));
         else
             CreateMainBuildingButton.onClick.RemoveAllListeners();
         CreateMainBuildingButton.gameObject.SetActive(active);

@@ -11,8 +11,6 @@ public class Unit : Commandable
     protected float veryCloseDistance = 1;
     public Regiment Reg { get; set; }
     public int Strength { get; set; }
-    public int MaxHealth { get; set; }
-    public int Health { get; set; }
     public int Intelligence { get; set; }
     public int Agility { get; set; }
     public int Healing { get; set; }
@@ -38,7 +36,17 @@ public class Unit : Commandable
     protected override void Update()
     {
         Move();
+        JobUpdate();
         base.Update();
+    }
+
+    protected virtual void JobUpdate()
+    {
+        if (job == null)
+            return;
+        if (job.Completed)
+            job = job.Following;
+        job?.Do(this);
     }
 
     protected void Move()
@@ -96,19 +104,40 @@ public class Unit : Commandable
     {
         SetGoal(hitObject);
     }
-
-
-    public override void SetSelection(bool selected, Player player)
-    {
-        base.SetSelection(selected, player);
-        bottomBar.SetActive(this, selected);
-    }
-    public override void DrawBottomBar()
+    protected override void DrawNameText()
     {
         nameText.text = Name;
+    }
+    protected override void DrawSelectedObjectText()
+    {
         selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth)
         + "\nStrength: " + Strength + "\nIntelligence: " + Intelligence
         + "\nAgility: " + Agility + "\nHealing: " + Healing
         + "\nCrafting: " + Crafting + "\nAccuracy: " + Accuracy;
+    }
+
+    public override void DrawHealthBar()
+    {
+        DrawProgressBar(Health / (float)MaxHealth);
+    }
+
+    public override void SetGoal(Selectable goal)
+    {
+        Job following = goal.CreateJob(this);
+        job = new JobGo(this as Unit, goal.transform.position, following);
+    }
+
+    public void SetJob(Job job)
+    {
+        this.job = job;
+    }
+
+    protected override void SetEvents()
+    {
+
+    }
+
+    protected override void RemoveEvents()
+    {
     }
 }

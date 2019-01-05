@@ -50,7 +50,7 @@ public class LeftMouseActivity : MouseActivity {
     {
         isClicking = false;
         if (player.SelectedObject && player.BuildingToBuild == null)
-            player.SelectedObject.SetSelection(false, player);
+            EventManager.TriggerEvent(player.SelectedObject, Selectable.deselectOwnEvent);
         if (Time.time - lastClickTime < maxClickTime)
             LeftMouseClick();
         else
@@ -76,7 +76,7 @@ public class LeftMouseActivity : MouseActivity {
             if (!selectedObject)
                 return;
             player.SelectedObject = selectedObject;
-            selectedObject.SetSelection(true, player);
+            EventManager.TriggerEvent(selectedObject, Selectable.selectOwnEvent);
         }
     }
     private void LeftMouseDrag()
@@ -97,7 +97,7 @@ public class LeftMouseActivity : MouseActivity {
             player.SelectedObject = null;
             Regiment regiment = player.factory.CreateRegiment(player, selectedUnits);
             player.SelectedObject = regiment;
-            regiment.SetSelection(true, player);
+            EventManager.TriggerEvent(regiment, Selectable.selectOwnEvent);
         }
     }
 

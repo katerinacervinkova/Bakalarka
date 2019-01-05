@@ -12,6 +12,7 @@ public class Building : Selectable {
     {
         base.Start();
         defaultDestination = spawnPoint = transform.position;
+        DrawHealthBar();
     }
     protected override void Update()
     {
@@ -34,16 +35,13 @@ public class Building : Selectable {
             animating = true;
         }
     }
-    public override void DrawBottomBar()
+    protected override void DrawNameText()
     {
-        nameText.text = "Building";
-        selectedObjectText.text = "";
+        nameText.text = Name;
     }
-
-    public override void SetSelection(bool selected, Player player)
+    protected override void DrawSelectedObjectText()
     {
-        base.SetSelection(selected, player);
-        bottomBar.SetActive(this, selected);
+        selectedObjectText.text = "";
     }
 
     protected override void BottomBarUI(bool selected, Player player)
@@ -65,6 +63,21 @@ public class Building : Selectable {
 
     protected override Job CreateEnemyJob(Commandable worker)
     {
-        return new AttackJob(worker, this);
+        return new AttackJob(this);
+    }
+
+    public override void DrawHealthBar()
+    {
+        DrawProgressBar(Health / (float)MaxHealth);
+    }
+
+    protected override void SetEvents()
+    {
+        
+    }
+
+    protected override void RemoveEvents()
+    {
+        
     }
 }

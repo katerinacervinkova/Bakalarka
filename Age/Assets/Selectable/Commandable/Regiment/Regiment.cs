@@ -28,10 +28,10 @@ public class Regiment : Commandable {
                     state = RState.Standing;
     }
 
-    public override void SetSelection(bool selected, Player player)
+    protected override void SetSelection(bool selected, Player player)
     {
-        foreach (var unit in units)
-            unit.SetSelection(selected, player);
+        units.ForEach(u => { EventManager.TriggerEvent(u, selected ? selectOwnEvent : deselectOwnEvent); });
+        bottomBar.SetActive(this, selected);
         if (!selected && state == RState.Standing)
             Destroy(gameObject);
     }
@@ -66,15 +66,46 @@ public class Regiment : Commandable {
     {
         gridGraph.SetDestination(destination, units);
     }
-
-    public override void DrawBottomBar()
+    protected override void DrawBottomBar()
     {
         if (units.Count == 0)
             return;
-        units[0].DrawBottomBar();
+        base.DrawBottomBar();
+        
+    }
+    protected override void DrawSelectedObjectText()
+    {
+        selectedObjectText.text = string.Format("Health: {0}/{1}", units.Sum(u => u.Health), units.Sum(u => u.MaxHealth))
+        + "\nStrength: " + units.Sum(u => u.Strength) + "\nIntelligence: " + units.Sum(u => u.Intelligence)
+        + "\nAgility: " + units.Sum(u => u.Agility) + "\nHealing: " + units.Sum(u => u.Healing)
+        + "\nCrafting: " + units.Sum(u => u.Crafting) + "\nAccuracy: " + units.Sum(u => u.Accuracy);
+    }
+
+    protected override void DrawNameText()
+    {
+        nameText.text = Name;
     }
     public void SetUnits(List<Unit> units)
     {
         this.units = units;
+    }
+
+    public override void DrawHealthBar()
+    {
+        units.ForEach(u => u.DrawHealthBar());
+    }
+
+    public override void SetGoal(Selectable goal)
+    {
+        Job following = goal.CreateJob(this);
+        units.ForEach(u => u.SetJob(new JobGo(u, goal.transform.position, following)));
+    }
+
+    protected override void SetEvents()
+    {
+    }
+
+    protected override void RemoveEvents()
+    {
     }
 }
