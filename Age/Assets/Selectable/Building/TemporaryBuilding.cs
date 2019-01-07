@@ -40,7 +40,7 @@
         if (buildJob.Completed)
         {
             Building building = owner.factory.CreateMainBuilding(this);
-            if (selected)
+            if (Selected)
             {
                 // špatně!! musí se jinak řešit ten player
                 EventManager.TriggerEvent(this, deselectOwnEvent);
@@ -63,7 +63,7 @@
 
     protected override void DrawSelectedObjectText()
     {
-        if (selected)
+        if (Selected)
             selectedObjectText.text = string.Format("progress {0}/{1}", Progress, maxProgress);
     }
 

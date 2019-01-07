@@ -37,6 +37,8 @@ public class Factory : MonoBehaviour
     {
         Regiment regiment = Instantiate(regimentPrefab);
         regiment.bottomBar = bottomBar;
+        regiment.selectedObjectText = selectedAttributesText;
+        regiment.nameText = nameText;
         regiment.owner = owner;
         regiment.SetUnits(units);
         regiment.gridGraph = gridGraph;

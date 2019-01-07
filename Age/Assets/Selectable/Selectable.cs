@@ -8,6 +8,8 @@ public abstract class Selectable : MonoBehaviour {
     public static readonly string healthEvent = "HealthChange";
     public static readonly string selectOwnEvent = "SelectOwn";
     public static readonly string deselectOwnEvent = "DeselectOwn";
+    public static readonly string selectToGroupEvent = "SelectGroup";
+    public static readonly string deselectGroupEvent = "DeselectGroup";
 
     public string Name;
     public Texture2D Image;
@@ -20,10 +22,22 @@ public abstract class Selectable : MonoBehaviour {
     private int health = 50;
     public int Health { get { return health; } set { health = value; EventManager.TriggerEvent(this, healthEvent); } }
     public int MaxHealth { get; set; } = 100;
+
+    protected bool Selected { get { return selected; }
+        set
+        {
+            if (value == selected)
+                return;
+            selected = value;
+            selector.SetActive(selected);
+            healthBarCanvas.SetActive(selected);
+        }
+    }
+
     protected GameObject healthBarCanvas;
     protected GameObject selector;
     protected Image healthBar;
-    protected bool selected = false;
+    private bool selected = false;
     protected bool selectedByOwner = false;
     private Quaternion healthBarRotation;
 
@@ -46,6 +60,7 @@ public abstract class Selectable : MonoBehaviour {
         SetEvents();
         SetHealthEvents();
         SetSelectionEvents();
+        SetGroupEvents();
     }
 
     protected virtual void SetHealthEvents()
@@ -60,12 +75,20 @@ public abstract class Selectable : MonoBehaviour {
         EventManager.StartListening(this, selectOwnEvent, DrawBottomBar);
         EventManager.StartListening(this, deselectOwnEvent, DeselectOwn);
     }
+    protected virtual void SetGroupEvents()
+    {
+        EventManager.StartListening(this, selectToGroupEvent, () => { Selected = true; });
+        EventManager.StartListening(this, deselectGroupEvent, () => { Selected = false; });
+    }
 
     protected void OnDestroy()
     {
+        if (Selected)
+            EventManager.TriggerEvent(this, deselectOwnEvent);
         RemoveEvents();
         RemoveHealthEvents();
         RemoveSelectionEvents();
+        RemoveGroupEvents();
     }
 
     protected virtual void RemoveHealthEvents()
@@ -76,6 +99,12 @@ public abstract class Selectable : MonoBehaviour {
     {
         EventManager.StopAllListening(this, selectOwnEvent);
         EventManager.StopAllListening(this, deselectOwnEvent);
+    }
+
+    protected virtual void RemoveGroupEvents()
+    {
+        EventManager.StopAllListening(this, deselectGroupEvent);
+        EventManager.StopAllListening(this, selectToGroupEvent);
     }
 
     protected virtual void Start()
@@ -99,11 +128,7 @@ public abstract class Selectable : MonoBehaviour {
     }
     protected virtual void SetSelection(bool selected, Player player)
     {
-        if (this.selected == selected)
-            return;
-        this.selected = selected;
-        selector.SetActive(selected);
-        healthBarCanvas.SetActive(selected);
+        Selected = selected;
         BottomBarUI(selected, player);
     }
 

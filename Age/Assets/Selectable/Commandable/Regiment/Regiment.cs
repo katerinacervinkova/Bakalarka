@@ -12,7 +12,14 @@ public class Regiment : Commandable {
 
     public override bool Arrived { get { return units.TrueForAll(u => u.Arrived); } }
 
-    protected override void Awake() { }
+    protected override void Awake()
+    {
+        gridGraph = GameObject.Find("Map").GetComponent<GridGraph>();
+        SetEvents();
+        SetHealthEvents();
+        SetSelectionEvents();
+        SetGroupEvents();
+    }
     protected override void Start() { }
     protected override void Update()
     {
@@ -22,7 +29,7 @@ public class Regiment : Commandable {
             if (state == RState.Assembling)
                 CoordinatedMovement();
             else if (state == RState.Moving)
-                if (!selected)
+                if (!Selected)
                     Destroy(gameObject);
                 else
                     state = RState.Standing;
@@ -30,8 +37,8 @@ public class Regiment : Commandable {
 
     protected override void SetSelection(bool selected, Player player)
     {
-        units.ForEach(u => { EventManager.TriggerEvent(u, selected ? selectOwnEvent : deselectOwnEvent); });
-        bottomBar.SetActive(this, selected);
+        units.ForEach(u => { EventManager.TriggerEvent(u, selected ? selectToGroupEvent : deselectGroupEvent); });
+        BottomBarUI(selected, player);
         if (!selected && state == RState.Standing)
             Destroy(gameObject);
     }
