@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class Resource : Selectable {
 
@@ -15,9 +16,8 @@ public abstract class Resource : Selectable {
     }
 
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
         capacity = MaxCapacity();
     }
 
@@ -40,27 +40,14 @@ public abstract class Resource : Selectable {
         return miningJob;
     }
 
-    protected override void DrawSelectedObjectText()
+    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
-        if (Selected)
-            selectedObjectText.text = string.Format("Capacity: {0}/{1}", Capacity, MaxCapacity());
+        selectedObjectText.text = string.Format("Capacity: {0}/{1}", Capacity, MaxCapacity());
     }
 
     public void Mine(Unit worker)
     {
         Capacity -= worker.Strength;
-    }
-
-    protected override void RemoveEvents()
-    {
-        EventManager.StopAllListening(this, miningEvent);
-    }
-
-    protected override void SetEvents()
-    {
-        EventManager.StartListening(this, miningEvent, DrawHealthBar);
-        EventManager.StartListening(this, miningEvent, DrawSelectedObjectText);
-        EventManager.StartListening(this, miningEvent, ControlCapacity);
     }
 
     protected void ControlCapacity()

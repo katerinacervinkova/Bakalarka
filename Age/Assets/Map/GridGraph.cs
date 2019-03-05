@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEngine.Networking;
 
-public class GridGraph : MonoBehaviour {
+public class GridGraph : NetworkBehaviour {
 
     Selectable[][] graph;
     int minx;
@@ -14,14 +13,74 @@ public class GridGraph : MonoBehaviour {
         CreateGraph();
     }
 
-    void Start()
+    public Vector3 ClosestUnoccupiedDestination(Vector3 location)
     {
-        
+        Vector3Int loc = WorldToGraphCoordinates(location);
+        if (!IsOccupied(loc, false))
+            return GraphToWorldCoordinates(loc);
+        Vector3 newLocation = Vector3Int.zero;
+        for (int i = 0;; i++)
+        {
+            for (int j = loc.x + i; j > loc.x - i; j--)
+                if (getLocation(ref newLocation, j, loc.z - i))
+                    return newLocation;
+            for (int j = loc.z - i; j < loc.z + i; j++)
+                if (getLocation(ref newLocation, loc.x - i, j))
+                    return newLocation;
+            for (int j = loc.x - i; j < loc.x + i; j++)
+                if (getLocation(ref newLocation, j, loc.z + i))
+                    return newLocation;
+            for (int j = loc.z + i; j > loc.z - i; j--)
+                if (getLocation(ref newLocation, loc.x + i, j))
+                    return newLocation;
+        }
     }
 
-    void Update()
+    private bool getLocation(ref Vector3 newLocation, int x, int z)
     {
+        newLocation = new Vector3(x, 0, z);
+        if (!IsOccupied(newLocation, false))
+        {
+            newLocation = GraphToWorldCoordinates(newLocation);
+            return true;
+        }
+        return false;
+    }
 
+    public Vector3 ClosestDestination(Vector3 location)
+    {
+        return GraphToWorldCoordinates(WorldToGraphCoordinates(location));
+    }
+
+    internal void Remove(Selectable selectable)
+    {
+        for (int i = 0; i < graph.Length; i++)
+            for (int j = 0; j < graph[i].Length; j++)
+                if (graph[i][j] == selectable)
+                    graph[i][j] = null;
+    }
+
+    internal void Add(Selectable selectable)
+    {
+        Bounds bounds = selectable.GetComponent<Collider>().bounds;
+        Vector3Int min = WorldToGraphCoordinates(bounds.min);
+        Vector3Int max = WorldToGraphCoordinates(bounds.max);
+
+        for (int i = min.x; i <= max.x; i++)
+            for (int j = min.z; j <= max.z; j++)
+                graph[i][j] = selectable;
+    }
+
+    public bool IsOccupied(Vector3 location, bool worldCoordinates = true)
+    {
+        return Get(location, worldCoordinates) != null;
+    }
+
+    private Selectable Get(Vector3 location, bool worldCoordinates = true)
+    {
+        if (worldCoordinates)
+            location = WorldToGraphCoordinates(location);
+        return graph[(int)location.x][(int)location.z];
     }
 
     private void CreateGraph()
@@ -42,93 +101,6 @@ public class GridGraph : MonoBehaviour {
         graph = new Selectable[height][];
         for (int i = 0; i < height; i++)
             graph[i] = new Selectable[width];
-    }
-
-    public void AddSelectable(Selectable selectable, Vector3 destination)
-    {
-
-    }
-    public void AddSelectable(Selectable selectable)
-    {
-        UpgradeGraph(selectable, selectable);
-    }
-    public void RemoveSelectable(Selectable selectable)
-    {
-        UpgradeGraph(selectable);
-    }
-
-
-    public void SetDestination(Vector3 destination, NavMeshAgent agent)
-    {
-        destination = GroupDestinations(destination, 1)[0];
-        agent.SetDestination(destination);
-    }
-
-    public void SetDestination(Vector3 destination, List<Unit> units)
-    {
-        var destinations = GroupDestinations(destination, units.Count);
-        int i = 0;
-        foreach (var unit in units)
-            unit.SetDestination(destinations[i++]);
-    }
-
-    public Vector3 ClosestDestination(Vector3 destination)
-    {
-        return GroupDestinations(destination, 1)[0];
-    }
-
-    private List<Vector3> GroupDestinations(Vector3 startDestination, int count)
-    {
-        var destinations = new List<Vector3>();
-        Vector3 destination;
-        Vector3Int graphCoordinates = WorldToGraphCoordinates(startDestination);
-        int r = 0;
-        while(destinations.Count < count)
-        {
-            int xmin = Math.Max(val1: graphCoordinates.x - r, val2: 0);
-            int xmax = Math.Min(graphCoordinates.x + r, graph.Length);
-            int zmin = Math.Max(graphCoordinates.z - r, 0);
-            int zmax = Math.Min(graphCoordinates.z + r, graph[0].Length);
-
-            for (int i = zmin + 1; i < zmax && destinations.Count < count; i++)
-                if (GetDestination(new Vector3Int(xmax, graphCoordinates.y, i), out destination))
-                    destinations.Add(destination);
-            for (int i = xmax; i >= xmin && destinations.Count < count; i--)
-                if (GetDestination(new Vector3Int(i, graphCoordinates.y, zmin), out destination))
-                    destinations.Add(destination);
-            if (xmax > xmin)
-                for (int i = zmin + 1; i < zmax && destinations.Count < count; i++)
-                    if (GetDestination(new Vector3Int(xmin, graphCoordinates.y, i), out destination))
-                        destinations.Add(destination);
-            if (zmax > zmin)
-                for (int i = xmin; i <= xmax && destinations.Count < count; i++)
-                    if (GetDestination(new Vector3Int(i, graphCoordinates.y, zmax), out destination))
-                        destinations.Add(destination);
-            r++;
-        }
-        return destinations;
-    }
-
-    private bool GetDestination(Vector3Int graphDestination, out Vector3 destination)
-    {
-        if (graph[graphDestination.z][graphDestination.x] == null)
-        {
-            destination = GraphToWorldCoordinates(graphDestination);
-            return true;
-        }
-        destination = Vector3.zero;
-        return false;
-    }
-
-    private void UpgradeGraph(Selectable selectable, Selectable field = null)
-    {
-        Bounds bounds = selectable.GetComponent<Collider>().bounds;
-        for (int i = (int)Math.Round(bounds.min.z); i <= (int)Math.Round(bounds.max.z); i++)
-            for (int j = (int)Math.Round(bounds.min.x); j <= (int)Math.Round(bounds.max.x); j++)
-            {
-                Vector3Int graphCoordinates = WorldToGraphCoordinates(j, i);
-                graph[graphCoordinates.z][graphCoordinates.x] = field;
-            }
     }
 
     private Vector3 GraphToWorldCoordinates(int x, int z)

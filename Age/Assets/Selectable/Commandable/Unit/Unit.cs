@@ -1,36 +1,47 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Unit : Commandable
 {
     protected enum UState { Standing, Moving, MovingClose, MovingVeryClose }
 
-
-    protected UState state;
-    protected float closeDistance = 5;
-    protected float veryCloseDistance = 1;
+    Vector3 desiredLocation;
+    Vector3 steeringLocation;
     public Regiment Reg { get; set; }
-    public int Strength { get; set; }
-    public int Intelligence { get; set; }
-    public int Agility { get; set; }
-    public int Healing { get; set; }
-    public int Crafting { get; set; }
-    public int Accuracy { get; set; }
+    [SyncVar]
+    public int Strength;
+    [SyncVar]
+    public int Intelligence;
+    [SyncVar]
+    public int Agility;
+    [SyncVar]
+    public int Healing;
+    [SyncVar]
+    public int Crafting;
+    [SyncVar]
+    public int Accuracy;
 
-    protected NavMeshAgent Agent { get; set; }
+    protected NavMeshAgent agent { get; set; }
 
-    public override bool Arrived => state == UState.Standing;
+    private bool pending = false;
 
-    protected override void Awake()
+    [SyncVar(hook = "OnArrivedChange")]
+    private bool arrived;
+    public override bool Arrived => arrived;
+
+    internal void ResetJob()
     {
-        base.Awake();
-        Agent = gameObject.GetComponent<NavMeshAgent>();
-        Agent.stoppingDistance = 0;
-        gridGraph.AddSelectable(this);
+        job = null;
     }
 
-    protected override void Start()
+    protected void Awake()
     {
+        agent = gameObject.GetComponent<NavMeshAgent>();
+        agent.stoppingDistance = 0;
+        desiredLocation = steeringLocation = transform.position;
     }
 
     protected override void Update()
@@ -42,80 +53,83 @@ public class Unit : Commandable
 
     protected virtual void JobUpdate()
     {
-        if (job == null)
-            return;
-        if (job.Completed)
+        if (job != null && job.Completed)
             job = job.Following;
         job?.Do(this);
     }
 
+
     protected void Move()
     {
-        if (state == UState.Moving && Agent.remainingDistance < closeDistance)
-            SetExactDestination();
-
-        else if (state != UState.Standing && Agent.remainingDistance < veryCloseDistance)
+        if (!hasAuthority || arrived || agent.pathPending)
+            return;
+        if (pending)
         {
-            gridGraph.AddSelectable(this);
-            state = UState.Standing;
+            pending = false;
+            Repath();
         }
-        else if (state == UState.MovingClose)
+        if (AlmostThere())
         {
-            veryCloseDistance += Time.deltaTime;
-            if (veryCloseDistance > 1)
-            {
-                veryCloseDistance -= 1;
-                gridGraph.SetDestination(Agent.destination, Agent);
-            }
+            if (steeringLocation != desiredLocation)
+                Repath();
+            if (AlmostThere())
+                CmdChangeArrived(true);
         }
+        else if (gameState.IsOccupied(agent.steeringTarget))
+            Repath();
+        
+    }
+    private bool AlmostThere()
+    {
+        return Vector3.Distance(transform.position, steeringLocation) < 1;
     }
 
-    private void SetExactDestination()
+    [Command]
+    public void CmdChangeArrived(bool value)
     {
-        gridGraph.SetDestination(Agent.destination, Agent);
-        state = UState.MovingClose;
+        arrived = value;
     }
 
-    private void SetExactDestination(Vector3 destination)
+    private void OnArrivedChange(bool value)
     {
-        gridGraph.SetDestination(destination, Agent);
-        state = UState.MovingClose;
+        if (value)
+            gameState.AddSelectable(this);
+        else
+            gameState.RemoveSelectable(this);
     }
-
-    public override void SetDestination(Vector3 destination)
+    private void Repath()
     {
-        Agent.SetDestination(destination);
-        state = UState.Moving;
+        steeringLocation = gameState.GetClosestUnoccupiedDestination(desiredLocation);
+        if (steeringLocation != agent.pathEndPosition)
+            agent.SetDestination(steeringLocation);
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
-        if (hitPoint != owner.gameWindow.InvalidPosition)
-        {
-            Reg?.Remove(this);
-            Reg = null;
-            if (state == UState.Standing)
-                gridGraph.RemoveSelectable(this);
-            job = new JobGo(this, hitPoint);
-        }
+        if (!hasAuthority)
+            return;
+        Reg?.Remove(this);
+        Reg = null;
+        job = new JobGo(this, hitPoint);
     }
 
     public override void RightMouseClickObject(Selectable hitObject)
     {
         SetGoal(hitObject);
     }
-    protected override void DrawNameText()
+    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
         nameText.text = Name;
-    }
-    protected override void DrawSelectedObjectText()
-    {
-        selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth)
-        + "\nStrength: " + Strength + "\nIntelligence: " + Intelligence
-        + "\nAgility: " + Agility + "\nHealing: " + Healing
-        + "\nCrafting: " + Crafting + "\nAccuracy: " + Accuracy;
+        if (hasAuthority)
+            selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth)
+            + "\nStrength: " + Strength + "\nIntelligence: " + Intelligence
+            + "\nAgility: " + Agility + "\nHealing: " + Healing
+            + "\nCrafting: " + Crafting + "\nAccuracy: " + Accuracy;
+        else
+            selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth);
     }
 
+   
     public override void DrawHealthBar()
     {
         DrawProgressBar(Health / (float)MaxHealth);
@@ -132,12 +146,12 @@ public class Unit : Commandable
         this.job = job;
     }
 
-    protected override void SetEvents()
+    public override void SetDestination(Vector3 destination)
     {
-
-    }
-
-    protected override void RemoveEvents()
-    {
+        CmdChangeArrived(false);
+        desiredLocation = gameState.GetClosestDestination(destination);
+        steeringLocation = desiredLocation;
+        agent.SetDestination(steeringLocation);
+        pending = true;
     }
 }

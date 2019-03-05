@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class Regiment : Commandable {
     protected enum RState { Standing, Assembling, Moving }
@@ -12,15 +13,6 @@ public class Regiment : Commandable {
 
     public override bool Arrived { get { return units.TrueForAll(u => u.Arrived); } }
 
-    protected override void Awake()
-    {
-        gridGraph = GameObject.Find("Map").GetComponent<GridGraph>();
-        SetEvents();
-        SetHealthEvents();
-        SetSelectionEvents();
-        SetGroupEvents();
-    }
-    protected override void Start() { }
     protected override void Update()
     {
         if (units.Count == 0)
@@ -35,12 +27,13 @@ public class Regiment : Commandable {
                     state = RState.Standing;
     }
 
-    protected override void SetSelection(bool selected, Player player)
+    public override void SetSelection(bool selected, Player player, BottomBar bottomBar)
     {
-        units.ForEach(u => { EventManager.TriggerEvent(u, selected ? selectToGroupEvent : deselectGroupEvent); });
-        BottomBarUI(selected, player);
         if (!selected && state == RState.Standing)
             Destroy(gameObject);
+        else
+            foreach(Unit unit in units)
+                SetSelection(selected, player, bottomBar);
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
@@ -71,26 +64,17 @@ public class Regiment : Commandable {
 
     public override void SetDestination(Vector3 destination)
     {
-        gridGraph.SetDestination(destination, units);
+        //gridGraph.SetDestination(destination, units);
     }
-    protected override void DrawBottomBar()
+    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
         if (units.Count == 0)
             return;
-        base.DrawBottomBar();
-        
-    }
-    protected override void DrawSelectedObjectText()
-    {
+        nameText.text = Name;
         selectedObjectText.text = string.Format("Health: {0}/{1}", units.Sum(u => u.Health), units.Sum(u => u.MaxHealth))
         + "\nStrength: " + units.Sum(u => u.Strength) + "\nIntelligence: " + units.Sum(u => u.Intelligence)
         + "\nAgility: " + units.Sum(u => u.Agility) + "\nHealing: " + units.Sum(u => u.Healing)
         + "\nCrafting: " + units.Sum(u => u.Crafting) + "\nAccuracy: " + units.Sum(u => u.Accuracy);
-    }
-
-    protected override void DrawNameText()
-    {
-        nameText.text = Name;
     }
     public void SetUnits(List<Unit> units)
     {
@@ -106,13 +90,5 @@ public class Regiment : Commandable {
     {
         Job following = goal.CreateJob(this);
         units.ForEach(u => u.SetJob(new JobGo(u, goal.transform.position, following)));
-    }
-
-    protected override void SetEvents()
-    {
-    }
-
-    protected override void RemoveEvents()
-    {
     }
 }

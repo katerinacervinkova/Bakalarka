@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GoldResource : Resource
 {
     private static readonly int maxCapacity = 100;
-    protected override void DrawNameText()
+    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
         nameText.text = "Gold";
     }

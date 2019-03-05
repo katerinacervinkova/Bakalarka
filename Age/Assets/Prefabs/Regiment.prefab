@@ -51,10 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55183df064809d643a9ae1ee8e585c52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState: {fileID: 0}
   Name: 
   Image: {fileID: 0}
-  buttons: []
-  selectedObjectText: {fileID: 0}
-  nameText: {fileID: 0}
   owner: {fileID: 0}
-  units: []

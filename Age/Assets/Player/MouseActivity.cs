@@ -2,11 +2,15 @@
 
 public class MouseActivity : MonoBehaviour {
 
-    protected Player player;
+    public GameState gameState;
+    public GameWindow gameWindow;
 
+    protected virtual void Awake()
+    {
+        gameWindow = gameObject.GetComponent<GameWindow>();
+    }
     protected virtual void Start()
     {
-        player = transform.root.GetComponent<Player>();
     }
 
     void Update ()
@@ -18,7 +22,7 @@ public class MouseActivity : MonoBehaviour {
     {
         Vector3 mousePosition = Input.mousePosition;
         bool insideWidth = mousePosition.x >= 0 && mousePosition.x <= Screen.width;
-        bool insideHeight = mousePosition.y >= player.gameWindow.BottomBorder && mousePosition.y <= Screen.height;
+        bool insideHeight = mousePosition.y >= gameWindow.BottomBorder && mousePosition.y <= Screen.height;
         return insideWidth && insideHeight;
     }
 
@@ -35,7 +39,7 @@ public class MouseActivity : MonoBehaviour {
         RaycastHit hit;
         if (FindRaycastHit(out hit))
             return hit.point;
-        return player.gameWindow.InvalidPosition;
+        return gameWindow.InvalidPosition;
     }
 
     private bool FindRaycastHit(out RaycastHit hit)

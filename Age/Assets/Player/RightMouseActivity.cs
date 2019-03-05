@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
 public class RightMouseActivity : MouseActivity {
-
-	protected override void Start ()
-    {
-        base.Start();
-	}
 	
 	void Update ()
     {
-		if (Input.GetMouseButtonDown(1))
+        if (gameState == null)
+            return;
+        if (Input.GetMouseButtonDown(1))
             RightMouseClick();
     }
 
@@ -18,14 +15,12 @@ public class RightMouseActivity : MouseActivity {
 
         GameObject hitObject = FindHitObject();
         Vector3 hitPoint = FindHitPoint();
-        if (!hitObject || !player.SelectedObject)
-            return;
-        if (player != player.SelectedObject.owner)
+        if (!hitObject || !gameState.SelectedObject)
             return;
         Selectable objectOfInterest = hitObject.GetComponent<Selectable>();
         if (hitObject.name == "Map")
-            player.SelectedObject.RightMouseClickGround(hitPoint);
+            gameState.SelectedObject.RightMouseClickGround(hitPoint);
         else if (objectOfInterest != null)
-            player.SelectedObject.RightMouseClickObject(hitObject.GetComponent<Selectable>());
+            gameState.SelectedObject.RightMouseClickObject(hitObject.GetComponent<Selectable>());
     }
 }

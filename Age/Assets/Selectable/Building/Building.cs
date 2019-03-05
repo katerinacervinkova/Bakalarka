@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Building : Selectable {
 
-    public Vector3 spawnPoint;
-    protected Vector3 defaultDestination;
+    public Vector3 SpawnPoint { get; private set; }
+    public Vector3 DefaultDestination { get; private set; }
 
     bool animating = false;
     protected List<Scheduler> schedulers = new List<Scheduler>();
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-        defaultDestination = spawnPoint = transform.position;
+        DefaultDestination = SpawnPoint = transform.position;
         DrawHealthBar();
+        gameState.AddSelectable(this);
     }
     protected override void Update()
     {
@@ -22,37 +23,43 @@ public class Building : Selectable {
     }
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
-        defaultDestination = hitPoint;
+        DefaultDestination = hitPoint;
     }
 
-    public void CreateUnit()
+    public void AddScheduler(Scheduler scheduler)
     {
-        Scheduler scheduler = owner.factory.CreateScheduler(schedulers, () => owner.factory.CreateUnit(owner, spawnPoint, defaultDestination), null);
+        scheduler.gameObject.transform.Translate(50 * schedulers.Count, 0, 0);
+        scheduler.gameObject.SetActive(true);
+        scheduler.schedulers = schedulers;
         schedulers.Add(scheduler);
         if (!animating)
-        { 
+        {
             scheduler.Animate();
             animating = true;
         }
-    }
-    protected override void DrawNameText()
-    {
-        nameText.text = Name;
-    }
-    protected override void DrawSelectedObjectText()
-    {
-        selectedObjectText.text = "";
+        
     }
 
-    protected override void BottomBarUI(bool selected, Player player)
+    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
-        base.BottomBarUI(selected, player);
-        schedulers.ForEach(scheduler => 
+        nameText.text = Name;
+        selectedObjectText.text = "";
+        SetSchedulersActive(true);
+    }
+
+    public override void RemoveBottomBar(Text nameText, Text selectedObjectText)
+    {
+        SetSchedulersActive(false);
+    }
+
+    protected void SetSchedulersActive(bool active)
+    {
+        schedulers.ForEach(scheduler =>
         {
             CanvasGroup canvasGroup = scheduler.gameObject.GetComponent<CanvasGroup>();
-            canvasGroup.blocksRaycasts = selected;
-            canvasGroup.alpha = selected ? 1 : 0;
-            
+            canvasGroup.blocksRaycasts = active;
+            canvasGroup.alpha = active ? 1 : 0;
+
         });
     }
 
@@ -69,15 +76,5 @@ public class Building : Selectable {
     public override void DrawHealthBar()
     {
         DrawProgressBar(Health / (float)MaxHealth);
-    }
-
-    protected override void SetEvents()
-    {
-        
-    }
-
-    protected override void RemoveEvents()
-    {
-        
     }
 }

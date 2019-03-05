@@ -1,41 +1,30 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
     public string Name;
-    public bool IsHuman;
     public Color color;
-    public Selectable SelectedObject { get; set; }
-    public List<Selectable> units;
-    public PlayerInputOptions inputOptions;
-    public Factory factory;
-    public GameWindow gameWindow;
-    public TemporaryBuilding BuildingToBuild { get; private set; }
-    public Commandable Worker { get; private set; }
+    public List<Unit> units;
+    public List<Building> buildings;
+    public List<TemporaryBuilding> temporaryBuildings;
+    public GameState gameState;
 
-    void Start () {
-        inputOptions = gameObject.GetComponent<PlayerInputOptions>();
-        gameWindow = gameObject.GetComponent<GameWindow>();
-        foreach (Unit unit in units)
-            unit.owner = this;
-    }
 
-    public void SetWorkerAndBuilding(TemporaryBuilding building, Commandable worker)
+    private void Awake()
     {
-        BuildingToBuild = building;
-        Worker = worker;
+        gameState = gameObject.GetComponent<GameState>();
+        gameState.player = this;
     }
-
-    public void RemoveWorkerAndBuilding()
+    public override void OnStartLocalPlayer()
     {
-        BuildingToBuild = null;
-        Worker = null;
+        if (isLocalPlayer)
+            gameState.CmdCreateUnit(transform.position, transform.position);
     }
-	
 
-	void Update () {
+    void Update () {
 
     }
 }

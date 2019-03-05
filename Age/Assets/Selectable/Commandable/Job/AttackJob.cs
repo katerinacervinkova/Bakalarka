@@ -10,13 +10,13 @@
     {
         get
         {
-            throw new System.NotImplementedException();
+            return null;
         }
     }
 
     public override void Do(Unit worker)
     {
-        throw new System.NotImplementedException();
+
     }
 
 

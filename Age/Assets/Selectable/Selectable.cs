@@ -1,148 +1,67 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
-public abstract class Selectable : MonoBehaviour {
+public abstract class Selectable : NetworkBehaviour {
 
-    public static readonly string healthEvent = "HealthChange";
-    public static readonly string selectOwnEvent = "SelectOwn";
-    public static readonly string deselectOwnEvent = "DeselectOwn";
-    public static readonly string selectToGroupEvent = "SelectGroup";
-    public static readonly string deselectGroupEvent = "DeselectGroup";
+    protected GameState gameState;
 
+    [SyncVar]
     public string Name;
     public Texture2D Image;
-    public Text selectedObjectText;
-    public Text nameText;
-    public GridGraph gridGraph;
-    public BottomBar bottomBar;
 
+    [SyncVar]
+    public NetworkInstanceId playerID;
     public Player owner;
-    private int health = 50;
-    public int Health { get { return health; } set { health = value; EventManager.TriggerEvent(this, healthEvent); } }
-    public int MaxHealth { get; set; } = 100;
 
-    protected bool Selected { get { return selected; }
-        set
-        {
-            if (value == selected)
-                return;
-            selected = value;
-            selector.SetActive(selected);
-            healthBarCanvas.SetActive(selected);
-        }
-    }
+    [SyncVar]
+    public int Health = 50;
+    [SyncVar]
+    public int MaxHealth = 100;
+
+    protected bool Selected { get; set; } = false;
 
     protected GameObject healthBarCanvas;
     protected GameObject selector;
     protected Image healthBar;
-    private bool selected = false;
-    protected bool selectedByOwner = false;
     private Quaternion healthBarRotation;
 
-    protected abstract void DrawSelectedObjectText();
-    protected abstract void DrawNameText();
+    public abstract void DrawBottomBar(Text nameText, Text selectedObjectText);
     protected abstract Job CreateOwnJob(Commandable worker);
     protected abstract Job CreateEnemyJob(Commandable worker);
     public abstract void DrawHealthBar();
-    protected abstract void SetEvents();
-    protected abstract void RemoveEvents();
 
-    protected virtual void Awake()
+    public override void OnStartClient()
     {
+        base.OnStartClient();
+        owner = ClientScene.objects[playerID].GetComponent<Player>();
+        gameState = owner.GetComponent<GameState>();
         selector = transform.Find("SelectionProjector").gameObject;
-        selector.GetComponent<Projector>().material.color = owner.color;
-        gridGraph = GameObject.Find("Map").GetComponent<GridGraph>();
+        selector.SetActive(false);
         healthBarCanvas = transform.Find("Canvas").gameObject;
         healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
         healthBarRotation = healthBarCanvas.transform.rotation;
-        SetEvents();
-        SetHealthEvents();
-        SetSelectionEvents();
-        SetGroupEvents();
+        selector.GetComponent<Projector>().material.color = owner.color;
     }
 
-    protected virtual void SetHealthEvents()
-    {
-        EventManager.StartListening(this, healthEvent, DrawHealthBar);
-        EventManager.StartListening(this, healthEvent, DrawSelectedObjectText);
-    }
-
-    protected virtual void SetSelectionEvents()
-    {
-        EventManager.StartListening(this, selectOwnEvent, SelectOwn);
-        EventManager.StartListening(this, selectOwnEvent, DrawBottomBar);
-        EventManager.StartListening(this, deselectOwnEvent, DeselectOwn);
-    }
-    protected virtual void SetGroupEvents()
-    {
-        EventManager.StartListening(this, selectToGroupEvent, () => { Selected = true; });
-        EventManager.StartListening(this, deselectGroupEvent, () => { Selected = false; });
-    }
-
-    protected void OnDestroy()
-    {
-        if (Selected)
-            EventManager.TriggerEvent(this, deselectOwnEvent);
-        RemoveEvents();
-        RemoveHealthEvents();
-        RemoveSelectionEvents();
-        RemoveGroupEvents();
-    }
-
-    protected virtual void RemoveHealthEvents()
-    {
-        EventManager.StopAllListening(this, healthEvent);
-    }
-    protected virtual void RemoveSelectionEvents()
-    {
-        EventManager.StopAllListening(this, selectOwnEvent);
-        EventManager.StopAllListening(this, deselectOwnEvent);
-    }
-
-    protected virtual void RemoveGroupEvents()
-    {
-        EventManager.StopAllListening(this, deselectGroupEvent);
-        EventManager.StopAllListening(this, selectToGroupEvent);
-    }
-
-    protected virtual void Start()
-    {
-        gridGraph.AddSelectable(this);
-    }
 
 
     protected virtual void Update()
     {
     }
 
-    public virtual void SelectOwn()
-    {
-        SetSelection(true, owner);
-    }
-
-    public virtual void DeselectOwn()
-    {
-        SetSelection(false, owner);
-    }
-    protected virtual void SetSelection(bool selected, Player player)
+    public virtual void SetSelection(bool selected, Player player, BottomBar bottomBar)
     {
         Selected = selected;
-        BottomBarUI(selected, player);
+        selector.SetActive(selected);
+        healthBarCanvas.SetActive(selected);
+        if (hasAuthority)
+            bottomBar.SetActive(gameState, this, selected);
     }
 
-    protected virtual void BottomBarUI(bool selected, Player player)
-    {
-        nameText.gameObject.SetActive(selected);
-        selectedObjectText.gameObject.SetActive(selected);
-    }
 
-    protected virtual void DrawBottomBar()
-    {
-        DrawNameText();
-        DrawSelectedObjectText();
-    }
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
     public virtual void RightMouseClickObject(Selectable hitObject) { }
     public virtual Job CreateJob(Commandable worker)
@@ -158,4 +77,11 @@ public abstract class Selectable : MonoBehaviour {
         healthBar.fillAmount = value;
     }
 
+    public virtual void RemoveBottomBar(Text nameText, Text selectedObjectText) { }
+
+    protected virtual void OnDestroy()
+    {
+        if (Selected)
+            gameState.Deselect();
+    }
 }

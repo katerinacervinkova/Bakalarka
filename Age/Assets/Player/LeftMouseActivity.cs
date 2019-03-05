@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class LeftMouseActivity : MouseActivity {
 
+    public InputOptions inputOptions;
+
     public RectTransform selectionSquare;
     readonly float maxClickTime = 0.3f;
     float lastClickTime = 0;
@@ -12,14 +14,21 @@ public class LeftMouseActivity : MouseActivity {
     Vector3 squareStartPosition = Vector3.zero;
     bool isClicking = false;
 
-	
-	private void Update ()
+    protected override void Awake()
     {
-        if (player.BuildingToBuild != null)
+        base.Awake();
+        inputOptions = gameObject.GetComponent<InputOptions>();
+    }
+
+    private void Update ()
+    {
+        if (gameState == null)
+            return;
+        if (gameState.BuildingToBuild != null)
         {
             Vector3 hitPoint = FindHitPoint();
             hitPoint.y = 0;
-            player.BuildingToBuild.transform.position = hitPoint;
+            gameState.BuildingToBuild.transform.position = hitPoint;
         }
         if (!isClicking && !MouseInBounds())
             return;
@@ -40,7 +49,7 @@ public class LeftMouseActivity : MouseActivity {
         lastClickTime = Time.time;
         hitObject = FindHitObject();
         hitPoint = FindHitPoint();
-        if (hitPoint == player.gameWindow.InvalidPosition)
+        if (hitPoint == gameWindow.InvalidPosition)
             return;
         isClicking = true;
         squareStartPosition = Input.mousePosition;
@@ -49,8 +58,6 @@ public class LeftMouseActivity : MouseActivity {
     private void LeftMouseRelease()
     {
         isClicking = false;
-        if (player.SelectedObject && player.BuildingToBuild == null)
-            EventManager.TriggerEvent(player.SelectedObject, Selectable.deselectOwnEvent);
         if (Time.time - lastClickTime < maxClickTime)
             LeftMouseClick();
         else
@@ -59,46 +66,35 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (player.BuildingToBuild != null && hitPoint != player.gameWindow.InvalidPosition)
+        if (gameState.SelectedObject && gameState.BuildingToBuild == null)
+            gameState.Deselect();
+        if (gameState.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
         {
-            player.BuildingToBuild.PlaceBuilding();
-            player.Worker.SetGoal(player.BuildingToBuild);
-            player.RemoveWorkerAndBuilding();
+            gameState.PlaceBuilding();
             return;
         }
-        if (!hitObject || hitPoint == player.gameWindow.InvalidPosition)
+        if (!hitObject || hitPoint == gameWindow.InvalidPosition)
             return;
         if (hitObject.name == "Map")
-            player.SelectedObject = null;
+            gameState.SelectedObject = null;
         else
         {
             Selectable selectedObject = hitObject.transform.GetComponent<Selectable>();
             if (!selectedObject)
                 return;
-            player.SelectedObject = selectedObject;
-            EventManager.TriggerEvent(selectedObject, Selectable.selectOwnEvent);
+            gameState.Select(selectedObject);
         }
     }
     private void LeftMouseDrag()
     {
-        player.inputOptions.MoveCameraEnabled = true;
+        inputOptions.MoveCameraEnabled = true;
         selectionSquare.gameObject.SetActive(false);
         var selectedUnits = new List<Unit>();
 
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
 
-        foreach (Unit unit in player.units)
-            if (IsWithinRectangle(topLeft, bottomRight, unit.transform))
-                selectedUnits.Add(unit);
-
-        if (selectedUnits.Count > 0)
-        {
-            player.SelectedObject = null;
-            Regiment regiment = player.factory.CreateRegiment(player, selectedUnits);
-            player.SelectedObject = regiment;
-            EventManager.TriggerEvent(regiment, Selectable.selectOwnEvent);
-        }
+        gameState.SelectUnits(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform));
     }
 
     private void DrawRectangle()
@@ -106,7 +102,7 @@ public class LeftMouseActivity : MouseActivity {
         if (Time.time - lastClickTime < maxClickTime)
             return;
 
-        player.inputOptions.MoveCameraEnabled = false;
+        inputOptions.MoveCameraEnabled = false;
         if (!selectionSquare.gameObject.activeInHierarchy)
             selectionSquare.gameObject.SetActive(true);
 
@@ -126,10 +122,10 @@ public class LeftMouseActivity : MouseActivity {
     {
         Vector3 squareEndPosition = Input.mousePosition;
 
-        squareEndPosition.x = Math.Max(player.gameWindow.LeftBorder, squareEndPosition.x);
-        squareEndPosition.y = Math.Max(player.gameWindow.BottomBorder, squareEndPosition.y);
-        squareEndPosition.x = Math.Min(player.gameWindow.RightBorder, squareEndPosition.x);
-        squareEndPosition.y = Math.Min(player.gameWindow.TopBorder, squareEndPosition.y);
+        squareEndPosition.x = Math.Max(gameWindow.LeftBorder, squareEndPosition.x);
+        squareEndPosition.y = Math.Max(gameWindow.BottomBorder, squareEndPosition.y);
+        squareEndPosition.x = Math.Min(gameWindow.RightBorder, squareEndPosition.x);
+        squareEndPosition.y = Math.Min(gameWindow.TopBorder, squareEndPosition.y);
 
         topLeft = new Vector3(Math.Min(squareStartPosition.x, squareEndPosition.x), Math.Min(squareStartPosition.y, squareEndPosition.y), 0);
         bottomRight = new Vector3(Math.Max(squareStartPosition.x, squareEndPosition.x), Math.Max(squareStartPosition.y, squareEndPosition.y), 0);

@@ -2,117 +2,94 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class Factory : MonoBehaviour
 {
-    public Player player;
-
     protected System.Random rnd;
     protected int sumOfProperties = 35;
 
+    public GameState gameState;
     public TemporaryBuilding temporaryBuildingPrefab;
     public Building mainBuildingPrefab;
     public Regiment regimentPrefab;
     public Unit unitPrefab;
     public Scheduler schedulerPrefab;
-    public GridGraph gridGraph;
     public BottomBar bottomBar;
 
     public Image panel;
     protected Text selectedAttributesText;
     protected Text nameText;
 
+    private void Awake()
+    {
+        bottomBar = GameObject.Find("Panel").GetComponent<BottomBar>();
+    }
     protected virtual void Start()
     {
         regimentPrefab.gameObject.SetActive(false);
         unitPrefab.gameObject.SetActive(false);
         schedulerPrefab.gameObject.SetActive(false);
         rnd = new System.Random();
+        panel = GameObject.Find("Panel").GetComponent<Image>();
         selectedAttributesText = panel.transform.Find("selectableAttributesText").GetComponent<Text>();
         nameText = panel.transform.Find("nameText").GetComponent<Text>();
-        CreateMainBuilding(new Vector3());
     }
-
+   
     public Regiment CreateRegiment(Player owner, List<Unit> units)
     {
         Regiment regiment = Instantiate(regimentPrefab);
-        regiment.bottomBar = bottomBar;
-        regiment.selectedObjectText = selectedAttributesText;
-        regiment.nameText = nameText;
         regiment.owner = owner;
         regiment.SetUnits(units);
-        regiment.gridGraph = gridGraph;
         regiment.Name = string.Format("Units({0})", units.Count);
         regiment.gameObject.SetActive(true);
-        EventManager.StartListening(regiment, Selectable.selectOwnEvent, () => bottomBar.SetActive(regiment, true));
-        EventManager.StartListening(regiment, Selectable.deselectOwnEvent, () => bottomBar.SetActive(regiment, false));
         return regiment;
     }
 
-    public Unit CreateUnit(Player owner, Vector3 position, Vector3 destination)
+    public Unit CreateUnit(Vector3 spawnPoint)
     {
-        Unit unit = Instantiate(unitPrefab, gridGraph.ClosestDestination(position), Quaternion.identity);
-
+        Unit unit = Instantiate(unitPrefab, spawnPoint, Quaternion.identity);
         unit.Name = "Unit";
-        unit.owner = owner;
-        unit.selectedObjectText = selectedAttributesText;
-        unit.nameText = nameText;
-        unit.bottomBar = bottomBar;
 
-        owner.units.Add(unit);
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
-        EventManager.StartListening(unit, Selectable.selectOwnEvent, () => bottomBar.SetActive(unit, true));
-        EventManager.StartListening(unit, Selectable.deselectOwnEvent, () => bottomBar.SetActive(unit, false));
-        if (destination != position)
-            unit.SetGo(destination);
+
         return unit;
     }
 
-    public TemporaryBuilding CreateTemporaryMainBuilding()
+    public TemporaryBuilding CreateTemporaryMainBuilding(Player player)
     {
         TemporaryBuilding building = Instantiate(temporaryBuildingPrefab, Vector3.zero, Quaternion.identity);
-        building.bottomBar = bottomBar;
-        building.owner = player;
-        building.nameText = nameText;
-        building.selectedObjectText = selectedAttributesText;
-        building.gameObject.SetActive(true);
+        building.playerID = player.netId;
+        player.temporaryBuildings.Add(building);
         return building;
     }
 
     public Building CreateMainBuilding(TemporaryBuilding tempBuilding)
     {
-        return CreateMainBuilding(tempBuilding.transform.position);
+        return CreateMainBuilding(tempBuilding.transform.position, tempBuilding.owner);
     }
 
-    private Building CreateMainBuilding(Vector3 position)
+    private Building CreateMainBuilding(Vector3 position, Player player)
     {
         Building building = Instantiate(mainBuildingPrefab, position, Quaternion.identity);
 
-        building.gridGraph = gridGraph;
         building.name = "Building";
-        building.owner = player;
-        building.nameText = nameText;
-        building.selectedObjectText = selectedAttributesText;
+        building.playerID = player.netId;
         building.gameObject.SetActive(true);
-        EventManager.StartListening(building, Selectable.selectOwnEvent, () => bottomBar.SetActive(building, true));
-        EventManager.StartListening(building, Selectable.deselectOwnEvent, () => bottomBar.SetActive(building, false));
 
         return building;
     }
 
-    public Scheduler CreateScheduler(List<Scheduler> schedulers, Action action, Image image)
+    public Scheduler CreateScheduler(Action action, Image image)
     {
         Vector3 position = new Vector3(-300, -30, 0);
-        position.x += 50 * schedulers.Count;
         Scheduler scheduler = Instantiate(schedulerPrefab, position, Quaternion.identity);
         scheduler.transform.SetParent(panel.transform, false);
-        scheduler.schedulers = schedulers;
         scheduler.ActionToPerform = action;
         scheduler.image = image;
         scheduler.Speed = 1f / 1;
 
-        scheduler.gameObject.SetActive(true);
         return scheduler;
     }
 

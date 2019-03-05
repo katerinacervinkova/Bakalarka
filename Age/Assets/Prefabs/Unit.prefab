@@ -74,6 +74,8 @@ GameObject:
   - component: {fileID: 136965531989801532}
   - component: {fileID: 114407188658032912}
   - component: {fileID: 195850367930928230}
+  - component: {fileID: 114057210403433038}
+  - component: {fileID: 114301838792173518}
   m_Layer: 9
   m_Name: Unit
   m_TagString: Untagged
@@ -113,7 +115,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4053542255012794
 Transform:
   m_ObjectHideFlags: 1
@@ -181,6 +183,59 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1423911953273262}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114057210403433038
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1499843512056606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 48
+    i1: 101
+    i2: 8
+    i3: 177
+    i4: 161
+    i5: 28
+    i6: 248
+    i7: 212
+    i8: 123
+    i9: 5
+    i10: 91
+    i11: 120
+    i12: 179
+    i13: 150
+    i14: 94
+    i15: 10
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &114301838792173518
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1499843512056606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114367195672354048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -210,11 +265,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: 
   Image: {fileID: 0}
-  selectedObjectText: {fileID: 0}
-  nameText: {fileID: 0}
-  gridGraph: {fileID: 0}
-  bottomBar: {fileID: 0}
   owner: {fileID: 0}
+  Health: 50
+  MaxHealth: 100
+  Strength: 0
+  Intelligence: 0
+  Agility: 0
+  Healing: 0
+  Crafting: 0
+  Accuracy: 0
 --- !u!114 &114799978308901470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -226,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: ab9a13a6429aacf4a92eb0ea2acd8e37, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
@@ -274,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 3cfb536652a4b5d43a7f0eca0fdc78ce, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 0, g: 1, b: 0.048275948, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
