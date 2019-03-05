@@ -59,13 +59,13 @@ public class TemporaryBuilding : Selectable
         transform.position = position;
         RpcSetPosition(position);
         placed = true;
-        gameState.AddSelectable(this);
     }
 
     [ClientRpc]
     private void RpcSetPosition(Vector3 position)
     {
         transform.position = position;
+        gameState.AddSelectable(this);
     }
 
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)

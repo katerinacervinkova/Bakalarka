@@ -53,6 +53,8 @@ public class Unit : Commandable
 
     protected virtual void JobUpdate()
     {
+        if (!hasAuthority)
+            return;
         if (job != null && job.Completed)
             job = job.Following;
         job?.Do(this);
@@ -96,6 +98,7 @@ public class Unit : Commandable
             gameState.AddSelectable(this);
         else
             gameState.RemoveSelectable(this);
+        arrived = value;
     }
     private void Repath()
     {
@@ -148,6 +151,7 @@ public class Unit : Commandable
 
     public override void SetDestination(Vector3 destination)
     {
+        arrived = false;
         CmdChangeArrived(false);
         desiredLocation = gameState.GetClosestDestination(destination);
         steeringLocation = desiredLocation;
