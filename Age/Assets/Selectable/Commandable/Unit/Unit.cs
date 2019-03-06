@@ -24,13 +24,15 @@ public class Unit : Commandable
     [SyncVar]
     public int Accuracy;
 
-    protected NavMeshAgent agent { get; set; }
+    private Job job;
+
+    protected NavMeshAgent Agent { get; set; }
 
     private bool pending = false;
 
     [SyncVar(hook = "OnArrivedChange")]
     private bool arrived;
-    public override bool Arrived => arrived;
+    public bool Arrived => arrived;
 
     internal void ResetJob()
     {
@@ -39,11 +41,17 @@ public class Unit : Commandable
 
     protected void Awake()
     {
-        agent = gameObject.GetComponent<NavMeshAgent>();
-        agent.stoppingDistance = 0;
+        Agent = gameObject.GetComponent<NavMeshAgent>();
+        Agent.stoppingDistance = 0;
         desiredLocation = steeringLocation = transform.position;
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        transform.Find("Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
+        gameState.AddSelectable(this);
+    }
     protected override void Update()
     {
         Move();
@@ -63,7 +71,7 @@ public class Unit : Commandable
 
     protected void Move()
     {
-        if (!hasAuthority || arrived || agent.pathPending)
+        if (!hasAuthority || arrived || Agent.pathPending)
             return;
         if (pending)
         {
@@ -77,7 +85,7 @@ public class Unit : Commandable
             if (AlmostThere())
                 CmdChangeArrived(true);
         }
-        else if (gameState.IsOccupied(agent.steeringTarget))
+        else if (gameState.IsOccupied(Agent.steeringTarget))
             Repath();
         
     }
@@ -103,23 +111,17 @@ public class Unit : Commandable
     private void Repath()
     {
         steeringLocation = gameState.GetClosestUnoccupiedDestination(desiredLocation);
-        if (steeringLocation != agent.pathEndPosition)
-            agent.SetDestination(steeringLocation);
+        if (steeringLocation != Agent.pathEndPosition)
+            Agent.SetDestination(steeringLocation);
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
         if (!hasAuthority)
             return;
-        Reg?.Remove(this);
-        Reg = null;
         job = new JobGo(this, hitPoint);
     }
 
-    public override void RightMouseClickObject(Selectable hitObject)
-    {
-        SetGoal(hitObject);
-    }
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
         nameText.text = Name;
@@ -141,7 +143,7 @@ public class Unit : Commandable
     public override void SetGoal(Selectable goal)
     {
         Job following = goal.CreateJob(this);
-        job = new JobGo(this as Unit, goal.transform.position, following);
+        job = new JobGo(this, goal.transform.position, following);
     }
 
     public void SetJob(Job job)
@@ -149,13 +151,13 @@ public class Unit : Commandable
         this.job = job;
     }
 
-    public override void SetDestination(Vector3 destination)
+    public void SetDestination(Vector3 destination)
     {
         arrived = false;
         CmdChangeArrived(false);
         desiredLocation = gameState.GetClosestDestination(destination);
         steeringLocation = desiredLocation;
-        agent.SetDestination(steeringLocation);
+        Agent.SetDestination(steeringLocation);
         pending = true;
     }
 }

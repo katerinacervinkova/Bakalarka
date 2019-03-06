@@ -2,17 +2,11 @@
 
 public abstract class Commandable : Selectable {
 
-    protected Job job;
-    public abstract void SetDestination(Vector3 destination);
-    public abstract bool Arrived { get; }
-
     public abstract void SetGoal(Selectable goal);
-
-    public void SetGo(Vector3 destination)
+    public override void RightMouseClickObject(Selectable hitObject)
     {
-        job = new JobGo(this as Unit, destination);
+        SetGoal(hitObject);
     }
- 
     protected override Job CreateOwnJob(Commandable worker)
     {
         return null;

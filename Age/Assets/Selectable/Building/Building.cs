@@ -15,6 +15,14 @@ public class Building : Selectable {
         DrawHealthBar();
         gameState.AddSelectable(this);
     }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
+
+    }
     protected override void Update()
     {
         if (animating && schedulers.Count == 0)

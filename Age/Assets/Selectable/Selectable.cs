@@ -36,14 +36,14 @@ public abstract class Selectable : NetworkBehaviour {
     public override void OnStartClient()
     {
         base.OnStartClient();
+        gameState = GameObject.Find("Factory").GetComponent<Factory>().gameState;
         owner = ClientScene.objects[playerID].GetComponent<Player>();
-        gameState = owner.GetComponent<GameState>();
         selector = transform.Find("SelectionProjector").gameObject;
+        selector.GetComponent<Projector>().material.color = owner.color;
         selector.SetActive(false);
         healthBarCanvas = transform.Find("Canvas").gameObject;
         healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
         healthBarRotation = healthBarCanvas.transform.rotation;
-        selector.GetComponent<Projector>().material.color = owner.color;
     }
 
 
@@ -52,12 +52,14 @@ public abstract class Selectable : NetworkBehaviour {
     {
     }
 
-    public virtual void SetSelection(bool selected, Player player, BottomBar bottomBar)
+    public virtual void SetSelection(bool selected, Player player, BottomBar bottomBar = null)
     {
         Selected = selected;
         selector.SetActive(selected);
         healthBarCanvas.SetActive(selected);
-        if (hasAuthority)
+        if (selected)
+            DrawHealthBar();
+        if (hasAuthority && bottomBar)
             bottomBar.SetActive(gameState, this, selected);
     }
 

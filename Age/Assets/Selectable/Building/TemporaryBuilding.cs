@@ -12,6 +12,11 @@ public class TemporaryBuilding : Selectable
     [SyncVar(hook = "OnProgressChange")]
     private float progress = 0;
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
+    }
     private void OnPlacedChange(bool placed)
     {
         gameObject.SetActive(true);
@@ -19,8 +24,9 @@ public class TemporaryBuilding : Selectable
 
     private void OnProgressChange(float newProgress)
     {
-        gameState.OnStateChange(this);
         progress = newProgress;
+        gameState.OnStateChange(this);
+        DrawHealthBar();
     }
 
     [ClientRpc]
@@ -28,7 +34,7 @@ public class TemporaryBuilding : Selectable
     {
         if (hasAuthority)
         {
-            gameState.SetWorkerAndBuilding(this, ClientScene.objects[workerID].GetComponent<Commandable>());
+            gameState.SetWorkerAndBuilding(this, ClientScene.objects[workerID].GetComponent<Unit>());
             gameObject.SetActive(true);
         }
         else

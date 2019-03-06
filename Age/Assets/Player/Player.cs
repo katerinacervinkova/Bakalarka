@@ -6,25 +6,27 @@ using UnityEngine.Networking;
 public class Player : NetworkBehaviour
 {
     public string Name;
+
+    [SyncVar]
     public Color color;
     public List<Unit> units;
     public List<Building> buildings;
     public List<TemporaryBuilding> temporaryBuildings;
-    public GameState gameState;
+
+    public GameObject gameStatePrefab;
 
 
-    private void Awake()
-    {
-        gameState = gameObject.GetComponent<GameState>();
-        gameState.player = this;
-    }
     public override void OnStartLocalPlayer()
     {
-        if (isLocalPlayer)
-            gameState.CmdCreateUnit(transform.position, transform.position);
+        CmdCreateState(netId);
     }
 
-    void Update () {
-
+    [Command]
+    private void CmdCreateState(NetworkInstanceId networkId)
+    {
+        GameState gameState = Instantiate(gameStatePrefab, transform.position, Quaternion.identity).GetComponent<GameState>();
+        gameState.playerId = netId;
+        NetworkServer.SpawnWithClientAuthority(gameState.gameObject, gameObject);
+        
     }
 }

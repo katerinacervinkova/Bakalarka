@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class BottomBar : MonoBehaviour {
@@ -24,9 +23,14 @@ public class BottomBar : MonoBehaviour {
                 CreateUnitButton.onClick.AddListener(() => gameState.CreateUnit(selectable as Building));
                 CreateUnitButton.gameObject.SetActive(true);
             }
-            else
+            else if (selectable is Unit)
             {
-                CreateMainBuildingButton.onClick.AddListener(() => gameState.CreateTemporaryMainBuilding(selectable as Commandable));
+                CreateMainBuildingButton.onClick.AddListener(() => gameState.CreateTemporaryMainBuilding(selectable as Unit));
+                CreateMainBuildingButton.gameObject.SetActive(true);
+            }
+            else if (selectable is Regiment)
+            {
+                CreateMainBuildingButton.onClick.AddListener(() => gameState.CreateTemporaryMainBuilding(((Regiment)selectable).GetFirstUnit()));
                 CreateMainBuildingButton.gameObject.SetActive(true);
             }
         }

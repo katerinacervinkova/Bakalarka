@@ -40,6 +40,7 @@ public class Factory : MonoBehaviour
     {
         Regiment regiment = Instantiate(regimentPrefab);
         regiment.owner = owner;
+        regiment.SetGameState(gameState);
         regiment.SetUnits(units);
         regiment.Name = string.Format("Units({0})", units.Count);
         regiment.gameObject.SetActive(true);

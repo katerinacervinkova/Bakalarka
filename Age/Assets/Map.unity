@@ -291,7 +291,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 139075541}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 368.5, y: 29.999996, z: 0}
+  m_LocalPosition: {x: 322.5, y: 29.999996, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1980441332}
@@ -461,7 +461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 0}
-  gameWindow: {fileID: 0}
+  gameWindow: {fileID: 317788822}
 --- !u!114 &317788827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,8 +474,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 0}
-  gameWindow: {fileID: 0}
-  inputOptions: {fileID: 0}
+  gameWindow: {fileID: 317788822}
+  inputOptions: {fileID: 317788823}
   selectionSquare: {fileID: 51918935}
 --- !u!1 &404542571
 GameObject:
@@ -504,7 +504,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 404542571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 368.5, y: 30, z: 0}
+  m_LocalPosition: {x: 322.5, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1838823368}
@@ -680,7 +680,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 614873104}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 433.5, y: 208, z: 0}
+  m_LocalPosition: {x: 387.5, y: 208, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 51918935}
@@ -1045,7 +1045,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1242759289}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -193.5, y: 190, z: 0}
+  m_LocalPosition: {x: -147.5, y: 190, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1373305565}
@@ -1131,7 +1131,7 @@ MonoBehaviour:
     type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
-  unitPrefab: {fileID: 114407188658032912, guid: 306508b1a11cf8d47b055b78b3965e0a,
+  unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,
     type: 2}
   schedulerPrefab: {fileID: 114579649446729468, guid: be1cb3fc7927d1a4e973008936c54932,
     type: 2}
@@ -1269,7 +1269,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1600181565}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -193.5, y: 210, z: 0}
+  m_LocalPosition: {x: -147.5, y: 210, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1373305565}
@@ -1361,7 +1361,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1814874245}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 72db99a6a23b7b74eb3ba70015bf914b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetworkPort: 7777
@@ -1376,14 +1376,15 @@ MonoBehaviour:
   m_PlayerPrefab: {fileID: 1093172153997856, guid: 334456ac0e70088439c6338742cfa612,
     type: 2}
   m_AutoCreatePlayer: 1
-  m_PlayerSpawnMethod: 1
+  m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 
   m_SpawnPrefabs:
-  - {fileID: 1499843512056606, guid: 306508b1a11cf8d47b055b78b3965e0a, type: 2}
+  - {fileID: 1021678367712600, guid: 306508b1a11cf8d47b055b78b3965e0a, type: 2}
   - {fileID: 1290759734880566, guid: 28511fe201e0a7948b88664883879c86, type: 2}
   - {fileID: 1446933535886276, guid: 3ba219d0637c91c4fa92ead68f4596ab, type: 2}
   - {fileID: 1849905017281888, guid: c58c5ff0bde2c4c44a69884126aadf04, type: 2}
+  - {fileID: 1516820713746086, guid: f5aafb01196fc8c41a4a2ee540ad391c, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
