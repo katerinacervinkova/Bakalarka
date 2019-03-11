@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class TemporaryBuilding : Selectable
 {
     static readonly int maxProgress = 100;
-    [SyncVar(hook = "OnPlacedChange")]
+    [SyncVar]
     public bool placed = false;
 
     private Job buildJob = null;
@@ -16,10 +17,7 @@ public class TemporaryBuilding : Selectable
     {
         base.OnStartClient();
         transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
-    }
-    private void OnPlacedChange(bool placed)
-    {
-        gameObject.SetActive(true);
+
     }
 
     private void OnProgressChange(float newProgress)
@@ -30,11 +28,11 @@ public class TemporaryBuilding : Selectable
     }
 
     [ClientRpc]
-    public void RpcOnCreate(NetworkInstanceId workerID)
+    public void RpcOnCreate()
     {
         if (hasAuthority)
         {
-            gameState.SetWorkerAndBuilding(this, ClientScene.objects[workerID].GetComponent<Unit>());
+            gameState.SetWorkerAndBuilding(this);
             gameObject.SetActive(true);
         }
         else
@@ -48,6 +46,8 @@ public class TemporaryBuilding : Selectable
     }
     public void Build(Unit worker)
     {
+        if (!hasAuthority)
+            return;
         CmdBuild(worker.Strength);
         ControlProgress();
     }
@@ -56,7 +56,7 @@ public class TemporaryBuilding : Selectable
     {
         buildJob.Completed = progress >= maxProgress;
         if (buildJob.Completed)
-            gameState.CmdCreateMainBuilding(netId);
+            gameState.CreateMainBuilding(this);
     }
 
     [Command]
@@ -71,6 +71,8 @@ public class TemporaryBuilding : Selectable
     private void RpcSetPosition(Vector3 position)
     {
         transform.position = position;
+        gameObject.SetActive(true);
+        GetComponent<Collider>().enabled = true;
         gameState.AddSelectable(this);
     }
 
@@ -80,19 +82,23 @@ public class TemporaryBuilding : Selectable
         selectedObjectText.text = string.Format("progress {0}/{1}", progress, maxProgress);
     }
 
-    protected override Job CreateOwnJob(Commandable worker)
+    protected override Job GetOwnJob(Commandable worker)
     {
         if (buildJob == null)
             buildJob = new JobBuild(this);
         return buildJob;
     }
 
-    protected override Job CreateEnemyJob(Commandable worker)
+    protected override Job GetEnemyJob(Commandable worker)
     {
         return new AttackJob(this);
     }
     public override void DrawHealthBar()
     {
         DrawProgressBar(progress / maxProgress);
+    }
+
+    protected override void InitTransactions()
+    {
     }
 }

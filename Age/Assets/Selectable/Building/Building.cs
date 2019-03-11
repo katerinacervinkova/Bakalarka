@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Building : Selectable {
@@ -71,12 +72,12 @@ public class Building : Selectable {
         });
     }
 
-    protected override Job CreateOwnJob(Commandable worker)
+    protected override Job GetOwnJob(Commandable worker)
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
-    protected override Job CreateEnemyJob(Commandable worker)
+    protected override Job GetEnemyJob(Commandable worker)
     {
         return new AttackJob(this);
     }
@@ -84,5 +85,10 @@ public class Building : Selectable {
     public override void DrawHealthBar()
     {
         DrawProgressBar(Health / (float)MaxHealth);
+    }
+
+    protected override void InitTransactions()
+    {
+        Transactions.Add(new Transaction("Create a unit", 20, () => gameState.CreateUnit(this)));
     }
 }

@@ -19,10 +19,12 @@ public class JobMine : Job {
 
     public override void Do(Unit worker)
     {
+        if (!resource)
+            return;
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            resource.Mine(worker);
+            worker.Mine(resource);
             timeElapsed -= minTime;
         }
     }

@@ -9,10 +9,11 @@ public class GameState : NetworkBehaviour {
 
     public Unit unitPrefab;
     public Player player;
-    public GridGraph gridGraph;
     public BottomBar bottomBar;
     public Factory factory;
     public NavMeshSurface navMeshSurface;
+
+    private GridGraph gridGraph;
 
     private List<Unit> units;
     private List<Building> buildings;
@@ -23,11 +24,24 @@ public class GameState : NetworkBehaviour {
 
     public Text nameText;
     public Text selectedObjectText;
-
-    public Commandable Worker { get; private set; }
+    public Text resourceText;
 
     // možná?
     private List<TemporaryBuilding> temporaryBuildings;
+
+    public void MoveBuildingToBuild(Vector3 hitPoint)
+    {
+        // pokud je to misto zabrane, nepohne se
+        // TODO
+        BuildingToBuild.transform.position = gridGraph.ClosestDestination(hitPoint);
+        if (gridGraph.IsOccupied(BuildingToBuild))
+            return;
+    }
+
+    public void OnResourceChange()
+    {
+        player.DrawBottomBar(resourceText);
+    }
 
     [SyncVar]
     public NetworkInstanceId playerId;
@@ -38,19 +52,15 @@ public class GameState : NetworkBehaviour {
         buildings = new List<Building>();
         resources = new List<Resource>();
         temporaryBuildings = new List<TemporaryBuilding>();
+        gridGraph = GameObject.Find("Map").GetComponent<GridGraph>();
 
         nameText = GameObject.Find("Canvas/Panel/nameText").GetComponent<Text>();
         selectedObjectText = GameObject.Find("Canvas/Panel/selectableAttributesText").GetComponent<Text>();
+        resourceText = GameObject.Find("Canvas/Panel/resourceText").GetComponent<Text>();
         factory = GameObject.Find("Factory").GetComponent<Factory>();
-        factory.gameState = this;
-        GameObject inputManager = GameObject.Find("InputManager");
-        inputManager.GetComponent<LeftMouseActivity>().gameState = this;
-        inputManager.GetComponent<RightMouseActivity>().gameState = this;
-        gridGraph = GameObject.Find("Map").GetComponent<GridGraph>();
         bottomBar = GameObject.Find("Canvas/Panel").GetComponent<BottomBar>();
         navMeshSurface = GameObject.Find("NavMesh").GetComponent<NavMeshSurface>();
     }
-
 
     public override void OnStartClient()
     {
@@ -59,8 +69,14 @@ public class GameState : NetworkBehaviour {
 
     public override void OnStartAuthority()
     {
-        CmdCreateUnit(transform.position, transform.position);
+        factory.gameState = this;
+        GameObject inputManager = GameObject.Find("InputManager");
+        inputManager.GetComponent<LeftMouseActivity>().gameState = this;
+        inputManager.GetComponent<RightMouseActivity>().gameState = this;
+        if (isServer)
+            CmdCreateResource(new Vector3(0, 0, 4), netId);
     }
+
 
     internal void AddSelectable(Selectable selectable)
     {
@@ -86,21 +102,18 @@ public class GameState : NetworkBehaviour {
         return gridGraph.IsOccupied(location);
     }
 
-    public void SetWorkerAndBuilding(TemporaryBuilding building, Unit worker)
+    public void SetWorkerAndBuilding(TemporaryBuilding building)
     {
         BuildingToBuild = building;
-        if (worker.Reg == null)
-            Worker = worker;
-        else
-            Worker = worker.Reg;
     }
 
     public void PlaceBuilding()
     {
+        if (gridGraph.IsOccupied(BuildingToBuild))
+            return;
         BuildingToBuild.CmdPlaceBuilding(BuildingToBuild.transform.position);
-        Worker.SetGoal(BuildingToBuild);
+        ((Commandable)SelectedObject).SetGoal(BuildingToBuild);
         BuildingToBuild = null;
-        Worker = null;
     }
 
     public void OnStateChange(Selectable selectable)
@@ -150,26 +163,23 @@ public class GameState : NetworkBehaviour {
             Select(factory.CreateRegiment(player, u));
     }
 
-    public void CreateTemporaryMainBuilding(Unit unit)
+    public void CreateTemporaryMainBuilding()
     {
-        CmdCreateTempBuilding(unit.netId);
+        CmdCreateTempBuilding(netId);
+        UpdateNavMesh();
+    }
+
+    public void CreateMainBuilding(TemporaryBuilding tempBuilding)
+    {
+        CmdCreateMainBuilding(tempBuilding.netId, netId);
+        UpdateNavMesh();
     }
 
     public void CreateUnit(Building building)
     {
         building.AddScheduler(
-            factory.CreateScheduler(() => CmdCreateUnit(building.SpawnPoint, building.DefaultDestination), null)
+            factory.CreateScheduler(() => CmdCreateUnit(building.SpawnPoint, building.DefaultDestination, netId), null)
          );
-    }
-
-    [Command]
-    public void CmdCreateMainBuilding(NetworkInstanceId tempBuildingID)
-    {
-        var temporaryBuilding = NetworkServer.objects[tempBuildingID].GetComponent<TemporaryBuilding>();
-        Building building = factory.CreateMainBuilding(temporaryBuilding);
-        NetworkServer.SpawnWithClientAuthority(building.gameObject, player.gameObject);
-        player.buildings.Add(building);
-        NetworkServer.Destroy(NetworkServer.objects[tempBuildingID].gameObject);
     }
 
     private void UpdateNavMesh()
@@ -178,23 +188,79 @@ public class GameState : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdCreateUnit(Vector3 position, Vector3 destination)
+    public void CmdCreateResource(Vector3 position, NetworkInstanceId stateId)
     {
-        Unit unit = factory.CreateUnit(gridGraph.ClosestUnoccupiedDestination(position));
-        unit.playerID = player.netId;
-        player.units.Add(unit);
-        units.Add(unit);
-        NetworkServer.SpawnWithClientAuthority(unit.gameObject, player.gameObject);
+        GameState gameState = NetworkServer.objects[stateId].GetComponent<GameState>();
+        Resource gold = gameState.factory.CreateGold(gridGraph.ClosestUnoccupiedDestination(position));
+        NetworkServer.Spawn(gold.gameObject);
+    }
+
+    [Command]
+    public void CmdCreateUnit(Vector3 position, Vector3 destination, NetworkInstanceId stateId)
+    {
+        GameState gameState = NetworkServer.objects[stateId].GetComponent<GameState>();
+        Unit unit = gameState.factory.CreateUnit(gridGraph.ClosestUnoccupiedDestination(position), gameState.playerId);
+        NetworkServer.SpawnWithClientAuthority(unit.gameObject, gameState.player.gameObject);
+        RpcAddUnit(unit.netId, stateId);
         if (destination != position)
             unit.SetJob(new JobGo(unit, destination));
     }
 
-    [Command]
-    private void CmdCreateTempBuilding(NetworkInstanceId workerID)
+    [ClientRpc]
+    private void RpcAddUnit(NetworkInstanceId unitId, NetworkInstanceId stateId)
     {
-        var tempBuilding = factory.CreateTemporaryMainBuilding(player);
-        NetworkServer.SpawnWithClientAuthority(tempBuilding.gameObject, player.gameObject);
-        tempBuilding.RpcOnCreate(workerID);
-        UpdateNavMesh();
+        ClientScene.objects[stateId].GetComponent<GameState>().player.units.Add(ClientScene.objects[unitId].GetComponent<Unit>());
+    }
+
+    [ClientRpc]
+    private void RpcRemoveUnit(NetworkInstanceId unitId, NetworkInstanceId stateId)
+    {
+        ClientScene.objects[stateId].GetComponent<GameState>().player.units.Remove(ClientScene.objects[unitId].GetComponent<Unit>());
+    }
+
+    [Command]
+    public void CmdCreateTempBuilding(NetworkInstanceId stateId)
+    {
+        GameState gameState = NetworkServer.objects[stateId].GetComponent<GameState>();
+        var tempBuilding = gameState.factory.CreateTemporaryMainBuilding(gameState.playerId);
+        NetworkServer.SpawnWithClientAuthority(tempBuilding.gameObject, gameState.player.gameObject);
+        RpcAddTempBuilding(tempBuilding.netId, stateId);
+        tempBuilding.RpcOnCreate();
+    }
+
+    [ClientRpc]
+    private void RpcAddTempBuilding(NetworkInstanceId buildingId, NetworkInstanceId stateId)
+    {
+        ClientScene.objects[stateId].GetComponent<GameState>().player.temporaryBuildings.Add(ClientScene.objects[buildingId].GetComponent<TemporaryBuilding>());
+    }
+
+    [ClientRpc]
+    private void RpcRemoveTempBuilding(NetworkInstanceId buildingId, NetworkInstanceId stateId)
+    {
+        ClientScene.objects[stateId].GetComponent<GameState>().player.temporaryBuildings.Remove(ClientScene.objects[buildingId].GetComponent<TemporaryBuilding>());
+    }
+
+    [Command]
+    public void CmdCreateMainBuilding(NetworkInstanceId tempBuildingID, NetworkInstanceId stateId)
+    {
+        GameState gameState = NetworkServer.objects[stateId].GetComponent<GameState>();
+        var temporaryBuilding = NetworkServer.objects[tempBuildingID].GetComponent<TemporaryBuilding>();
+        Building building = gameState.factory.CreateMainBuilding(temporaryBuilding, gameState.playerId);
+        NetworkServer.SpawnWithClientAuthority(building.gameObject, gameState.player.gameObject);
+        RpcAddBuilding(building.netId, stateId);
+        //RpcRemoveTempBuilding(tempBuildingID, stateId);
+        NetworkServer.Destroy(NetworkServer.objects[tempBuildingID].gameObject);
+    }
+
+    [ClientRpc]
+    private void RpcAddBuilding(NetworkInstanceId buildingId, NetworkInstanceId stateId)
+    {
+        ClientScene.objects[stateId].GetComponent<GameState>().player.buildings.Add(ClientScene.objects[buildingId].GetComponent<Building>());
+    }
+
+    [ClientRpc]
+    private void RpcRemoveBuilding(NetworkInstanceId buildingId, NetworkInstanceId stateId)
+    {
+        ClientScene.objects[stateId].GetComponent<GameState>().player.buildings.Remove(ClientScene.objects[buildingId].GetComponent<Building>());
     }
 }

@@ -42,7 +42,6 @@ public class Unit : Commandable
     protected void Awake()
     {
         Agent = gameObject.GetComponent<NavMeshAgent>();
-        Agent.stoppingDistance = 0;
         desiredLocation = steeringLocation = transform.position;
     }
 
@@ -50,7 +49,6 @@ public class Unit : Commandable
     {
         base.OnStartClient();
         transform.Find("Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
-        gameState.AddSelectable(this);
     }
     protected override void Update()
     {
@@ -153,11 +151,24 @@ public class Unit : Commandable
 
     public void SetDestination(Vector3 destination)
     {
+        if (!hasAuthority)
+            return;
         arrived = false;
         CmdChangeArrived(false);
         desiredLocation = gameState.GetClosestDestination(destination);
         steeringLocation = desiredLocation;
         Agent.SetDestination(steeringLocation);
         pending = true;
+    }
+
+    public void Mine(Resource resource)
+    {
+        CmdMine(Strength, resource.netId);
+    }
+
+    [Command]
+    private void CmdMine(int strength, NetworkInstanceId resourceId)
+    {
+        NetworkServer.objects[resourceId].GetComponent<Resource>().CmdMine(strength, owner.netId);
     }
 }

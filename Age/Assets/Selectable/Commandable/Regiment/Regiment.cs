@@ -22,7 +22,7 @@ public class Regiment : Commandable {
         Selected = selected;
         foreach (Unit unit in units)
             unit.SetSelection(selected, player);
-        bottomBar.SetActive(gameState, this, selected);
+        bottomBar.SetActive(player, units[0].Transactions, selected);
     }
 
     public void SetGameState(GameState gameState)

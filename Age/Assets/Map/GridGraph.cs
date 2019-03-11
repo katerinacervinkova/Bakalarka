@@ -13,6 +13,20 @@ public class GridGraph : NetworkBehaviour {
         CreateGraph();
     }
 
+    /*private void Update()
+    {
+        for (int i = 0; i < graph.Length; i++)
+        {
+            for (int j = 0; j < graph[i].Length; j++)
+            {
+                var place = GraphToWorldCoordinates(i, j);
+                if (IsOccupied(place))
+                    Debug.DrawRay(GraphToWorldCoordinates(i, j), Vector3.up, Color.red);
+                else
+                    Debug.DrawRay(GraphToWorldCoordinates(i, j), Vector3.up);
+            }
+        }
+    }*/
     public Vector3 ClosestUnoccupiedDestination(Vector3 location)
     {
         Vector3Int loc = WorldToGraphCoordinates(location);
@@ -36,6 +50,19 @@ public class GridGraph : NetworkBehaviour {
         }
     }
 
+    internal bool IsOccupied(TemporaryBuilding buildingToBuild)
+    {
+        Bounds bounds = buildingToBuild.GetComponent<Collider>().bounds;
+        Vector3Int min = WorldToGraphCoordinates(bounds.min);
+        Vector3Int max = WorldToGraphCoordinates(bounds.max);
+        for (int i = min.x; i <= max.x; i++)
+            for (int j = min.z; j <= max.z; j++)
+                if (graph[i][j] != null)
+                    return true;
+        return false;
+
+    }
+
     private bool getLocation(ref Vector3 newLocation, int x, int z)
     {
         newLocation = new Vector3(x, 0, z);
@@ -52,7 +79,7 @@ public class GridGraph : NetworkBehaviour {
         return GraphToWorldCoordinates(WorldToGraphCoordinates(location));
     }
 
-    internal void Remove(Selectable selectable)
+    public void Remove(Selectable selectable)
     {
         for (int i = 0; i < graph.Length; i++)
             for (int j = 0; j < graph[i].Length; j++)
@@ -60,7 +87,7 @@ public class GridGraph : NetworkBehaviour {
                     graph[i][j] = null;
     }
 
-    internal void Add(Selectable selectable)
+    public void Add(Selectable selectable)
     {
         Bounds bounds = selectable.GetComponent<Collider>().bounds;
         Vector3Int min = WorldToGraphCoordinates(bounds.min);
@@ -70,6 +97,7 @@ public class GridGraph : NetworkBehaviour {
             for (int j = min.z; j <= max.z; j++)
                 graph[i][j] = selectable;
     }
+
 
     public bool IsOccupied(Vector3 location, bool worldCoordinates = true)
     {

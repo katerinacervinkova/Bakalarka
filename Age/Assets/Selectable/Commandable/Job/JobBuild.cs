@@ -17,7 +17,7 @@ public class JobBuild : Job {
 
     public override void Do(Unit worker)
     {
-        if (Vector3.Distance(buildingCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > 3)
+        if (!building || Vector3.Distance(buildingCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > 3)
         {
             worker.ResetJob();
             return;

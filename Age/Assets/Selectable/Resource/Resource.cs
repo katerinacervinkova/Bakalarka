@@ -1,59 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public abstract class Resource : Selectable {
 
     private Job miningJob = null;
 
-    private float capacity;
+    [SyncVar(hook = "OnCapacityChange")]
+    private int capacity = 0;
     protected abstract int MaxCapacity();
-    private float Capacity
-    {
-        get { return capacity; }
-        set { capacity = value; EventManager.TriggerEvent(this, miningEvent); }
-    }
-
+    public static readonly string miningEvent = "capacityChanged";
 
     protected void Start()
     {
         capacity = MaxCapacity();
     }
-
-    public static readonly string miningEvent = "capacityChanged";
+    public override void OnStartClient()
+    {
+        selector = transform.Find("SelectionProjector").gameObject;
+        selector.GetComponent<Projector>().material.color = Color.gray;
+        selector.SetActive(false);
+        healthBarCanvas = transform.Find("Canvas").gameObject;
+        healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
+        healthBarRotation = healthBarCanvas.transform.rotation;
+        InitGameState();
+    }
+    private void OnCapacityChange(int newCapacity)
+    {
+        capacity = newCapacity;
+        gameState.OnStateChange(this);
+        DrawHealthBar();
+    }
 
     public override void DrawHealthBar()
     {
-        DrawProgressBar(1);
+        DrawProgressBar(capacity / MaxCapacity());
     }
 
-    protected override Job CreateEnemyJob(Commandable worker)
-    {
-        return null;
-    }
-
-    protected override Job CreateOwnJob(Commandable worker)
+    protected override Job GetEnemyJob(Commandable worker)
     {
         if (miningJob == null)
             miningJob = new JobMine(this);
         return miningJob;
     }
 
-    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
+    protected override Job GetOwnJob(Commandable worker)
     {
-        selectedObjectText.text = string.Format("Capacity: {0}/{1}", Capacity, MaxCapacity());
+        return GetEnemyJob(worker);
     }
 
-    public void Mine(Unit worker)
+    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
-        Capacity -= worker.Strength;
+        selectedObjectText.text = string.Format("Capacity: {0}/{1}", capacity, MaxCapacity());
+    }
+
+    [Command]
+    public void CmdMine(int strength, NetworkInstanceId playerId)
+    {
+        int amount = Math.Min(strength, capacity);
+        capacity -= amount;
+        NetworkServer.objects[playerId].GetComponent<Player>().gold += amount;
+        ControlCapacity();
     }
 
     protected void ControlCapacity()
     {
-        miningJob.Completed = Capacity <= 0;
-        if (miningJob.Completed)
+        var job = GetOwnJob(null);
+        job.Completed = capacity <= 0;
+        if (job.Completed)
             Destroy(gameObject);
     }
+
+    protected override void InitTransactions() { }
 }

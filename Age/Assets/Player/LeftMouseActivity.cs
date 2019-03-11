@@ -28,7 +28,7 @@ public class LeftMouseActivity : MouseActivity {
         {
             Vector3 hitPoint = FindHitPoint();
             hitPoint.y = 0;
-            gameState.BuildingToBuild.transform.position = hitPoint;
+            gameState.MoveBuildingToBuild(hitPoint);
         }
         if (!isClicking && !MouseInBounds())
             return;

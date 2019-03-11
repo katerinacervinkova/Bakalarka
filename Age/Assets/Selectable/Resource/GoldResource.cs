@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 public class GoldResource : Resource
 {
@@ -9,6 +6,7 @@ public class GoldResource : Resource
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
         nameText.text = "Gold";
+        base.DrawBottomBar(nameText, selectedObjectText);
     }
 
     protected override int MaxCapacity()

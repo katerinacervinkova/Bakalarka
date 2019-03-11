@@ -14,6 +14,7 @@ public class Factory : MonoBehaviour
     public Building mainBuildingPrefab;
     public Regiment regimentPrefab;
     public Unit unitPrefab;
+    public Resource goldPrefab;
     public Scheduler schedulerPrefab;
     public BottomBar bottomBar;
 
@@ -47,39 +48,48 @@ public class Factory : MonoBehaviour
         return regiment;
     }
 
-    public Unit CreateUnit(Vector3 spawnPoint)
+    public Unit CreateUnit(Vector3 spawnPoint, NetworkInstanceId playerId)
     {
         Unit unit = Instantiate(unitPrefab, spawnPoint, Quaternion.identity);
         unit.Name = "Unit";
-
+        unit.playerID = playerId;
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
 
         return unit;
     }
 
-    public TemporaryBuilding CreateTemporaryMainBuilding(Player player)
+    public TemporaryBuilding CreateTemporaryMainBuilding(NetworkInstanceId playerId)
     {
         TemporaryBuilding building = Instantiate(temporaryBuildingPrefab, Vector3.zero, Quaternion.identity);
-        building.playerID = player.netId;
-        player.temporaryBuildings.Add(building);
+        building.playerID = playerId;
         return building;
     }
 
-    public Building CreateMainBuilding(TemporaryBuilding tempBuilding)
+    public Building CreateMainBuilding(TemporaryBuilding tempBuilding, NetworkInstanceId playerId)
     {
-        return CreateMainBuilding(tempBuilding.transform.position, tempBuilding.owner);
+        return CreateMainBuilding(tempBuilding.transform.position, playerId);
     }
 
-    private Building CreateMainBuilding(Vector3 position, Player player)
+    private Building CreateMainBuilding(Vector3 position, NetworkInstanceId playerId)
     {
         Building building = Instantiate(mainBuildingPrefab, position, Quaternion.identity);
 
         building.name = "Building";
-        building.playerID = player.netId;
+        building.playerID = playerId;
         building.gameObject.SetActive(true);
 
         return building;
+    }
+
+    public Resource CreateGold(Vector3 position)
+    {
+        Resource gold = Instantiate(goldPrefab, position, Quaternion.identity);
+
+        gold.name = "Gold";
+        gold.gameObject.SetActive(true);
+
+        return gold;
     }
 
     public Scheduler CreateScheduler(Action action, Image image)

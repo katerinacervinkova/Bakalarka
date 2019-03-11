@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -26,17 +27,19 @@ public abstract class Selectable : NetworkBehaviour {
     protected GameObject healthBarCanvas;
     protected GameObject selector;
     protected Image healthBar;
-    private Quaternion healthBarRotation;
+    protected Quaternion healthBarRotation;
+
+    public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
 
     public abstract void DrawBottomBar(Text nameText, Text selectedObjectText);
-    protected abstract Job CreateOwnJob(Commandable worker);
-    protected abstract Job CreateEnemyJob(Commandable worker);
+    protected abstract Job GetOwnJob(Commandable worker);
+    protected abstract Job GetEnemyJob(Commandable worker);
     public abstract void DrawHealthBar();
+    protected abstract void InitTransactions();
 
     public override void OnStartClient()
     {
         base.OnStartClient();
-        gameState = GameObject.Find("Factory").GetComponent<Factory>().gameState;
         owner = ClientScene.objects[playerID].GetComponent<Player>();
         selector = transform.Find("SelectionProjector").gameObject;
         selector.GetComponent<Projector>().material.color = owner.color;
@@ -44,13 +47,28 @@ public abstract class Selectable : NetworkBehaviour {
         healthBarCanvas = transform.Find("Canvas").gameObject;
         healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
         healthBarRotation = healthBarCanvas.transform.rotation;
+        InitGameState();
     }
 
-
-
-    protected virtual void Update()
+    public void InitGameState()
     {
+        if (gameState != null)
+            return;
+        var players = GameObject.Find("PlayerList").GetComponent<PlayerList>().players;
+        foreach (var player in players)
+            if (player.gameState && player.gameState.hasAuthority)
+            {
+                gameState = player.gameState;
+                gameState.AddSelectable(this);
+            }
     }
+
+    public override void OnStartAuthority()
+    {
+        InitTransactions();
+    }
+
+    protected virtual void Update() { }
 
     public virtual void SetSelection(bool selected, Player player, BottomBar bottomBar = null)
     {
@@ -60,7 +78,7 @@ public abstract class Selectable : NetworkBehaviour {
         if (selected)
             DrawHealthBar();
         if (hasAuthority && bottomBar)
-            bottomBar.SetActive(gameState, this, selected);
+            bottomBar.SetActive(owner, Transactions, selected);
     }
 
 
@@ -69,8 +87,8 @@ public abstract class Selectable : NetworkBehaviour {
     public virtual Job CreateJob(Commandable worker)
     {
         if (owner == worker.owner)
-            return CreateOwnJob(worker);
-        return CreateEnemyJob(worker);
+            return GetOwnJob(worker);
+        return GetEnemyJob(worker);
     }
 
     protected virtual void DrawProgressBar(float value)
