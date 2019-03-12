@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour
     private void OnGoldChange(int newGold)
     {
         gold = newGold;
-        gameState.OnResourceChange();
+        gameState?.OnResourceChange();
     }
 
     [Command]

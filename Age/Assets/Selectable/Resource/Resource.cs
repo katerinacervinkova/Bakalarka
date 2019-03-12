@@ -9,12 +9,10 @@ public abstract class Resource : Selectable {
 
     [SyncVar(hook = "OnCapacityChange")]
     private int capacity = 0;
-    protected abstract int MaxCapacity();
-    public static readonly string miningEvent = "capacityChanged";
-
+    protected abstract int MaxCapacity { get; }
     protected void Start()
     {
-        capacity = MaxCapacity();
+        capacity = MaxCapacity;
     }
     public override void OnStartClient()
     {
@@ -35,7 +33,7 @@ public abstract class Resource : Selectable {
 
     public override void DrawHealthBar()
     {
-        DrawProgressBar(capacity / MaxCapacity());
+        DrawProgressBar((float)capacity / MaxCapacity);
     }
 
     protected override Job GetEnemyJob(Commandable worker)
@@ -52,7 +50,7 @@ public abstract class Resource : Selectable {
 
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
-        selectedObjectText.text = string.Format("Capacity: {0}/{1}", capacity, MaxCapacity());
+        selectedObjectText.text = string.Format("Capacity: {0}/{1}", capacity, MaxCapacity);
     }
 
     [Command]
@@ -61,15 +59,16 @@ public abstract class Resource : Selectable {
         int amount = Math.Min(strength, capacity);
         capacity -= amount;
         NetworkServer.objects[playerId].GetComponent<Player>().gold += amount;
-        ControlCapacity();
+        CmdControlCapacity();
     }
 
-    protected void ControlCapacity()
+    [Command]
+    protected void CmdControlCapacity()
     {
         var job = GetOwnJob(null);
         job.Completed = capacity <= 0;
         if (job.Completed)
-            Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
     }
 
     protected override void InitTransactions() { }

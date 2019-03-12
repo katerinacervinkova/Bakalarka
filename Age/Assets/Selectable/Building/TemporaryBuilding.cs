@@ -42,7 +42,7 @@ public class TemporaryBuilding : Selectable
     [Command]
     private void CmdBuild(int strength)
     {
-        progress += strength;
+        progress += Math.Min(maxProgress - progress, strength);
     }
     public void Build(Unit worker)
     {
