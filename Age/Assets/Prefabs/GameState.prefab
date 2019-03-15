@@ -52,15 +52,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f811362e8bfb324ebb744952c400696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitPrefab: {fileID: 114407188658032912, guid: 306508b1a11cf8d47b055b78b3965e0a,
-    type: 2}
   player: {fileID: 0}
-  gridGraph: {fileID: 0}
-  bottomBar: {fileID: 0}
-  factory: {fileID: 0}
+  playerState: {fileID: 0}
   navMeshSurface: {fileID: 0}
-  nameText: {fileID: 0}
-  selectedObjectText: {fileID: 0}
 --- !u!114 &114775222442176142
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -92,4 +86,4 @@ MonoBehaviour:
     i14: 57
     i15: 28
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_LocalPlayerAuthority: 0

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public abstract class Selectable : NetworkBehaviour {
 
     protected GameState gameState;
+    protected PlayerState playerState;
 
     [SyncVar]
     public string Name;
@@ -18,7 +19,7 @@ public abstract class Selectable : NetworkBehaviour {
     public Player owner;
 
     [SyncVar]
-    public int Health = 50;
+    public int Health;
     [SyncVar]
     public int MaxHealth = 100;
 
@@ -40,6 +41,8 @@ public abstract class Selectable : NetworkBehaviour {
     public override void OnStartClient()
     {
         base.OnStartClient();
+        gameState = GameObject.Find("GameState").GetComponent<GameState>();
+        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
         owner = ClientScene.objects[playerID].GetComponent<Player>();
         selector = transform.Find("SelectionProjector").gameObject;
         selector.GetComponent<Projector>().material.color = owner.color;
@@ -47,20 +50,7 @@ public abstract class Selectable : NetworkBehaviour {
         healthBarCanvas = transform.Find("Canvas").gameObject;
         healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
         healthBarRotation = healthBarCanvas.transform.rotation;
-        InitGameState();
-    }
-
-    public void InitGameState()
-    {
-        if (gameState != null)
-            return;
-        var players = GameObject.Find("PlayerList").GetComponent<PlayerList>().players;
-        foreach (var player in players)
-            if (player.gameState && player.gameState.hasAuthority)
-            {
-                gameState = player.gameState;
-                gameState.AddSelectable(this);
-            }
+        Health = MaxHealth;
     }
 
     public override void OnStartAuthority()
@@ -78,7 +68,7 @@ public abstract class Selectable : NetworkBehaviour {
         if (selected)
             DrawHealthBar();
         if (hasAuthority && bottomBar)
-            bottomBar.SetActive(owner, Transactions, selected);
+            bottomBar.SetActive(Transactions, selected);
     }
 
 
@@ -101,7 +91,11 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected virtual void OnDestroy()
     {
+        if (GetEnemyJob(null) != null)
+         GetEnemyJob(null).Completed = true;
+        if (GetOwnJob(null) != null)
+            GetOwnJob(null).Completed = true;
         if (Selected)
-            gameState.Deselect();
+            playerState.Deselect();
     }
 }

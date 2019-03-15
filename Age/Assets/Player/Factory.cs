@@ -55,7 +55,6 @@ public class Factory : MonoBehaviour
         unit.playerID = playerId;
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
-
         return unit;
     }
 

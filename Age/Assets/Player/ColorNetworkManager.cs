@@ -5,6 +5,9 @@ using UnityEngine.Networking;
 public class ColorNetworkManager : NetworkManager {
 
     public List<Player> players = new List<Player>();
+    public GameObject mapPrefab;
+    public GameObject gameStatePrefab;
+
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {

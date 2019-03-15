@@ -13,7 +13,7 @@ public class GridGraph : NetworkBehaviour {
         CreateGraph();
     }
 
-    /*private void Update()
+    private void Update()
     {
         for (int i = 0; i < graph.Length; i++)
         {
@@ -26,7 +26,7 @@ public class GridGraph : NetworkBehaviour {
                     Debug.DrawRay(GraphToWorldCoordinates(i, j), Vector3.up);
             }
         }
-    }*/
+    }
     public Vector3 ClosestUnoccupiedDestination(Vector3 location)
     {
         Vector3Int loc = WorldToGraphCoordinates(location);
@@ -55,8 +55,8 @@ public class GridGraph : NetworkBehaviour {
         Bounds bounds = buildingToBuild.GetComponent<Collider>().bounds;
         Vector3Int min = WorldToGraphCoordinates(bounds.min);
         Vector3Int max = WorldToGraphCoordinates(bounds.max);
-        for (int i = min.x; i <= max.x; i++)
-            for (int j = min.z; j <= max.z; j++)
+        for (int i = Math.Max(0, min.x); i <= Math.Min(max.x, graph.Length - 1); i++)
+            for (int j = Math.Max(0, min.z); j <= Math.Min(max.z, graph[i].Length - 1); j++)
                 if (graph[i][j] != null)
                     return true;
         return false;
@@ -81,6 +81,8 @@ public class GridGraph : NetworkBehaviour {
 
     public void Remove(Selectable selectable)
     {
+        if (selectable == null)
+            return;
         for (int i = 0; i < graph.Length; i++)
             for (int j = 0; j < graph[i].Length; j++)
                 if (graph[i][j] == selectable)

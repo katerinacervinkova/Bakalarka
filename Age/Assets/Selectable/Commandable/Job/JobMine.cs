@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class JobMine : Job {
 
     private Resource resource;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
+    private Collider resourceCollider;
     public override Job Following
     {
         get
@@ -15,16 +14,23 @@ public class JobMine : Job {
         }
     }
 
-    public JobMine(Resource resource) { this.resource = resource; }
+    public JobMine(Resource resource)
+    {
+        this.resource = resource;
+        resourceCollider = resource.GetComponent<Collider>();
+    }
 
     public override void Do(Unit worker)
     {
-        if (!resource)
+        if (!resource || Vector3.Distance(resourceCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > 3)
+        {
+            worker.ResetJob();
             return;
+        }
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            worker.Mine(resource);
+            resource.Mine(worker);
             timeElapsed -= minTime;
         }
     }

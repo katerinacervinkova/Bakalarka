@@ -14,7 +14,6 @@ public class Building : Selectable {
     {
         DefaultDestination = SpawnPoint = transform.position;
         DrawHealthBar();
-        gameState.AddSelectable(this);
     }
 
     public override void OnStartClient()
@@ -22,8 +21,14 @@ public class Building : Selectable {
         base.OnStartClient();
         transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
         transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
-
     }
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+        playerState.buildings.Add(this);
+    }
+
     protected override void Update()
     {
         if (animating && schedulers.Count == 0)
@@ -89,6 +94,12 @@ public class Building : Selectable {
 
     protected override void InitTransactions()
     {
-        Transactions.Add(new Transaction("Create a unit", 20, () => gameState.CreateUnit(this)));
+        Transactions.Add(new Transaction("Create a unit", 20, () => owner.CreateUnit(this)));
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        playerState.buildings.Remove(this);
     }
 }

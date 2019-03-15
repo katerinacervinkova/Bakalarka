@@ -20,10 +20,17 @@ public class TemporaryBuilding : Selectable
 
     }
 
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+        playerState.SetWorkerAndBuilding(this);
+        playerState.temporaryBuildings.Add(this);
+    }
+
     private void OnProgressChange(float newProgress)
     {
         progress = newProgress;
-        gameState.OnStateChange(this);
+        playerState.OnStateChange(this);
         DrawHealthBar();
     }
 
@@ -31,10 +38,7 @@ public class TemporaryBuilding : Selectable
     public void RpcOnCreate()
     {
         if (hasAuthority)
-        {
-            gameState.SetWorkerAndBuilding(this);
             gameObject.SetActive(true);
-        }
         else
             gameObject.SetActive(false);
     }
@@ -56,24 +60,7 @@ public class TemporaryBuilding : Selectable
     {
         buildJob.Completed = progress >= maxProgress;
         if (buildJob.Completed)
-            gameState.CreateMainBuilding(this);
-    }
-
-    [Command]
-    public void CmdPlaceBuilding(Vector3 position)
-    {
-        transform.position = position;
-        RpcSetPosition(position);
-        placed = true;
-    }
-
-    [ClientRpc]
-    private void RpcSetPosition(Vector3 position)
-    {
-        transform.position = position;
-        gameObject.SetActive(true);
-        GetComponent<Collider>().enabled = true;
-        gameState.AddSelectable(this);
+            owner.CreateMainBuilding(this);
     }
 
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)
@@ -93,6 +80,7 @@ public class TemporaryBuilding : Selectable
     {
         return new AttackJob(this);
     }
+
     public override void DrawHealthBar()
     {
         DrawProgressBar(progress / maxProgress);
@@ -100,5 +88,11 @@ public class TemporaryBuilding : Selectable
 
     protected override void InitTransactions()
     {
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        playerState.temporaryBuildings.Remove(this);
     }
 }

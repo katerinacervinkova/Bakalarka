@@ -22,7 +22,7 @@ public class Regiment : Commandable {
         Selected = selected;
         foreach (Unit unit in units)
             unit.SetSelection(selected, player);
-        bottomBar.SetActive(player, units[0].Transactions, selected);
+        bottomBar.SetActive(units[0].Transactions, selected);
     }
 
     public void SetGameState(GameState gameState)
@@ -30,10 +30,6 @@ public class Regiment : Commandable {
         this.gameState = gameState;
     }
 
-    public Unit GetFirstUnit()
-    {
-        return units[0];
-    }
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
         units.ForEach(u => u.SetJob(new JobGo(u, hitPoint)));

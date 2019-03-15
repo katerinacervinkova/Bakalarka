@@ -22,13 +22,13 @@ public class LeftMouseActivity : MouseActivity {
 
     private void Update ()
     {
-        if (gameState == null)
+        if (playerState == null)
             return;
-        if (gameState.BuildingToBuild != null)
+        if (playerState.BuildingToBuild != null)
         {
             Vector3 hitPoint = FindHitPoint();
             hitPoint.y = 0;
-            gameState.MoveBuildingToBuild(hitPoint);
+            playerState.MoveBuildingToBuild(hitPoint);
         }
         if (!isClicking && !MouseInBounds())
             return;
@@ -66,23 +66,23 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (gameState.SelectedObject && gameState.BuildingToBuild == null)
-            gameState.Deselect();
-        if (gameState.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
+        if (playerState.SelectedObject && playerState.BuildingToBuild == null)
+            playerState.Deselect();
+        if (playerState.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
         {
-            gameState.PlaceBuilding();
+            playerState.PlaceBuilding();
             return;
         }
         if (!hitObject || hitPoint == gameWindow.InvalidPosition)
             return;
         if (hitObject.name == "Map")
-            gameState.SelectedObject = null;
+            playerState.SelectedObject = null;
         else
         {
             Selectable selectedObject = hitObject.transform.GetComponent<Selectable>();
             if (!selectedObject)
                 return;
-            gameState.Select(selectedObject);
+            playerState.Select(selectedObject);
         }
     }
     private void LeftMouseDrag()
@@ -94,7 +94,7 @@ public class LeftMouseActivity : MouseActivity {
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
 
-        gameState.SelectUnits(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform));
+        playerState.SelectUnits(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform));
     }
 
     private void DrawRectangle()

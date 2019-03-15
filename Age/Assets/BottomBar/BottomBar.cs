@@ -5,14 +5,15 @@ using UnityEngine.UI;
 public class BottomBar : MonoBehaviour {
 
     public List<Button> buttons;
+    public PlayerState playerState;
 
-    public void SetActive(Player player, List<Transaction> transactions, bool active)
+    public void SetActive(List<Transaction> transactions, bool active)
     {
         if (active)
             for (int i = 0; i < transactions.Count; i++)
             {
                 int k = i;
-                buttons[k].onClick.AddListener(() => transactions[k].Do(player));
+                buttons[k].onClick.AddListener(() => transactions[k].Do(playerState));
                 buttons[k].gameObject.SetActive(true);
                 buttons[k].GetComponentInChildren<Text>().text = transactions[k].name;
             }

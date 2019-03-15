@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 65820818076121314}
   - component: {fileID: 114363327289667068}
   - component: {fileID: 114267955546009990}
+  - component: {fileID: 208451262166154770}
   m_Layer: 0
   m_Name: Gold
   m_TagString: Untagged
@@ -295,10 +296,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c484cfaef197a458ea8ccfde8d4c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameState: {fileID: 0}
   Name: 
   Image: {fileID: 0}
   owner: {fileID: 0}
+  Health: 50
+  MaxHealth: 100
 --- !u!114 &114479603430119988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -365,6 +367,21 @@ Projector:
   m_IgnoreLayers:
     serializedVersion: 2
     m_Bits: 0
+--- !u!208 &208451262166154770
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1849905017281888}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!222 &222389359664775436
 CanvasRenderer:
   m_ObjectHideFlags: 1

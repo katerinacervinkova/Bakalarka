@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -30,9 +29,8 @@ public class Unit : Commandable
 
     private bool pending = false;
 
-    [SyncVar(hook = "OnArrivedChange")]
-    private bool arrived;
-    public bool Arrived => arrived;
+    [SyncVar]
+    public bool Arrived;
 
     internal void ResetJob()
     {
@@ -50,9 +48,16 @@ public class Unit : Commandable
         base.OnStartClient();
         transform.Find("Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
     }
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+        playerState.units.Add(this);
+    }
     protected override void Update()
     {
         Move();
+        Debug.DrawRay(steeringLocation, Vector3.up * 10, Color.blue);
+        Debug.DrawRay(desiredLocation, Vector3.up * 15, Color.green);
         JobUpdate();
         base.Update();
     }
@@ -69,7 +74,7 @@ public class Unit : Commandable
 
     protected void Move()
     {
-        if (!hasAuthority || arrived || Agent.pathPending)
+        if (!hasAuthority || Arrived || Agent.pathPending)
             return;
         if (pending)
         {
@@ -81,7 +86,7 @@ public class Unit : Commandable
             if (steeringLocation != desiredLocation)
                 Repath();
             if (AlmostThere())
-                CmdChangeArrived(true);
+                owner.CmdUnitArrived(true, netId);
         }
         else if (gameState.IsOccupied(Agent.steeringTarget))
             Repath();
@@ -89,23 +94,9 @@ public class Unit : Commandable
     }
     private bool AlmostThere()
     {
-        return Vector3.Distance(transform.position, steeringLocation) < 1;
+        return Vector3.Distance(transform.position, steeringLocation) < 1.5;
     }
 
-    [Command]
-    public void CmdChangeArrived(bool value)
-    {
-        arrived = value;
-    }
-
-    private void OnArrivedChange(bool value)
-    {
-        if (value)
-            gameState.AddSelectable(this);
-        else
-            gameState.RemoveSelectable(this);
-        arrived = value;
-    }
     private void Repath()
     {
         steeringLocation = gameState.GetClosestUnoccupiedDestination(desiredLocation);
@@ -153,22 +144,17 @@ public class Unit : Commandable
     {
         if (!hasAuthority)
             return;
-        arrived = false;
-        CmdChangeArrived(false);
+        Arrived = false;
+        owner.CmdUnitArrived(false, netId);
         desiredLocation = gameState.GetClosestDestination(destination);
         steeringLocation = desiredLocation;
         Agent.SetDestination(steeringLocation);
         pending = true;
     }
 
-    public void Mine(Resource resource)
+    protected override void OnDestroy()
     {
-        CmdMine(Strength, resource.netId);
-    }
-
-    [Command]
-    private void CmdMine(int strength, NetworkInstanceId resourceId)
-    {
-        NetworkServer.objects[resourceId].GetComponent<Resource>().CmdMine(strength, owner.netId);
+        base.OnDestroy();
+        playerState.units.Remove(this);
     }
 }

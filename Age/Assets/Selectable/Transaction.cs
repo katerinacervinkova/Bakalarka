@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class Transaction
 {
@@ -17,10 +13,9 @@ public class Transaction
         this.action = action;
     }
 
-    public void Do(Player player)
+    public void Do(PlayerState pState)
     {
-        if (!player.PayGold(gold))
-            return;
-        action.Invoke();
+        if (pState.PayGold(gold))
+            action.Invoke();
     }
 }

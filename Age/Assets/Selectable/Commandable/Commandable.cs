@@ -9,7 +9,7 @@ public abstract class Commandable : Selectable {
     {
         if (!hasAuthority)
             return;
-        Transactions.Add(new Transaction("Create Main Building", 50, gameState.CreateTemporaryMainBuilding));
+        Transactions.Add(new Transaction("Create Main Building", 50, owner.CreateTemporaryMainBuilding));
     }
 
     public override void RightMouseClickObject(Selectable hitObject)
