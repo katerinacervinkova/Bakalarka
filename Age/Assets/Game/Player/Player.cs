@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class Player : NetworkBehaviour
 {
@@ -16,7 +17,6 @@ public class Player : NetworkBehaviour
     public PlayerState playerState;
 
     public Factory factory;
-
     public override void OnStartClient()
     {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
