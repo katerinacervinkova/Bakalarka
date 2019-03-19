@@ -12,6 +12,7 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public Color color;
 
+    private bool unitCreated = false;
 
     public GameState gameState;
     public PlayerState playerState;
@@ -19,23 +20,63 @@ public class Player : NetworkBehaviour
     public Factory factory;
     public override void OnStartClient()
     {
-        gameState = GameObject.Find("GameState").GetComponent<GameState>();
-        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
-        factory = GameObject.Find("Factory").GetComponent<Factory>();
-        GameObject.Find("PlayerList").GetComponent<PlayerList>().players.Add(this);
+        gameState = GameObject.Find("GameState")?.GetComponent<GameState>();
+        playerState = GameObject.Find("PlayerState")?.GetComponent<PlayerState>();
+        factory = GameObject.Find("Factory")?.GetComponent<Factory>();
+        GameObject.Find("PlayerList")?.GetComponent<PlayerList>().players.Add(this);
+    }
+
+    private void Update()
+    {
+        if (hasAuthority && !unitCreated)
+            CreateInitialUnit();
+
     }
 
     public override void OnStartLocalPlayer()
     {
-        playerState.player = this;
-        gameState.player = this;
-
-        //CreateTemporaryMainBuilding();
-        CmdCreateUnit(transform.position, transform.position);
-        if (isServer)
-            CmdCreateResource(new Vector3(0, 0, 4));
-
+        if (playerState != null)
+            playerState.player = this;
+        if (gameState != null)
+            gameState.player = this;
     }
+     
+    public void Register(PlayerState newPlayerState)
+    {
+        if (playerState != null)
+            return;
+        playerState = newPlayerState;
+        if (hasAuthority)
+            playerState.player = this;
+    }
+
+    public void Register(Factory newFactory)
+    {
+        if (factory != null)
+            return;
+        factory = newFactory;
+    }
+
+    public void Register(GameState newGameState)
+    {
+        if (gameState != null)
+            return;
+        gameState = newGameState;
+        if (hasAuthority)
+            gameState.player = this;
+    }
+
+    private void CreateInitialUnit()
+    {
+        if (gameState != null && playerState != null && factory != null && (connectionToClient == null || connectionToClient.isReady))
+        {
+            if (isServer)
+                CmdCreateResource(new Vector3(0, 0, 4));
+            CmdCreateUnit(transform.position, transform.position);
+            unitCreated = true;
+        }
+    }
+
 
     public void Mine(int amount, GoldResource goldResource)
     {

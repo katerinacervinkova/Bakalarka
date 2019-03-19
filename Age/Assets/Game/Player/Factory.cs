@@ -35,6 +35,8 @@ public class Factory : MonoBehaviour
         panel = GameObject.Find("Panel").GetComponent<Image>();
         selectedAttributesText = panel.transform.Find("selectableAttributesText").GetComponent<Text>();
         nameText = panel.transform.Find("nameText").GetComponent<Text>();
+        foreach (var player in FindObjectsOfType<Player>())
+            player.Register(this);
     }
    
     public Regiment CreateRegiment(Player owner, List<Unit> units)

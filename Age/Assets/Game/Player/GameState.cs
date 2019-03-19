@@ -18,8 +18,6 @@ public class GameState : NetworkBehaviour {
     // možná?
     private List<TemporaryBuilding> temporaryBuildings;
 
-
-
     public override void OnStartClient()
     {
         units = new List<Unit>();
@@ -28,6 +26,8 @@ public class GameState : NetworkBehaviour {
         temporaryBuildings = new List<TemporaryBuilding>();
         playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
         navMeshSurface = GameObject.Find("NavMesh").GetComponent<NavMeshSurface>();
+        foreach (var player in FindObjectsOfType<Player>())
+            player.Register(this);
     }
 
     public void AddSelectable(Selectable selectable)

@@ -29,6 +29,11 @@ public class PlayerState : MonoBehaviour {
     public Text selectedObjectText;
     public Text resourceText;
 
+    public void Start()
+    {
+        foreach (var player in FindObjectsOfType<Player>())
+            player.Register(this);
+    }
 
     public void Select(Selectable selectable)
     {
