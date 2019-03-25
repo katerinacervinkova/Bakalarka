@@ -9,23 +9,15 @@ public class Factory : MonoBehaviour
     protected System.Random rnd;
     protected int sumOfProperties = 35;
 
-    public GameState gameState;
-    public TemporaryBuilding temporaryBuildingPrefab;
-    public Building mainBuildingPrefab;
+    public Player player;
+    public TemporaryBuilding tempBuildingPrefab;
     public Regiment regimentPrefab;
     public Unit unitPrefab;
     public Resource goldPrefab;
     public Scheduler schedulerPrefab;
-    public BottomBar bottomBar;
 
     public Image panel;
-    protected Text selectedAttributesText;
-    protected Text nameText;
 
-    private void Awake()
-    {
-        bottomBar = GameObject.Find("Panel").GetComponent<BottomBar>();
-    }
     protected virtual void Start()
     {
         regimentPrefab.gameObject.SetActive(false);
@@ -33,17 +25,13 @@ public class Factory : MonoBehaviour
         schedulerPrefab.gameObject.SetActive(false);
         rnd = new System.Random();
         panel = GameObject.Find("Panel").GetComponent<Image>();
-        selectedAttributesText = panel.transform.Find("selectableAttributesText").GetComponent<Text>();
-        nameText = panel.transform.Find("nameText").GetComponent<Text>();
-        foreach (var player in FindObjectsOfType<Player>())
-            player.Register(this);
     }
    
     public Regiment CreateRegiment(Player owner, List<Unit> units)
     {
         Regiment regiment = Instantiate(regimentPrefab);
         regiment.owner = owner;
-        regiment.SetGameState(gameState);
+        regiment.SetGameState(player.gameState);
         regiment.SetUnits(units);
         regiment.Name = string.Format("Units({0})", units.Count);
         regiment.gameObject.SetActive(true);
@@ -62,24 +50,8 @@ public class Factory : MonoBehaviour
 
     public TemporaryBuilding CreateTemporaryMainBuilding(NetworkInstanceId playerId)
     {
-        TemporaryBuilding building = Instantiate(temporaryBuildingPrefab, Vector3.zero, Quaternion.identity);
+        TemporaryBuilding building = Instantiate(tempBuildingPrefab);
         building.playerID = playerId;
-        return building;
-    }
-
-    public Building CreateMainBuilding(TemporaryBuilding tempBuilding, NetworkInstanceId playerId)
-    {
-        return CreateMainBuilding(tempBuilding.transform.position, playerId);
-    }
-
-    private Building CreateMainBuilding(Vector3 position, NetworkInstanceId playerId)
-    {
-        Building building = Instantiate(mainBuildingPrefab, position, Quaternion.identity);
-
-        building.name = "Building";
-        building.playerID = playerId;
-        building.gameObject.SetActive(true);
-
         return building;
     }
 

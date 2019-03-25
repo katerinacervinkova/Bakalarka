@@ -1,32 +1,30 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Building : Selectable {
+public abstract class Building : Selectable {
 
     public Vector3 SpawnPoint { get; private set; }
     public Vector3 DefaultDestination { get; private set; }
 
     bool animating = false;
     protected List<Scheduler> schedulers = new List<Scheduler>();
-    protected void Start()
+
+    public override void OnStartClient() { }
+    public override void Init()
     {
+        base.Init();
+        minimapColor = owner.color;
+        minimapIcon.color = minimapColor; 
         DefaultDestination = SpawnPoint = transform.position;
         DrawHealthBar();
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
         transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
         transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
-    }
-
-    public override void OnStartAuthority()
-    {
-        base.OnStartAuthority();
-        playerState.buildings.Add(this);
+        if (hasAuthority)
+        {
+            playerState.buildings.Add(this);
+            InitTransactions();
+        }
     }
 
     protected override void Update()
@@ -77,11 +75,6 @@ public class Building : Selectable {
         });
     }
 
-    protected override Job GetOwnJob(Commandable worker)
-    {
-        return null;
-    }
-
     protected override Job GetEnemyJob(Commandable worker)
     {
         return new AttackJob(this);
@@ -90,11 +83,6 @@ public class Building : Selectable {
     public override void DrawHealthBar()
     {
         DrawProgressBar(Health / (float)MaxHealth);
-    }
-
-    protected override void InitTransactions()
-    {
-        Transactions.Add(new Transaction("Create a unit", 20, () => owner.CreateUnit(this)));
     }
 
     protected override void OnDestroy()

@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4027467642016656}
   - component: {fileID: 114682149439794398}
   - component: {fileID: 114001992372661144}
+  - component: {fileID: 114881949609890668}
+  - component: {fileID: 114918450667427504}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -86,9 +88,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: "\u0158eho\u0159"
   color: {r: 1, g: 0.003, b: 0, a: 0}
-  units: []
-  buildings: []
-  temporaryBuildings: []
   gameState: {fileID: 0}
-  gameStatePrefab: {fileID: 1516820713746086, guid: f5aafb01196fc8c41a4a2ee540ad391c,
+  playerState: {fileID: 0}
+  factory: {fileID: 114881949609890668}
+--- !u!114 &114881949609890668
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1093172153997856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5454ac37bbf0b8b488067be9ffd6aacb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 114682149439794398}
+  tempBuildingPrefab: {fileID: 114019076716311038, guid: 28511fe201e0a7948b88664883879c86,
     type: 2}
+  regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
+    type: 2}
+  unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,
+    type: 2}
+  goldPrefab: {fileID: 114363327289667068, guid: c58c5ff0bde2c4c44a69884126aadf04,
+    type: 2}
+  schedulerPrefab: {fileID: 114579649446729468, guid: be1cb3fc7927d1a4e973008936c54932,
+    type: 2}
+  panel: {fileID: 0}
+--- !u!114 &114918450667427504
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1093172153997856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd64a095e781d74a809218fef20b186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 114682149439794398}

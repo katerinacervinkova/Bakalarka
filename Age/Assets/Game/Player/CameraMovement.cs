@@ -1,74 +1,74 @@
-﻿using UnityEngine;
-using UnityEngine.Networking;
+﻿using System;
+using UnityEngine;
 
 public class CameraMovement : MonoBehaviour {
 
     public InputOptions inputOptions;
     public GameWindow gameWindow;
 
-    readonly float ScrollSpeed = 25;
-    readonly int ScrollWidth = 50;
-    readonly float MinHeight = 10;
-    readonly float MaxHeight = 40;
+    readonly float panSpeed = 20;
+    readonly int panBorderThickness = 10;
 
-    protected void Awake ()
-    {
-        inputOptions = gameObject.GetComponent<InputOptions>();
-        gameWindow = gameObject.GetComponent<GameWindow>();
-    }
+    readonly Vector3 mainCameraMin = new Vector3(-200, 0, -200);
+    readonly Vector3 mainCameraMax = new Vector3(160, 0, 160);
 
 
     void Update ()
     {
         if (inputOptions.MoveCameraEnabled)
+        {
             MoveCamera();
+            ZoomCamera();
+        }
     }
 
+    private void ZoomCamera()
+    {
+        Camera.main.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 200;
+        Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 25, 70);
+    }
 
     private void MoveCamera()
     {
-        if (Input.mousePosition.x < gameWindow.LeftBorder || Input.mousePosition.x > gameWindow.RightBorder)
+        Vector3 movement = Vector3.zero;
+        if (Input.GetKey("w") || Input.GetKey("d"))
+            movement.x += panSpeed * Time.deltaTime;
+        if (Input.GetKey("d") || Input.GetKey("s"))
+            movement.z -= panSpeed * Time.deltaTime;
+        if (Input.GetKey("s") || Input.GetKey("a"))
+            movement.x -= panSpeed * Time.deltaTime;
+        if (Input.GetKey("a") || Input.GetKey("w"))
+            movement.z += panSpeed * Time.deltaTime;
+
+        float m = HorizontalMovement(Input.mousePosition.x);
+        movement += new Vector3(m, 0, -m);
+        m = VerticalMovement(Input.mousePosition.y);
+        movement += new Vector3(m, 0, m);
+
+        if (movement == Vector3.zero)
             return;
-        if (Input.mousePosition.y < gameWindow.BottomBorder || Input.mousePosition.y > gameWindow.TopBorder)
-            return;
 
-        Vector3 movement = new Vector3(HorizontalMovement(Input.mousePosition.x), 0, VerticalMovement(Input.mousePosition.y));
-
-        movement = Camera.main.transform.TransformDirection(movement);
-        movement.y = 0;
-
-        movement.y -= ScrollSpeed * Input.GetAxis("Mouse ScrollWheel");
-
-        Vector3 origin = Camera.main.transform.position;
-        Vector3 destination = origin;
-        destination.x += movement.x;
-        destination.y += movement.y;
-        destination.z += movement.z;
-
-        if (destination.y > MaxHeight)
-            destination.y = MaxHeight;
-        else if (destination.y < MinHeight)
-            destination.y = MinHeight;
-
-        if (destination != origin)
-            Camera.main.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * ScrollSpeed);
+        Vector3 pos = Camera.main.transform.position + movement;
+        pos.x = Mathf.Clamp(pos.x, mainCameraMin.x, mainCameraMax.x);
+        pos.z = Mathf.Clamp(pos.z, mainCameraMin.z, mainCameraMax.z);
+        transform.position = pos;
     }
 
-    private float HorizontalMovement(float position_x)
+    private float HorizontalMovement(float pos)
     {
-        if ((position_x >= gameWindow.LeftBorder && position_x <  gameWindow.LeftBorder + ScrollWidth) || Input.GetKey(KeyCode.LeftArrow))
-            return -ScrollSpeed;
-        if ((position_x <= gameWindow.RightBorder && position_x > gameWindow.RightBorder - ScrollWidth) || Input.GetKey(KeyCode.RightArrow))
-            return ScrollSpeed;
+        if (Math.Abs(pos - gameWindow.LeftBorder) <= panBorderThickness)
+            return -panSpeed * Time.deltaTime;
+        if (Math.Abs(pos - gameWindow.RightBorder) <= panBorderThickness)
+            return panSpeed * Time.deltaTime;
         return 0;
     }
 
-    private float VerticalMovement(float position_y)
+    private float VerticalMovement(float pos)
     {
-        if ((position_y >= gameWindow.BottomBorder&& position_y < gameWindow.BottomBorder+ ScrollWidth) || Input.GetKey(KeyCode.DownArrow))
-            return -ScrollSpeed;
-        if ((position_y <= gameWindow.TopBorder && position_y > gameWindow.TopBorder - ScrollWidth) || Input.GetKey(KeyCode.UpArrow))
-            return ScrollSpeed;
+        if (Math.Abs(pos - gameWindow.BottomBorder) <= panBorderThickness)
+            return -panSpeed * Time.deltaTime;
+        if (Math.Abs(pos - gameWindow.TopBorder) <= panBorderThickness)
+            return panSpeed * Time.deltaTime;
         return 0;
     }
 }

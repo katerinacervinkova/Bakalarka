@@ -7,7 +7,7 @@ public class JobGo : Job
     public JobGo(Unit worker, Vector3 destination, Job following = null)
     {
         this.following = following;
-        worker.SetDestination(destination);
+        worker.Go(destination);
     }
 
     public override Job Following => following;

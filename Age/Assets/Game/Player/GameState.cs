@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
@@ -62,13 +63,13 @@ public class GameState : NetworkBehaviour {
     [ClientRpc]
     public void RpcAddSelectable(NetworkInstanceId selectableId)
     {
-        gridGraph.Add(ClientScene.objects[selectableId].GetComponent<Selectable>());
+        AddSelectable(ClientScene.objects[selectableId].GetComponent<Selectable>());
     }
 
     [ClientRpc]
     public void RpcRemoveSelectable(NetworkInstanceId selectableId)
     {
-        gridGraph.Remove(ClientScene.objects[selectableId]?.GetComponent<Selectable>());
+        RemoveSelectable(ClientScene.objects[selectableId]?.GetComponent<Selectable>());
     }
 
     [ClientRpc]
@@ -78,5 +79,22 @@ public class GameState : NetworkBehaviour {
         temporaryBuilding.transform.position = position;
         temporaryBuilding.SetActive(true);
         temporaryBuilding.GetComponent<NavMeshObstacle>().enabled = true;
+    }
+
+    [ClientRpc]
+    internal void RpcSetDestination(Vector3 destination, NetworkInstanceId unitId)
+    {
+        ClientScene.objects[unitId].GetComponent<Unit>().SetDestination(destination);
+    }
+
+    [ClientRpc]
+    internal void RpcCreateBuilding(NetworkInstanceId tempBuildingID)
+    {
+        var tempBuilding = ClientScene.objects[tempBuildingID].GetComponent<TemporaryBuilding>();
+        Building building = tempBuilding.gameObject.AddComponent<MainBuilding>() as MainBuilding;
+        building.owner = tempBuilding.owner;
+        building.Init();
+        AddSelectable(building);
+        Destroy(tempBuilding);
     }
 }

@@ -17,6 +17,8 @@ public class TemporaryBuilding : Selectable
     {
         base.OnStartClient();
         transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
+        minimapColor = owner.color;
+        minimapIcon.color = minimapColor;
 
     }
 
@@ -52,7 +54,7 @@ public class TemporaryBuilding : Selectable
     {
         if (!hasAuthority)
             return;
-        CmdBuild(worker.Strength);
+        CmdBuild(worker.Crafting);
         ControlProgress();
     }
 
@@ -60,7 +62,7 @@ public class TemporaryBuilding : Selectable
     {
         buildJob.Completed = progress >= maxProgress;
         if (buildJob.Completed)
-            owner.CreateMainBuilding(this);
+            owner.CmdCreateBuilding(netId);
     }
 
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)

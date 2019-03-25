@@ -27,25 +27,32 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected GameObject healthBarCanvas;
     protected GameObject selector;
+    protected SpriteRenderer minimapIcon;
+    protected Color minimapColor;
+
     protected Image healthBar;
     protected Quaternion healthBarRotation;
 
     public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
 
     public abstract void DrawBottomBar(Text nameText, Text selectedObjectText);
-    protected abstract Job GetOwnJob(Commandable worker);
-    protected abstract Job GetEnemyJob(Commandable worker);
+    protected abstract Job GetOwnJob(Commandable worker = null);
+    protected abstract Job GetEnemyJob(Commandable worker = null);
     public abstract void DrawHealthBar();
     protected abstract void InitTransactions();
 
     public override void OnStartClient()
     {
-        base.OnStartClient();
+        owner = ClientScene.objects[playerID].GetComponent<Player>();
+        Init();
+    }
+
+    public virtual void Init()
+    {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
         playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
-        owner = ClientScene.objects[playerID].GetComponent<Player>();
+        minimapIcon = transform.Find("MinimapIcon").GetComponent<SpriteRenderer>();
         selector = transform.Find("SelectionProjector").gameObject;
-        selector.GetComponent<Projector>().material.color = owner.color;
         selector.SetActive(false);
         healthBarCanvas = transform.Find("Canvas").gameObject;
         healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
@@ -64,6 +71,7 @@ public abstract class Selectable : NetworkBehaviour {
     {
         Selected = selected;
         selector.SetActive(selected);
+        minimapIcon.color = selected ? Color.white : minimapColor;
         healthBarCanvas.SetActive(selected);
         if (selected)
             DrawHealthBar();
@@ -91,10 +99,10 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected virtual void OnDestroy()
     {
-        if (GetEnemyJob(null) != null)
-         GetEnemyJob(null).Completed = true;
-        if (GetOwnJob(null) != null)
-            GetOwnJob(null).Completed = true;
+        if (GetEnemyJob() != null)
+         GetEnemyJob().Completed = true;
+        if (GetOwnJob() != null)
+            GetOwnJob().Completed = true;
         if (Selected)
             playerState.Deselect();
     }

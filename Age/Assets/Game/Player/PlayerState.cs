@@ -18,13 +18,32 @@ public class PlayerState : MonoBehaviour {
             gold = value;
             OnResourceChange();
         } }
+    private int wood = 50;
+    public int Wood
+    {
+        get { return wood; }
+        set
+        {
+            wood = value;
+            OnResourceChange();
+        }
+    }
+    private int food = 50;
+    public int Food
+    {
+        get { return food; }
+        set
+        {
+            food = value;
+            OnResourceChange();
+        }
+    }
 
     public Selectable SelectedObject { get; set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
 
     public GameState gameState;
     public BottomBar bottomBar;
-    public Factory factory;
     public Text nameText;
     public Text selectedObjectText;
     public Text resourceText;
@@ -47,7 +66,7 @@ public class PlayerState : MonoBehaviour {
         SetUIActive(true);
     }
 
-    public void SelectUnits(Predicate<Unit> predicate)
+    public void Select(Predicate<Unit> predicate)
     {
         var u = units.FindAll(predicate);
         if (u.Count == 0)
@@ -55,7 +74,7 @@ public class PlayerState : MonoBehaviour {
         if (u.Count == 1)
             Select(u[0]);
         else
-            Select(factory.CreateRegiment(player, u));
+            Select(player.factory.CreateRegiment(player, u));
     }
 
     public void Deselect()
@@ -73,7 +92,7 @@ public class PlayerState : MonoBehaviour {
 
     private void DrawBottomBar(Text resourceText)
     {
-        resourceText.text = "Gold: " + gold;
+        resourceText.text = String.Format("Food: {0}\nWood: {1}\nGold: {2}", Food, Wood, Gold);
     }
 
     public void OnStateChange(Selectable selectable)

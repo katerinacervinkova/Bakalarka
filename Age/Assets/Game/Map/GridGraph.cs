@@ -91,6 +91,12 @@ public class GridGraph : NetworkBehaviour {
 
     public void Add(Selectable selectable)
     {
+        if (selectable is Unit)
+        {
+            var position = WorldToGraphCoordinates(selectable.transform.position);
+            graph[position.x][position.z] = selectable;
+            return;
+        }
         Bounds bounds = selectable.GetComponent<Collider>().bounds;
         Vector3Int min = WorldToGraphCoordinates(bounds.min);
         Vector3Int max = WorldToGraphCoordinates(bounds.max);

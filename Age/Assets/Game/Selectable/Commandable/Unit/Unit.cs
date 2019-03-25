@@ -46,6 +46,8 @@ public class Unit : Commandable
     public override void OnStartClient()
     {
         base.OnStartClient();
+        minimapColor = owner.color;
+        minimapIcon.color = minimapColor;
         transform.Find("Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
     }
     public override void OnStartAuthority()
@@ -86,7 +88,10 @@ public class Unit : Commandable
             if (steeringLocation != desiredLocation)
                 Repath();
             if (AlmostThere())
+            {
+                transform.position = steeringLocation;
                 owner.CmdUnitArrived(true, netId);
+            }
         }
         else if (gameState.IsOccupied(Agent.steeringTarget))
             Repath();
@@ -94,14 +99,14 @@ public class Unit : Commandable
     }
     private bool AlmostThere()
     {
-        return Vector3.Distance(transform.position, steeringLocation) < 1.5;
+        return Vector3.Distance(transform.position, steeringLocation) < 0.5;
     }
 
     private void Repath()
     {
         steeringLocation = gameState.GetClosestUnoccupiedDestination(desiredLocation);
         if (steeringLocation != Agent.pathEndPosition)
-            Agent.SetDestination(steeringLocation);
+            SyncDestination(steeringLocation);
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
@@ -140,7 +145,7 @@ public class Unit : Commandable
         this.job = job;
     }
 
-    public void SetDestination(Vector3 destination)
+    public void Go(Vector3 destination)
     {
         if (!hasAuthority)
             return;
@@ -148,8 +153,19 @@ public class Unit : Commandable
         owner.CmdUnitArrived(false, netId);
         desiredLocation = gameState.GetClosestDestination(destination);
         steeringLocation = desiredLocation;
-        Agent.SetDestination(steeringLocation);
+        SyncDestination(steeringLocation);
         pending = true;
+    }
+
+    public void SetDestination(Vector3 destination)
+    {
+        steeringLocation = destination;
+        Agent.SetDestination(steeringLocation);
+    }
+
+    private void SyncDestination(Vector3 destination)
+    {
+        owner.CmdSetDestination(destination, netId);
     }
 
     protected override void OnDestroy()

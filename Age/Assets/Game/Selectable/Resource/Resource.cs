@@ -19,7 +19,8 @@ public abstract class Resource : Selectable {
 
     public override void OnStartClient()
     {
-        base.OnStartClient();
+        Init();
+        minimapColor = minimapIcon.color;
         gameState.AddSelectable(this);
     }
 
@@ -50,18 +51,6 @@ public abstract class Resource : Selectable {
     public override void DrawBottomBar(Text nameText, Text selectedObjectText)
     {
         selectedObjectText.text = string.Format("Capacity: {0}/{1}", capacity, MaxCapacity);
-    }
-
-    [Command]
-    public void CmdMine(int strength, NetworkInstanceId playerId)
-    {
-        
-    }
-
-    [Command]
-    protected void CmdControlCapacity()
-    {
-        
     }
 
     protected override void InitTransactions() { }
