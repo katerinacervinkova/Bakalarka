@@ -1,7 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour {
+
+    public Camera minimapCamera;
+    public RawImage minimap;
 
     public InputOptions inputOptions;
     public GameWindow gameWindow;
@@ -9,9 +13,7 @@ public class CameraMovement : MonoBehaviour {
     readonly float panSpeed = 20;
     readonly int panBorderThickness = 10;
 
-    readonly Vector3 mainCameraMin = new Vector3(-200, 0, -200);
-    readonly Vector3 mainCameraMax = new Vector3(160, 0, 160);
-
+    readonly Vector3 panLimit = new Vector3(200, 0, 200);
 
     void Update ()
     {
@@ -48,9 +50,9 @@ public class CameraMovement : MonoBehaviour {
         if (movement == Vector3.zero)
             return;
 
-        Vector3 pos = Camera.main.transform.position + movement;
-        pos.x = Mathf.Clamp(pos.x, mainCameraMin.x, mainCameraMax.x);
-        pos.z = Mathf.Clamp(pos.z, mainCameraMin.z, mainCameraMax.z);
+        Vector3 pos = transform.position + movement;
+        pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);
+        pos.z = Mathf.Clamp(pos.z, -panLimit.z, panLimit.z);
         transform.position = pos;
     }
 
@@ -70,5 +72,14 @@ public class CameraMovement : MonoBehaviour {
         if (Math.Abs(pos - gameWindow.TopBorder) <= panBorderThickness)
             return panSpeed * Time.deltaTime;
         return 0;
+    }
+
+    public void OnMinimapClick()
+    {
+        RaycastHit hit;
+        Vector3 mousePos = Quaternion.Euler(0, 0, -45) * (Input.mousePosition - minimap.rectTransform.position) + minimap.rectTransform.position;
+        Ray ray = minimapCamera.ScreenPointToRay(mousePos);
+        if (Physics.Raycast(ray, out hit))
+            transform.position = new Vector3(hit.point.x - 35, 0, hit.point.z - 35);
     }
 }

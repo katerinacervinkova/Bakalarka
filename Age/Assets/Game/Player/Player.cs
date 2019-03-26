@@ -22,7 +22,7 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        Camera.main.transform.position += transform.position;
+        Camera.main.transform.parent.position = transform.position;
         if (playerState != null)
         {
             playerState.player = this;

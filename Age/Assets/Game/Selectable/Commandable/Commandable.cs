@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.Networking;
-
-public abstract class Commandable : Selectable {
+﻿public abstract class Commandable : Selectable {
 
     public abstract void SetGoal(Selectable goal);
 
     protected override void InitTransactions()
     {
-        if (!hasAuthority)
-            return;
         Transactions.Add(new Transaction("Create Main Building", 50, owner.CreateTemporaryMainBuilding));
     }
 
