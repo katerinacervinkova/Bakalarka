@@ -59,8 +59,6 @@ public class Player : NetworkBehaviour
             return false;
         if (connectionToClient == null || connectionToClient.isReady)
         {
-            if (isServer)
-                CmdCreateResource(new Vector3(0, 0, 4));
             CmdCreateUnit(transform.position, transform.position);
             return true;
         }

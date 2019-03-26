@@ -109,7 +109,7 @@ MonoBehaviour:
     type: 2}
   unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,
     type: 2}
-  goldPrefab: {fileID: 114363327289667068, guid: c58c5ff0bde2c4c44a69884126aadf04,
+  goldPrefab: {fileID: 114018519629479988, guid: e3df380f1b7f20648b7f5abd1e80f452,
     type: 2}
   schedulerPrefab: {fileID: 114579649446729468, guid: be1cb3fc7927d1a4e973008936c54932,
     type: 2}
