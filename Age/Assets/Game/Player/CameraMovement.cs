@@ -76,10 +76,14 @@ public class CameraMovement : MonoBehaviour {
 
     public void OnMinimapClick()
     {
+        Debug.Log(Input.mousePosition);
         RaycastHit hit;
         Vector3 mousePos = Quaternion.Euler(0, 0, -45) * (Input.mousePosition - minimap.rectTransform.position) + minimap.rectTransform.position;
         Ray ray = minimapCamera.ScreenPointToRay(mousePos);
         if (Physics.Raycast(ray, out hit))
-            transform.position = new Vector3(hit.point.x - 35, 0, hit.point.z - 35);
+        {
+            Debug.Log(hit.point);
+            transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+        }
     }
 }

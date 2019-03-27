@@ -11,6 +11,6 @@ public class MainBuilding : Building {
 
     protected override void InitTransactions()
     {
-        Transactions.Add(new Transaction("Create a unit", 20, () => owner.CreateUnit(this)));
+        Transactions.Add(new Transaction("Unit", "Create a unit", () => owner.CreateUnit(this), food: 20, wood: 0, gold: 0));
     }
 }

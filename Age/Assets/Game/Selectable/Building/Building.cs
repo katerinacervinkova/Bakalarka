@@ -22,7 +22,7 @@ public abstract class Building : Selectable {
         transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
         if (hasAuthority)
         {
-            playerState.buildings.Add(this);
+            PlayerState.Instance.buildings.Add(this);
             InitTransactions();
         }
     }
@@ -88,6 +88,6 @@ public abstract class Building : Selectable {
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        playerState.buildings.Remove(this);
+        PlayerState.Instance?.buildings.Remove(this);
     }
 }

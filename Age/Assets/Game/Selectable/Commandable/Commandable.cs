@@ -4,7 +4,7 @@
 
     protected override void InitTransactions()
     {
-        Transactions.Add(new Transaction("Create Main Building", 50, owner.CreateTemporaryMainBuilding));
+        Transactions.Add(new Transaction("Building", "Create Main Building", owner.CreateTemporaryMainBuilding, food: 0, wood: 50, gold: 0));
     }
 
     public override void RightMouseClickObject(Selectable hitObject)

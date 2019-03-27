@@ -10,52 +10,23 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public Color color;
 
-    public GameState gameState;
-    public PlayerState playerState;
-
     public Factory factory;
-    public override void OnStartClient()
-    {
-        gameState = GameObject.Find("GameState")?.GetComponent<GameState>();
-        playerState = GameObject.Find("PlayerState")?.GetComponent<PlayerState>();
-    }
 
     public override void OnStartLocalPlayer()
     {
         Camera.main.transform.parent.position = transform.position;
-        if (playerState != null)
+        if (PlayerState.Instance != null)
         {
-            playerState.player = this;
-            playerState.OnResourceChange();
+            PlayerState.Instance.player = this;
+            PlayerState.Instance.OnResourceChange();
         }
-        if (gameState != null)
-            gameState.player = this;
-    }
-     
-    public void Register(PlayerState newPlayerState)
-    {
-        if (playerState != null)
-            return;
-        playerState = newPlayerState;
-        if (hasAuthority)
-        {
-            playerState.player = this;
-            playerState.OnResourceChange();
-        }
-    }
-
-    public void Register(GameState newGameState)
-    {
-        if (gameState != null)
-            return;
-        gameState = newGameState;
-        if (hasAuthority)
-            gameState.player = this;
+        if (GameState.Instance != null)
+            GameState.Instance.player = this;
     }
 
     public bool CreateInitialUnit()
     {
-        if (!hasAuthority || gameState == null || playerState == null || factory == null)
+        if (!hasAuthority)
             return false;
         if (connectionToClient == null || connectionToClient.isReady)
         {
@@ -91,21 +62,21 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCreateResource(Vector3 position)
     {
-        Resource gold = factory.CreateGold(gameState.GetClosestUnoccupiedDestination(position));
+        Resource gold = factory.CreateGold(GameState.Instance.GetClosestUnoccupiedDestination(position));
         gold.playerID = netId;
         NetworkServer.Spawn(gold.gameObject);
-        gameState.RpcAddSelectable(gold.netId);
+        GameState.Instance.RpcAddSelectable(gold.netId);
     }
 
     [Command]
     public void CmdCreateUnit(Vector3 position, Vector3 destination)
     {
-        Unit unit = factory.CreateUnit(gameState.GetClosestUnoccupiedDestination(position), netId);
+        Unit unit = factory.CreateUnit(GameState.Instance.GetClosestUnoccupiedDestination(position), netId);
         NetworkServer.SpawnWithClientAuthority(unit.gameObject, gameObject);
         if (destination != position)
             unit.SetJob(new JobGo(unit, destination));
         else
-            gameState.RpcAddSelectable(unit.netId);
+            GameState.Instance.RpcAddSelectable(unit.netId);
 
     }
 
@@ -120,14 +91,14 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCreateBuilding(NetworkInstanceId tempBuildingID)
     {
-        gameState.RpcCreateBuilding(tempBuildingID);
+        GameState.Instance.RpcCreateBuilding(tempBuildingID);
     }
 
     [Command]
     public void CmdSetDestination(Vector3 destination, NetworkInstanceId unitId)
     {
         NetworkServer.objects[unitId].GetComponent<Unit>().SetDestination(destination);
-        gameState.RpcSetDestination(destination, unitId);
+        GameState.Instance.RpcSetDestination(destination, unitId);
     }
 
     [Command]
@@ -147,8 +118,8 @@ public class Player : NetworkBehaviour
         TemporaryBuilding temporaryBuilding = NetworkServer.objects[tempBuildingId].GetComponent<TemporaryBuilding>();
         temporaryBuilding.transform.position = position;
         temporaryBuilding.placed = true;
-        gameState.RpcPlaceBuilding(position, tempBuildingId);
-        gameState.RpcAddSelectable(tempBuildingId);
+        GameState.Instance.RpcPlaceBuilding(position, tempBuildingId);
+        GameState.Instance.RpcAddSelectable(tempBuildingId);
     }
 
     [Command]
@@ -157,8 +128,8 @@ public class Player : NetworkBehaviour
         Unit unit = NetworkServer.objects[unitId].GetComponent<Unit>();
         unit.Arrived = value;
         if (value)
-            gameState.RpcAddSelectable(unitId);
+            GameState.Instance.RpcAddSelectable(unitId);
         else
-            gameState.RpcRemoveSelectable(unitId);
+            GameState.Instance.RpcRemoveSelectable(unitId);
     }
 }

@@ -7,9 +7,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Collider))]
 public abstract class Selectable : NetworkBehaviour {
 
-    protected GameState gameState;
-    protected PlayerState playerState;
-
     [SyncVar]
     public string Name;
     public Texture2D Image;
@@ -49,8 +46,6 @@ public abstract class Selectable : NetworkBehaviour {
 
     public virtual void Init()
     {
-        gameState = GameObject.Find("GameState").GetComponent<GameState>();
-        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
         minimapIcon = transform.Find("MinimapIcon").GetComponent<SpriteRenderer>();
         selector = transform.Find("SelectionProjector").gameObject;
         selector.SetActive(false);
@@ -67,7 +62,7 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected virtual void Update() { }
 
-    public virtual void SetSelection(bool selected, Player player, BottomBar bottomBar = null)
+    public virtual void SetSelection(bool selected, Player player)
     {
         Selected = selected;
         selector.SetActive(selected);
@@ -75,10 +70,9 @@ public abstract class Selectable : NetworkBehaviour {
         healthBarCanvas.SetActive(selected);
         if (selected)
             DrawHealthBar();
-        if (hasAuthority && bottomBar)
-            bottomBar.SetActive(Transactions, selected);
+        if (hasAuthority)
+            UIManager.Instance?.SetActive(Transactions, selected);
     }
-
 
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
     public virtual void RightMouseClickObject(Selectable hitObject) { }
@@ -104,6 +98,6 @@ public abstract class Selectable : NetworkBehaviour {
         if (GetOwnJob() != null)
             GetOwnJob().Completed = true;
         if (Selected)
-            playerState.Deselect();
+            PlayerState.Instance?.Deselect();
     }
 }

@@ -53,7 +53,7 @@ public class Unit : Commandable
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        playerState.units.Add(this);
+        PlayerState.Instance.units.Add(this);
     }
     protected override void Update()
     {
@@ -93,7 +93,7 @@ public class Unit : Commandable
                 owner.CmdUnitArrived(true, netId);
             }
         }
-        else if (gameState.IsOccupied(Agent.steeringTarget))
+        else if (GameState.Instance.IsOccupied(Agent.steeringTarget))
             Repath();
         
     }
@@ -104,7 +104,7 @@ public class Unit : Commandable
 
     private void Repath()
     {
-        steeringLocation = gameState.GetClosestUnoccupiedDestination(desiredLocation);
+        steeringLocation = GameState.Instance.GetClosestUnoccupiedDestination(desiredLocation);
         if (steeringLocation != Agent.pathEndPosition)
             SyncDestination(steeringLocation);
     }
@@ -151,7 +151,7 @@ public class Unit : Commandable
             return;
         Arrived = false;
         owner.CmdUnitArrived(false, netId);
-        desiredLocation = gameState.GetClosestDestination(destination);
+        desiredLocation = GameState.Instance.GetClosestDestination(destination);
         steeringLocation = desiredLocation;
         SyncDestination(steeringLocation);
         pending = true;
@@ -171,6 +171,6 @@ public class Unit : Commandable
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        playerState.units.Remove(this);
+        PlayerState.Instance?.units.Remove(this);
     }
 }

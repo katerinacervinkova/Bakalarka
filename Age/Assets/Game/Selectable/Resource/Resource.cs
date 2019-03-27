@@ -21,13 +21,13 @@ public abstract class Resource : Selectable {
     {
         Init();
         minimapColor = minimapIcon.color;
-        gameState.AddSelectable(this);
+        GameState.Instance.AddSelectable(this);
     }
 
     private void OnCapacityChange(int newCapacity)
     {
         capacity = newCapacity;
-        playerState.OnStateChange(this);
+        PlayerState.Instance.OnStateChange(this);
         DrawHealthBar();
     }
 

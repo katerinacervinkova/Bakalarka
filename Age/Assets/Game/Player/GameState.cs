@@ -6,8 +6,18 @@ using UnityEngine.Networking;
 
 public class GameState : NetworkBehaviour {
 
+    private static GameState instance;
+    public static GameState Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<GameState>();
+            return instance;
+        }
+    }
+
     public Player player;
-    public PlayerState playerState;
     public NavMeshSurface navMeshSurface;
 
     public GridGraph gridGraph;
@@ -25,10 +35,10 @@ public class GameState : NetworkBehaviour {
         buildings = new List<Building>();
         resources = new List<Resource>();
         temporaryBuildings = new List<TemporaryBuilding>();
-        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
         navMeshSurface = GameObject.Find("NavMesh").GetComponent<NavMeshSurface>();
         foreach (var player in FindObjectsOfType<Player>())
-            player.Register(this);
+            if (player.hasAuthority)
+                this.player = player;
     }
 
     public void AddSelectable(Selectable selectable)

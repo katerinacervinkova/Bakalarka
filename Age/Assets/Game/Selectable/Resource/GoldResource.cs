@@ -17,6 +17,6 @@ public class GoldResource : Resource
     {
         int amount = Math.Min(worker.Strength, capacity);
         worker.owner.Mine(amount, this);
-        playerState.Gold += amount;
+        PlayerState.Instance.Gold += amount;
     }
 }

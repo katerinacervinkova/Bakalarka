@@ -17,17 +17,12 @@ public class Regiment : Commandable {
         }
     }
 
-    public override void SetSelection(bool selected, Player player, BottomBar bottomBar)
+    public override void SetSelection(bool selected, Player player)
     {
         Selected = selected;
         foreach (Unit unit in units)
             unit.SetSelection(selected, player);
-        bottomBar.SetActive(units[0].Transactions, selected);
-    }
-
-    public void SetGameState(GameState gameState)
-    {
-        this.gameState = gameState;
+        UIManager.Instance.SetActive(units[0].Transactions, selected);
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)

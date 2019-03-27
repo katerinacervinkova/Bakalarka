@@ -25,14 +25,14 @@ public class TemporaryBuilding : Selectable
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        playerState.SetWorkerAndBuilding(this);
-        playerState.temporaryBuildings.Add(this);
+        PlayerState.Instance.SetWorkerAndBuilding(this);
+        PlayerState.Instance.temporaryBuildings.Add(this);
     }
 
     private void OnProgressChange(float newProgress)
     {
         progress = newProgress;
-        playerState.OnStateChange(this);
+        PlayerState.Instance.OnStateChange(this);
         DrawHealthBar();
     }
 
@@ -95,6 +95,6 @@ public class TemporaryBuilding : Selectable
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        playerState.temporaryBuildings.Remove(this);
+        PlayerState.Instance.temporaryBuildings.Remove(this);
     }
 }

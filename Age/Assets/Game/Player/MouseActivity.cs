@@ -2,7 +2,6 @@
 
 public class MouseActivity : MonoBehaviour {
 
-    public PlayerState playerState;
     public GameWindow gameWindow;
 
     protected virtual void Awake()

@@ -17,6 +17,6 @@ public class WoodResource : Resource
     {
         int amount = Math.Min(worker.Strength, capacity);
         worker.owner.Mine(amount, this);
-        playerState.Wood += amount;
+        PlayerState.Instance.Wood += amount;
     }
 }

@@ -17,6 +17,6 @@ public class FoodResource : Resource
     {
         int amount = Math.Min(worker.Strength, capacity);
         worker.owner.Mine(amount, this);
-        playerState.Food += amount;
+        PlayerState.Instance.Food += amount;
     }
 }

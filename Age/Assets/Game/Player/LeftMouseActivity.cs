@@ -22,13 +22,11 @@ public class LeftMouseActivity : MouseActivity {
 
     private void Update ()
     {
-        if (playerState == null)
-            return;
-        if (playerState.BuildingToBuild != null)
+        if (PlayerState.Instance.BuildingToBuild != null)
         {
             Vector3 hitPoint = FindHitPoint();
             hitPoint.y = 0;
-            playerState.MoveBuildingToBuild(hitPoint);
+            PlayerState.Instance.MoveBuildingToBuild(hitPoint);
         }
         if (!isClicking && !MouseInBounds())
             return;
@@ -66,23 +64,23 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (playerState.SelectedObject && playerState.BuildingToBuild == null)
-            playerState.Deselect();
-        if (playerState.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
+        if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
+            PlayerState.Instance.Deselect();
+        if (PlayerState.Instance.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
         {
-            playerState.PlaceBuilding();
+            PlayerState.Instance.PlaceBuilding();
             return;
         }
         if (!hitObject || hitPoint == gameWindow.InvalidPosition)
             return;
         if (hitObject.name == "Map")
-            playerState.SelectedObject = null;
+            PlayerState.Instance.SelectedObject = null;
         else
         {
             Selectable selectedObject = hitObject.transform.GetComponent<Selectable>();
             if (!selectedObject)
                 return;
-            playerState.Select(selectedObject);
+            PlayerState.Instance.Select(selectedObject);
         }
     }
     private void LeftMouseDrag()
@@ -94,7 +92,7 @@ public class LeftMouseActivity : MouseActivity {
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
 
-        playerState.Select(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform));
+        PlayerState.Instance.Select(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform));
     }
 
     private void DrawRectangle()

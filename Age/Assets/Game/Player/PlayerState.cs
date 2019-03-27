@@ -5,6 +5,17 @@ using UnityEngine.UI;
 
 public class PlayerState : MonoBehaviour {
 
+    private static PlayerState instance;
+    public static PlayerState Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<PlayerState>();
+            return instance;
+        }
+    }
+
     public Player player;
 
     public List<Unit> units;
@@ -12,12 +23,15 @@ public class PlayerState : MonoBehaviour {
     public List<TemporaryBuilding> temporaryBuildings;
 
     private int gold = 50;
-    public int Gold {
+    public int Gold
+    {
         get { return gold; }
-        set {
+        set
+        {
             gold = value;
             OnResourceChange();
-        } }
+        }
+    }
     private int wood = 50;
     public int Wood
     {
@@ -42,8 +56,6 @@ public class PlayerState : MonoBehaviour {
     public Selectable SelectedObject { get; set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
 
-    public GameState gameState;
-    public BottomBar bottomBar;
     public Text nameText;
     public Text selectedObjectText;
     public Text resourceText;
@@ -51,7 +63,8 @@ public class PlayerState : MonoBehaviour {
     public void Start()
     {
         foreach (var player in FindObjectsOfType<Player>())
-            player.Register(this);
+            if (player.hasAuthority)
+                this.player = player;
     }
 
     public void Select(Selectable selectable)
@@ -61,7 +74,7 @@ public class PlayerState : MonoBehaviour {
         if (SelectedObject != null)
             Deselect();
         SelectedObject = selectable;
-        selectable.SetSelection(true, player, bottomBar);
+        selectable.SetSelection(true, player);
         selectable.DrawBottomBar(nameText, selectedObjectText);
         SetUIActive(true);
     }
@@ -80,7 +93,7 @@ public class PlayerState : MonoBehaviour {
     public void Deselect()
     {
         SelectedObject.RemoveBottomBar(nameText, selectedObjectText);
-        SelectedObject.SetSelection(false, player, bottomBar);
+        SelectedObject.SetSelection(false, player);
         SetUIActive(false);
         SelectedObject = null;
     }
@@ -92,7 +105,7 @@ public class PlayerState : MonoBehaviour {
 
     private void DrawBottomBar(Text resourceText)
     {
-        resourceText.text = String.Format("Food: {0}\nWood: {1}\nGold: {2}", Food, Wood, Gold);
+        resourceText.text = string.Format("Food: {0}\nWood: {1}\nGold: {2}", Food, Wood, Gold);
     }
 
     public void OnStateChange(Selectable selectable)
@@ -115,8 +128,8 @@ public class PlayerState : MonoBehaviour {
     {
         // pokud je to misto zabrane, nepohne se
         // TODO
-        BuildingToBuild.transform.position = gameState.GetClosestDestination(hitPoint);
-        if (gameState.IsOccupied(BuildingToBuild))
+        BuildingToBuild.transform.position = GameState.Instance.GetClosestDestination(hitPoint);
+        if (GameState.Instance.IsOccupied(BuildingToBuild))
             return;
     }
 
@@ -127,18 +140,20 @@ public class PlayerState : MonoBehaviour {
 
     public void PlaceBuilding()
     {
-        if (gameState.IsOccupied(BuildingToBuild))
+        if (GameState.Instance.IsOccupied(BuildingToBuild))
             return;
         player.PlaceBuilding(BuildingToBuild);
         ((Commandable)SelectedObject)?.SetGoal(BuildingToBuild);
         BuildingToBuild = null;
     }
 
-    public bool PayGold(int amount)
+    public bool Pay(int food, int wood, int gold)
     {
-        if (Gold < amount)
+        if (Food < food || Wood < wood || Gold < gold)
             return false;
-        Gold -= amount;
+        Food -= food;
+        Wood -= wood;
+        Gold -= gold;
         return true;
     }
 }
