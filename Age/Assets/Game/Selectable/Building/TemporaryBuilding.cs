@@ -95,6 +95,6 @@ public class TemporaryBuilding : Selectable
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        PlayerState.Instance.temporaryBuildings.Remove(this);
+        PlayerState.Instance?.temporaryBuildings.Remove(this);
     }
 }

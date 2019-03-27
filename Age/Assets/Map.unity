@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.37954152, g: 0.8602941, b: 0.44253674, a: 1}
   m_AmbientEquatorColor: {r: 0.28114185, g: 0.9558824, b: 0.36955607, a: 1}
   m_AmbientGroundColor: {r: 0.47984427, g: 0.9485294, b: 0.362673, a: 1}
-  m_AmbientIntensity: 1.6
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -447,7 +447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimapCamera: {fileID: 455555734}
-  minimap: {fileID: 214468340}
+  minimapButton: {fileID: 114942770}
   inputOptions: {fileID: 317788823}
   gameWindow: {fileID: 317788822}
 --- !u!4 &10959200
@@ -17592,10 +17592,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 10
-    m_Right: 10
-    m_Top: 10
-    m_Bottom: 10
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
@@ -25680,10 +25680,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0

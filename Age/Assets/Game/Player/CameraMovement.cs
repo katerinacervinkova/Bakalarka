@@ -1,20 +1,31 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour {
 
-    public Camera minimapCamera;
-    public RawImage minimap;
+    [SerializeField]
+    private Camera minimapCamera;
+    [SerializeField]
+    private RectTransform minimapButton;
 
-    public InputOptions inputOptions;
-    public GameWindow gameWindow;
+    [SerializeField]
+    private InputOptions inputOptions;
+    [SerializeField]
+    private GameWindow gameWindow;
 
-    readonly float panSpeed = 20;
-    readonly int panBorderThickness = 10;
+    private readonly float panSpeed = 20;
+    private readonly int panBorderThickness = 10;
 
-    readonly Vector3 panLimit = new Vector3(200, 0, 200);
+    private readonly Vector3 panLimit = new Vector3(200, 0, 200);
 
+    private float mapRatio;
+    private Quaternion rotationMatrix;
+
+    private void Start()
+    {
+        mapRatio = 2 * minimapCamera.orthographicSize / minimapButton.rect.width;
+        rotationMatrix = Quaternion.Euler(-minimapButton.transform.rotation.eulerAngles);
+    }
     void Update ()
     {
         if (inputOptions.MoveCameraEnabled)
@@ -76,14 +87,8 @@ public class CameraMovement : MonoBehaviour {
 
     public void OnMinimapClick()
     {
-        Debug.Log(Input.mousePosition);
-        RaycastHit hit;
-        Vector3 mousePos = Quaternion.Euler(0, 0, -45) * (Input.mousePosition - minimap.rectTransform.position) + minimap.rectTransform.position;
-        Ray ray = minimapCamera.ScreenPointToRay(mousePos);
-        if (Physics.Raycast(ray, out hit))
-        {
-            Debug.Log(hit.point);
-            transform.position = new Vector3(hit.point.x, 0, hit.point.z);
-        }
+        Vector3 translatedPosition = Input.mousePosition - minimapButton.transform.position;
+        Vector3 position = mapRatio * (rotationMatrix * translatedPosition);
+        transform.position = new Vector3(position.x, 0, position.y);
     }
 }

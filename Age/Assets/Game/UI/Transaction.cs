@@ -29,14 +29,23 @@ public class Transaction
 
     public string GetDescription()
     {
-        StringBuilder d = new StringBuilder(Name + "\n");
+        StringBuilder d = new StringBuilder();
+        d.AppendLine("<b>" + Name + "</b>");
         if (food > 0)
-            d.AppendFormat("Food: {0}/{1}\n", food, PlayerState.Instance.Food);
+            d.AppendLine(ResourceDescription("Food", food, PlayerState.Instance.Food));
         if (wood > 0)
-            d.AppendFormat("Wood: {0}/{1}\n", wood, PlayerState.Instance.Wood);
+            d.AppendLine(ResourceDescription("Wood", wood, PlayerState.Instance.Wood));
         if (gold > 0)
-            d.Append("Gold: {0}/{1}\n", gold, PlayerState.Instance.Gold);
+            d.AppendLine(ResourceDescription("Gold", gold, PlayerState.Instance.Gold));
         d.Append(description);
         return d.ToString();
+    }
+
+    private string ResourceDescription(string resourceName, int amountToPay, int ownedAmount)
+    {
+        string line = string.Format("{0}: {1}/{2}", resourceName, amountToPay, ownedAmount);
+        if (amountToPay > ownedAmount)
+            return "<color=red>" + line + "</color>";
+        return line;
     }
 }
