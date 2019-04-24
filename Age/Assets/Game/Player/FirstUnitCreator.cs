@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FirstUnitCreator : MonoBehaviour {
 
@@ -8,8 +6,13 @@ public class FirstUnitCreator : MonoBehaviour {
 	
 	void Update ()
     {
+
         if (player.CreateInitialUnit())
         {
+            for (int i = 0; i < 0; i++)
+            {
+                player.CreateInitialUnit();
+            }
             Destroy(this);
         }
 	}

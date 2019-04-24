@@ -88,9 +88,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: "\u0158eho\u0159"
   color: {r: 1, g: 0.003, b: 0, a: 0}
-  gameState: {fileID: 0}
-  playerState: {fileID: 0}
   factory: {fileID: 114881949609890668}
+  unitPrefab: {fileID: 1021678367712600, guid: 306508b1a11cf8d47b055b78b3965e0a, type: 2}
 --- !u!114 &114881949609890668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -108,10 +107,6 @@ MonoBehaviour:
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
   unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,
-    type: 2}
-  goldPrefab: {fileID: 114018519629479988, guid: e3df380f1b7f20648b7f5abd1e80f452,
-    type: 2}
-  schedulerPrefab: {fileID: 114579649446729468, guid: be1cb3fc7927d1a4e973008936c54932,
     type: 2}
   panel: {fileID: 0}
 --- !u!114 &114918450667427504

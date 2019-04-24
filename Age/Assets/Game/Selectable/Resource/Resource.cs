@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Pathfinding;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public abstract class Resource : Selectable {
 
-    private Job miningJob = null;
+    protected Job miningJob = null;
+
+    [SerializeField]
+    public int size;
 
     [SyncVar(hook = "OnCapacityChange")]
     public int capacity = 0;
@@ -21,7 +23,6 @@ public abstract class Resource : Selectable {
     {
         Init();
         minimapColor = minimapIcon.color;
-        GameState.Instance.AddSelectable(this);
     }
 
     private void OnCapacityChange(int newCapacity)
@@ -36,22 +37,22 @@ public abstract class Resource : Selectable {
         DrawProgressBar((float)capacity / MaxCapacity);
     }
 
-    protected override Job GetEnemyJob(Commandable worker)
-    {
-        if (miningJob == null)
-            miningJob = new JobMine(this);
-        return miningJob;
-    }
-
-    protected override Job GetOwnJob(Commandable worker)
+    public override Job GetOwnJob(Commandable worker)
     {
         return GetEnemyJob(worker);
     }
 
-    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
+    public override string GetObjectDescription()
     {
-        selectedObjectText.text = string.Format("Capacity: {0}/{1}", capacity, MaxCapacity);
+        return string.Format("Capacity: {0}/{1}", capacity, MaxCapacity);
     }
 
-    protected override void InitTransactions() { }
+    protected override void InitPurchases() { }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        GameState.Instance?.Resources.Remove(this);
+        GameState.Instance?.UpdateGraph(GetComponent<Collider>().bounds);
+    }
 }

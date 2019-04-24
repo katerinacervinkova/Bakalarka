@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 223799702696876798}
   - component: {fileID: 114027069226756400}
   - component: {fileID: 114249405155672982}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4459668452127426}
   - component: {fileID: 119999761440760932}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: SelectionProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 4731175319895178}
   - component: {fileID: 33888797229431616}
   - component: {fileID: 23641327811210922}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: root 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 224953394491613024}
   - component: {fileID: 222411456985842126}
   - component: {fileID: 114539528555002018}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4551189772230278}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Food
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,9 +120,8 @@ GameObject:
   - component: {fileID: 4826563836186224}
   - component: {fileID: 136266703088587730}
   - component: {fileID: 114377075688212642}
-  - component: {fileID: 208952002238144314}
   - component: {fileID: 114485398290390334}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Berries
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +138,7 @@ GameObject:
   - component: {fileID: 224595264865194750}
   - component: {fileID: 222840782895589632}
   - component: {fileID: 114446264691878940}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: HealthBarBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,6 +368,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  size: 1
   capacity: 0
 --- !u!114 &114539528555002018
 MonoBehaviour:
@@ -428,21 +428,6 @@ CapsuleCollider:
   m_Height: 1.3024044
   m_Direction: 1
   m_Center: {x: -0.052114487, y: 0.38245332, z: 0.099087715}
---- !u!208 &208952002238144314
-NavMeshObstacle:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1760401173036238}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.5, y: 0.25, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0.4, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!212 &212793975446948140
 SpriteRenderer:
   m_ObjectHideFlags: 1

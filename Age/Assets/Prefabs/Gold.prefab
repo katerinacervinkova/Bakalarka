@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4659092806368786}
   - component: {fileID: 119231375988568356}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: SelectionProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   - component: {fileID: 223310209653704904}
   - component: {fileID: 114143047886561508}
   - component: {fileID: 114122787365862886}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,11 +69,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4060758661814178}
-  - component: {fileID: 135421473161843284}
   - component: {fileID: 114839473009011550}
   - component: {fileID: 114018519629479988}
-  - component: {fileID: 208298698743860356}
-  m_Layer: 0
+  - component: {fileID: 136711307759141374}
+  m_Layer: 11
   m_Name: Gold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +89,7 @@ GameObject:
   - component: {fileID: 224224368089633378}
   - component: {fileID: 222794056821908404}
   - component: {fileID: 114187350357102264}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: HealthBarBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +106,7 @@ GameObject:
   - component: {fileID: 4332082671171030}
   - component: {fileID: 33046630972598312}
   - component: {fileID: 23283575543200524}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: root 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +123,7 @@ GameObject:
   - component: {fileID: 224741326328719908}
   - component: {fileID: 222201206801432784}
   - component: {fileID: 114865444492120020}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,8 +136,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1552674786467166}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 179.86572, y: -0.1, z: 37.383312}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 180.28334, y: 0, z: 27.91278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4332082671171030}
@@ -244,6 +243,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  size: 5
   capacity: 0
 --- !u!114 &114122787365862886
 MonoBehaviour:
@@ -386,8 +386,8 @@ Projector:
   m_IgnoreLayers:
     serializedVersion: 2
     m_Bits: 0
---- !u!135 &135421473161843284
-SphereCollider:
+--- !u!136 &136711307759141374
+CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -395,24 +395,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: -3, z: 0}
---- !u!208 &208298698743860356
-NavMeshObstacle:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1552674786467166}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 4, y: 1, z: 4}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
+  m_Radius: 5.7
+  m_Height: 0
+  m_Direction: 1
+  m_Center: {x: 0, y: -4, z: 0}
 --- !u!212 &212512333423935542
 SpriteRenderer:
   m_ObjectHideFlags: 1

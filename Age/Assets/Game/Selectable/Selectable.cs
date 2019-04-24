@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -30,13 +29,13 @@ public abstract class Selectable : NetworkBehaviour {
     protected Image healthBar;
     protected Quaternion healthBarRotation;
 
-    public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
+    public List<Purchase> Purchases { get; private set; } = new List<Purchase>();
 
-    public abstract void DrawBottomBar(Text nameText, Text selectedObjectText);
-    protected abstract Job GetOwnJob(Commandable worker = null);
-    protected abstract Job GetEnemyJob(Commandable worker = null);
+    public abstract Job GetOwnJob(Commandable worker = null);
+    public abstract Job GetEnemyJob(Commandable worker = null);
     public abstract void DrawHealthBar();
-    protected abstract void InitTransactions();
+    protected abstract void InitPurchases();
+    public abstract string GetObjectDescription();
 
     public override void OnStartClient()
     {
@@ -57,7 +56,7 @@ public abstract class Selectable : NetworkBehaviour {
 
     public override void OnStartAuthority()
     {
-        InitTransactions();
+        InitPurchases();
     }
 
     protected virtual void Update() { }
@@ -71,7 +70,12 @@ public abstract class Selectable : NetworkBehaviour {
         if (selected)
             DrawHealthBar();
         if (hasAuthority)
-            UIManager.Instance?.SetActive(Transactions, selected);
+        {
+            if (selected)
+                UIManager.Instance?.ShowButtons(Purchases);
+            else
+                UIManager.Instance?.HideButtons();
+        }
     }
 
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
@@ -89,7 +93,7 @@ public abstract class Selectable : NetworkBehaviour {
         healthBar.fillAmount = value;
     }
 
-    public virtual void RemoveBottomBar(Text nameText, Text selectedObjectText) { }
+    public virtual void RemoveBottomBar(Text selectedObjectText) { }
 
     protected virtual void OnDestroy()
     {

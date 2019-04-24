@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,38 +16,89 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+
     [SerializeField]
     private Image toolTip;
     private Text toolTipText;
-
     [SerializeField]
-    private List<Button> buttons;
+    private List<PurchaseButton> buttons;
+    [SerializeField]
+    private List<Scheduler> schedulers;
+    [SerializeField]
+    private Text objectText;
+    [SerializeField]
+    private Text resourceText;
+
 
     private void Start()
     {
         toolTipText = toolTip.GetComponentInChildren<Text>();
     }
 
-    public void SetActive(List<Transaction> transactions, bool active)
+    public void ShowButtons(List<Purchase> transactions)
     {
-        if (active)
-            for (int i = 0; i < transactions.Count; i++)
+        for (int i = 0; i < schedulers.Count; i++)
+        {
+            if (i < transactions.Count)
             {
-                int k = i;
-                buttons[k].onClick.AddListener(() => transactions[k].Do());
-                buttons[k].gameObject.SetActive(true);
-                buttons[k].GetComponentInChildren<Text>().text = transactions[k].Name;
-                buttons[k].GetComponent<ToolTipButton>().transaction = transactions[k];
+                buttons[i].SetPurchase(transactions[i]);
+                buttons[i].gameObject.SetActive(true);
             }
-        else
-            buttons.ForEach(b => { b.onClick.RemoveAllListeners(); b.gameObject.SetActive(false); });
+            else
+                buttons[i].gameObject.SetActive(false);
+        }
+    }
+
+    public void HideButtons()
+    {
+        buttons.ForEach(b => b.gameObject.SetActive(false));
+    }
+
+    public void ShowTransactions(List<Transaction> transactions)
+    {
+        for (int i = 0; i < schedulers.Count; i++)
+        {
+            if (i < transactions.Count)
+            {
+                schedulers[i].image.fillAmount = 1 - (transactions[i].Progress / transactions[i].MaxProgress);
+                schedulers[i].gameObject.SetActive(true);
+            }
+            else
+                schedulers[i].gameObject.SetActive(false);
+        }
+    }
+
+    public void HideTransactions()
+    {
+        schedulers.ForEach(s => s.gameObject.SetActive(false));
+    }
+
+    public void OnClickScheduler(int index)
+    {
+        ((Building)PlayerState.Instance.SelectedObject).RemoveTransaction(index);
+    }
+
+    public void ChangeResourceText(string resourceString)
+    {
+        resourceText.text = resourceString;
+    }
+
+    public void ShowObjectText(string name, string description)
+    {
+        objectText.text = string.Format("<b><i>{0}</i></b>\n{1}", name, description);
+        objectText.gameObject.SetActive(true);
+    }
+
+    public void HideObjectText()
+    {
+        objectText.gameObject.SetActive(false);
     }
     
     public void ShowToolTip(Vector3 position, string description)
     {
         toolTip.transform.position = position;
-        toolTip.gameObject.SetActive(true);
         toolTipText.text = description;
+        toolTip.gameObject.SetActive(true);
     }
     public void HideToolTip()
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour {
 
@@ -21,8 +22,18 @@ public class CameraMovement : MonoBehaviour {
     private float mapRatio;
     private Quaternion rotationMatrix;
 
+    private int fingerID = -1;
+
+
+    private void Awake()
+    {
+        #if !UNITY_EDITOR
+            fingerID = 0; 
+        #endif
+    }
     private void Start()
     {
+
         mapRatio = 2 * minimapCamera.orthographicSize / minimapButton.rect.width;
         rotationMatrix = Quaternion.Euler(-minimapButton.transform.rotation.eulerAngles);
     }
@@ -53,10 +64,13 @@ public class CameraMovement : MonoBehaviour {
         if (Input.GetKey("a") || Input.GetKey("w"))
             movement.z += panSpeed * Time.deltaTime;
 
-        float m = HorizontalMovement(Input.mousePosition.x);
-        movement += new Vector3(m, 0, -m);
-        m = VerticalMovement(Input.mousePosition.y);
-        movement += new Vector3(m, 0, m);
+        if (!EventSystem.current.IsPointerOverGameObject(fingerID))
+        {
+            float m = HorizontalMovement(Input.mousePosition.x);
+            movement += new Vector3(m, 0, -m);
+            m = VerticalMovement(Input.mousePosition.y);
+            movement += new Vector3(m, 0, m);
+        }
 
         if (movement == Vector3.zero)
             return;

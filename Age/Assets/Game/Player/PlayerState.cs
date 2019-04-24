@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerState : MonoBehaviour {
 
@@ -42,6 +42,7 @@ public class PlayerState : MonoBehaviour {
             OnResourceChange();
         }
     }
+
     private int food = 50;
     public int Food
     {
@@ -55,10 +56,6 @@ public class PlayerState : MonoBehaviour {
 
     public Selectable SelectedObject { get; set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
-
-    public Text nameText;
-    public Text selectedObjectText;
-    public Text resourceText;
 
     public void Start()
     {
@@ -75,8 +72,7 @@ public class PlayerState : MonoBehaviour {
             Deselect();
         SelectedObject = selectable;
         selectable.SetSelection(true, player);
-        selectable.DrawBottomBar(nameText, selectedObjectText);
-        SetUIActive(true);
+        UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
     }
 
     public void Select(Predicate<Unit> predicate)
@@ -92,61 +88,64 @@ public class PlayerState : MonoBehaviour {
 
     public void Deselect()
     {
-        SelectedObject.RemoveBottomBar(nameText, selectedObjectText);
+        UIManager.Instance?.HideObjectText();
         SelectedObject.SetSelection(false, player);
-        SetUIActive(false);
+
         SelectedObject = null;
+    }
+
+    public void OnTransactionLoading(Building building)
+    {
+        if (building == SelectedObject)
+            UIManager.Instance.ShowTransactions(building.transactions);
     }
 
     public void OnResourceChange()
     {
-        DrawBottomBar(resourceText);
+        UIManager.Instance.ChangeResourceText(GetResourceText());
     }
 
-    private void DrawBottomBar(Text resourceText)
+    private string GetResourceText()
     {
-        resourceText.text = string.Format("Food: {0}\nWood: {1}\nGold: {2}", Food, Wood, Gold);
+        return string.Format("Food: {0}\nWood: {1}\nGold: {2}", Food, Wood, Gold);
     }
 
     public void OnStateChange(Selectable selectable)
     {
         if (SelectedObject == selectable)
-        {
-            selectable.DrawBottomBar(nameText, selectedObjectText);
-        }
-    }
+            UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
 
-    private void SetUIActive(bool active)
-    {
-        if (nameText)
-            nameText.gameObject.SetActive(active);
-        if (selectedObjectText)
-            selectedObjectText.gameObject.SetActive(active);
     }
 
     public void MoveBuildingToBuild(Vector3 hitPoint)
     {
         // pokud je to misto zabrane, nepohne se
         // TODO
-        BuildingToBuild.transform.position = GameState.Instance.GetClosestDestination(hitPoint);
+        /*BuildingToBuild.transform.position = GameState.Instance.GetClosestDestination(hitPoint);
         if (GameState.Instance.IsOccupied(BuildingToBuild))
-            return;
+            return;*/
+        BuildingToBuild.transform.position = hitPoint;
     }
 
-    public void SetWorkerAndBuilding(TemporaryBuilding building)
+    public void SetTempBuilding(TemporaryBuilding building)
     {
         BuildingToBuild = building;
     }
 
     public void PlaceBuilding()
     {
-        if (GameState.Instance.IsOccupied(BuildingToBuild))
-            return;
+       /* if (GameState.Instance.IsOccupied(BuildingToBuild))
+            return;*/
         player.PlaceBuilding(BuildingToBuild);
         ((Commandable)SelectedObject)?.SetGoal(BuildingToBuild);
         BuildingToBuild = null;
     }
 
+    public TemporaryBuilding GetNearestTempBuilding(TemporaryBuilding build, Vector3 position, int maxDistance)
+    {
+        return temporaryBuildings.Where(b => b != build && Vector3.Distance(position, b.transform.position) < maxDistance).
+            OrderBy(b => Vector3.Distance(position, b.transform.position)).FirstOrDefault();
+    }
     public bool Pay(int food, int wood, int gold)
     {
         if (Food < food || Wood < wood || Gold < gold)

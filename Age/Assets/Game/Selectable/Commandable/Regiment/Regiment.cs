@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.UI;
 
 public class Regiment : Commandable {
 
@@ -22,12 +21,16 @@ public class Regiment : Commandable {
         Selected = selected;
         foreach (Unit unit in units)
             unit.SetSelection(selected, player);
-        UIManager.Instance.SetActive(units[0].Transactions, selected);
+        if (selected)
+            UIManager.Instance.ShowButtons(units[0].Purchases);
+        else
+            UIManager.Instance.HideButtons();
+
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
-        units.ForEach(u => u.SetJob(new JobGo(u, hitPoint)));
+        units.ForEach(u => u.SetJob(new JobGo(hitPoint)));
     }
 
     public void Remove(Unit unit)
@@ -36,12 +39,9 @@ public class Regiment : Commandable {
         unit.Reg = null;
     }
 
-    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
+    public override string GetObjectDescription()
     {
-        if (units.Count == 0)
-            return;
-        nameText.text = Name;
-        selectedObjectText.text = string.Format("Health: {0}/{1}", units.Sum(u => u.Health), units.Sum(u => u.MaxHealth))
+        return string.Format("Health: {0}/{1}", units.Sum(u => u.Health), units.Sum(u => u.MaxHealth))
         + "\nStrength: " + units.Sum(u => u.Strength) + "\nIntelligence: " + units.Sum(u => u.Intelligence)
         + "\nAgility: " + units.Sum(u => u.Agility) + "\nHealing: " + units.Sum(u => u.Healing)
         + "\nCrafting: " + units.Sum(u => u.Crafting) + "\nAccuracy: " + units.Sum(u => u.Accuracy);

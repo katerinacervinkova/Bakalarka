@@ -1,28 +1,34 @@
 ﻿using UnityEngine;
 
-public class JobMine : Job {
+public class JobMine<T> : Job where T : Resource {
 
-    private Resource resource;
+    private Vector3 resourcePosition;
+    private int resourceSize;
+    private T resource;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
-    private Collider resourceCollider;
     public override Job Following
     {
         get
         {
+            /*T res = GameState.Instance.GetNearbyResource<T>(resourcePosition, 20, resourceSize);
+            if (res == null)
+                return null;
+            return new JobGo(res.transform.position, res.GetOwnJob(null));*/
             return null;
         }
     }
 
-    public JobMine(Resource resource)
+    public JobMine(T resource)
     {
         this.resource = resource;
-        resourceCollider = resource.GetComponent<Collider>();
+        resourceSize = resource.size;
+        resourcePosition = resource.transform.position;
     }
 
     public override void Do(Unit worker)
     {
-        if (!resource || Vector3.Distance(resourceCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > 3)
+        if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resourceSize + 3)
         {
             worker.ResetJob();
             return;

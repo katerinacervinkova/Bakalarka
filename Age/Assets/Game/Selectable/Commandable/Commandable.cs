@@ -2,20 +2,20 @@
 
     public abstract void SetGoal(Selectable goal);
 
-    protected override void InitTransactions()
+    protected override void InitPurchases()
     {
-        Transactions.Add(new Transaction("Building", "Create Main Building", owner.CreateTemporaryMainBuilding, food: 0, wood: 50, gold: 0));
+        Purchases.Add(new Purchase("Building", "Create Main Building", owner.CreateTemporaryMainBuilding, food: 0, wood: 50, gold: 0));
     }
 
     public override void RightMouseClickObject(Selectable hitObject)
     {
         SetGoal(hitObject);
     }
-    protected override Job GetOwnJob(Commandable worker)
+    public override Job GetOwnJob(Commandable worker)
     {
         return null;
     }
-    protected override Job GetEnemyJob(Commandable worker)
+    public override Job GetEnemyJob(Commandable worker)
     {
         return new AttackJob(this);
     }

@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Pathfinding;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class Building : Selectable {
 
     public Vector3 SpawnPoint { get; private set; }
     public Vector3 DefaultDestination { get; private set; }
 
-    bool animating = false;
-    protected List<Scheduler> schedulers = new List<Scheduler>();
+    private readonly int maxTransactions = 16;
+    private Transaction activeTransaction;
+    public List<Transaction> transactions = new List<Transaction>();
 
-    public override void OnStartClient() { }
+    public override void OnStartClient()
+    {
+        GameState.Instance.Buildings.Add(this);
+        GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
+    }
     public override void Init()
     {
         base.Init();
@@ -23,59 +29,83 @@ public abstract class Building : Selectable {
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);
-            InitTransactions();
+            InitPurchases();
         }
     }
 
-    protected override void Update()
+    public override void SetSelection(bool selected, Player player)
     {
-        if (animating && schedulers.Count == 0)
-            animating = false;
-        base.Update();
+        base.SetSelection(selected, player);
+        if (selected)
+            UIManager.Instance.ShowTransactions(transactions);
+        else
+            UIManager.Instance.HideTransactions();
     }
+
+    public void AddTransaction(Transaction transaction)
+    {
+        transactions.Add(transaction);
+        if (activeTransaction == null)
+        {
+            activeTransaction = transaction;
+            StartTransaction();
+        }
+    }
+
+    public void StartTransaction()
+    {
+        StartCoroutine("LoadTransaction");
+    }
+
+    internal void RemoveTransaction(int index)
+    {
+        transactions[index].Reset();
+        if (index == 0)
+            FinishTransaction();
+        else
+            transactions.RemoveAt(index);
+        PlayerState.Instance.OnTransactionLoading(this);
+    }
+
+    private IEnumerator LoadTransaction()
+    {
+        while (true)
+        {
+            if (activeTransaction.Load(Time.deltaTime))
+                FinishTransaction();
+            PlayerState.Instance.OnTransactionLoading(this);
+            yield return null;
+        }
+    }
+
+    private void FinishTransaction()
+    {
+        StopAllCoroutines();
+        activeTransaction = null;
+        transactions.RemoveAt(0);
+        if (transactions.Count > 0)
+        {
+            activeTransaction = transactions[0];
+            StartTransaction();
+        }
+    }
+
+    public bool CanStartTransaction()
+    {
+        return transactions.Count < maxTransactions;
+    }
+
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
         DefaultDestination = hitPoint;
     }
 
-    public void AddScheduler(Scheduler scheduler)
+    public override string GetObjectDescription()
     {
-        scheduler.gameObject.transform.Translate(50 * schedulers.Count, 0, 0);
-        scheduler.gameObject.SetActive(true);
-        scheduler.schedulers = schedulers;
-        schedulers.Add(scheduler);
-        if (!animating)
-        {
-            scheduler.Animate();
-            animating = true;
-        }
-        
+        return "";
     }
 
-    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
-    {
-        nameText.text = Name;
-        selectedObjectText.text = "";
-        SetSchedulersActive(true);
-    }
-
-    public override void RemoveBottomBar(Text nameText, Text selectedObjectText)
-    {
-        SetSchedulersActive(false);
-    }
-
-    protected void SetSchedulersActive(bool active)
-    {
-        schedulers.ForEach(scheduler =>
-        {
-            CanvasGroup canvasGroup = scheduler.gameObject.GetComponent<CanvasGroup>();
-            canvasGroup.blocksRaycasts = active;
-            canvasGroup.alpha = active ? 1 : 0;
-
-        });
-    }
-
-    protected override Job GetEnemyJob(Commandable worker)
+    public override Job GetEnemyJob(Commandable worker)
     {
         return new AttackJob(this);
     }
@@ -89,5 +119,7 @@ public abstract class Building : Selectable {
     {
         base.OnDestroy();
         PlayerState.Instance?.buildings.Remove(this);
+        GameState.Instance?.Buildings.Remove(this);
+        GameState.Instance?.UpdateGraph(GetComponent<Collider>().bounds);
     }
 }

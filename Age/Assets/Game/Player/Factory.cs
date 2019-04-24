@@ -13,16 +13,11 @@ public class Factory : MonoBehaviour
     public TemporaryBuilding tempBuildingPrefab;
     public Regiment regimentPrefab;
     public Unit unitPrefab;
-    public Resource goldPrefab;
-    public Scheduler schedulerPrefab;
 
     public Image panel;
 
     protected virtual void Start()
     {
-        regimentPrefab.gameObject.SetActive(false);
-        unitPrefab.gameObject.SetActive(false);
-        schedulerPrefab.gameObject.SetActive(false);
         rnd = new System.Random();
         panel = GameObject.Find("Panel").GetComponent<Image>();
     }
@@ -52,28 +47,6 @@ public class Factory : MonoBehaviour
         TemporaryBuilding building = Instantiate(tempBuildingPrefab);
         building.playerID = playerId;
         return building;
-    }
-
-    public Resource CreateGold(Vector3 position)
-    {
-        Resource gold = Instantiate(goldPrefab, position, Quaternion.identity);
-
-        gold.name = "Gold";
-        gold.gameObject.SetActive(true);
-
-        return gold;
-    }
-
-    public Scheduler CreateScheduler(Action action, Image image)
-    {
-        Vector3 position = new Vector3(-300, -30, 0);
-        Scheduler scheduler = Instantiate(schedulerPrefab, position, Quaternion.identity);
-        scheduler.transform.SetParent(panel.transform, false);
-        scheduler.ActionToPerform = action;
-        scheduler.image = image;
-        scheduler.Speed = 1f / 1;
-
-        return scheduler;
     }
 
     private void SetRandomParameters(Unit unit)

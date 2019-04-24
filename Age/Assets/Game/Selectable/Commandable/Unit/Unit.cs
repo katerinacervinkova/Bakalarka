@@ -1,14 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
+﻿using Pathfinding;
+using System;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Unit : Commandable
 {
-    protected enum UState { Standing, Moving, MovingClose, MovingVeryClose }
-
-    Vector3 desiredLocation;
-    Vector3 steeringLocation;
     public Regiment Reg { get; set; }
     [SyncVar]
     public int Strength;
@@ -25,12 +22,8 @@ public class Unit : Commandable
 
     private Job job;
 
-    protected NavMeshAgent Agent { get; set; }
-
-    private bool pending = false;
-
-    [SyncVar]
-    public bool Arrived;
+    protected AIPath aiPath;
+    public MovementController movementController;
 
     internal void ResetJob()
     {
@@ -39,8 +32,8 @@ public class Unit : Commandable
 
     protected void Awake()
     {
-        Agent = gameObject.GetComponent<NavMeshAgent>();
-        desiredLocation = steeringLocation = transform.position;
+        aiPath = GetComponent<AIPath>();
+        movementController = GetComponent<MovementController>();
     }
 
     public override void OnStartClient()
@@ -57,9 +50,6 @@ public class Unit : Commandable
     }
     protected override void Update()
     {
-        Move();
-        Debug.DrawRay(steeringLocation, Vector3.up * 10, Color.blue);
-        Debug.DrawRay(desiredLocation, Vector3.up * 15, Color.green);
         JobUpdate();
         base.Update();
     }
@@ -74,58 +64,22 @@ public class Unit : Commandable
     }
 
 
-    protected void Move()
-    {
-        if (!hasAuthority || Arrived || Agent.pathPending)
-            return;
-        if (pending)
-        {
-            pending = false;
-            Repath();
-        }
-        if (AlmostThere())
-        {
-            if (steeringLocation != desiredLocation)
-                Repath();
-            if (AlmostThere())
-            {
-                transform.position = steeringLocation;
-                owner.CmdUnitArrived(true, netId);
-            }
-        }
-        else if (GameState.Instance.IsOccupied(Agent.steeringTarget))
-            Repath();
-        
-    }
-    private bool AlmostThere()
-    {
-        return Vector3.Distance(transform.position, steeringLocation) < 0.5;
-    }
-
-    private void Repath()
-    {
-        steeringLocation = GameState.Instance.GetClosestUnoccupiedDestination(desiredLocation);
-        if (steeringLocation != Agent.pathEndPosition)
-            SyncDestination(steeringLocation);
-    }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
         if (!hasAuthority)
             return;
-        job = new JobGo(this, hitPoint);
+        job = new JobGo(hitPoint);
     }
 
-    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
+    public override string GetObjectDescription()
     {
-        nameText.text = Name;
         if (hasAuthority)
-            selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth)
+            return string.Format("Health: {0}/{1}", Health, MaxHealth)
             + "\nStrength: " + Strength + "\nIntelligence: " + Intelligence
             + "\nAgility: " + Agility + "\nHealing: " + Healing
             + "\nCrafting: " + Crafting + "\nAccuracy: " + Accuracy;
-        else
-            selectedObjectText.text = string.Format("Health: {0}/{1}", Health, MaxHealth);
+        return string.Format("Health: {0}/{1}", Health, MaxHealth);
     }
 
    
@@ -137,7 +91,7 @@ public class Unit : Commandable
     public override void SetGoal(Selectable goal)
     {
         Job following = goal.CreateJob(this);
-        job = new JobGo(this, goal.transform.position, following);
+        job = new JobGo(goal.transform.position, following);
     }
 
     public void SetJob(Job job)
@@ -147,30 +101,19 @@ public class Unit : Commandable
 
     public void Go(Vector3 destination)
     {
-        if (!hasAuthority)
-            return;
-        Arrived = false;
-        owner.CmdUnitArrived(false, netId);
-        desiredLocation = GameState.Instance.GetClosestDestination(destination);
-        steeringLocation = desiredLocation;
-        SyncDestination(steeringLocation);
-        pending = true;
-    }
-
-    public void SetDestination(Vector3 destination)
-    {
-        steeringLocation = destination;
-        Agent.SetDestination(steeringLocation);
-    }
-
-    private void SyncDestination(Vector3 destination)
-    {
-        owner.CmdSetDestination(destination, netId);
+        aiPath.destination = destination;
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         PlayerState.Instance?.units.Remove(this);
+    }
+
+    public void OnTargetReached()
+    {
+        if (job is JobGo)
+            job.Completed = true;
+        //GameState.Instance.SetPoint(this, transform.position);
     }
 }

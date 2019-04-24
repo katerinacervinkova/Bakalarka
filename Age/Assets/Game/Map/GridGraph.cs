@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,105 +20,96 @@ public class GridGraph : NetworkBehaviour {
         {
             for (int j = 0; j < graph[i].Length; j++)
             {
-                var place = GraphToWorldCoordinates(i, j);
+                var place = GraphToWorldCoordinates(new Vector2Int(i, j));
                 if (IsOccupied(place))
-                    Debug.DrawRay(GraphToWorldCoordinates(i, j), Vector3.up, Color.red);
-                else
-                    Debug.DrawRay(GraphToWorldCoordinates(i, j), Vector3.up);
+                    Debug.DrawRay(GraphToWorldCoordinates(new Vector2Int(i, j)), Vector3.up, Color.red);
+                //else
+                  //  Debug.DrawRay(GraphToWorldCoordinates(new Vector2Int(i, j)), Vector3.up);
             }
         }
     }
-    public Vector3 ClosestUnoccupiedDestination(Vector3 location)
+    public Vector3? ClosestUnoccupiedDestination(Vector3 location)
     {
-        Vector3Int loc = WorldToGraphCoordinates(location);
-        if (!IsOccupied(loc, false))
+        Vector2Int loc = WorldToGraphCoordinates(location);
+
+        if (!IsOccupied(loc))
             return GraphToWorldCoordinates(loc);
-        Vector3 newLocation = Vector3Int.zero;
-        for (int i = 0;; i++)
-        {
-            for (int j = loc.x + i; j > loc.x - i; j--)
-                if (getLocation(ref newLocation, j, loc.z - i))
-                    return newLocation;
-            for (int j = loc.z - i; j < loc.z + i; j++)
-                if (getLocation(ref newLocation, loc.x - i, j))
-                    return newLocation;
-            for (int j = loc.x - i; j < loc.x + i; j++)
-                if (getLocation(ref newLocation, j, loc.z + i))
-                    return newLocation;
-            for (int j = loc.z + i; j > loc.z - i; j--)
-                if (getLocation(ref newLocation, loc.x + i, j))
-                    return newLocation;
-        }
+
+        var enumerator = GetEnumerator(loc);
+        enumerator.MoveNext();
+        for (var vector = enumerator.Current; enumerator.MoveNext(); vector = enumerator.Current)
+            if (!IsOccupied(vector))
+                return GraphToWorldCoordinates(vector);
+        return null;
     }
 
-    internal bool IsOccupied(TemporaryBuilding buildingToBuild)
+    internal bool IsOccupied(TemporaryBuilding buildingToBuild, Vector2Int posDelta)
     {
-        Bounds bounds = buildingToBuild.GetComponent<Collider>().bounds;
-        Vector3Int min = WorldToGraphCoordinates(bounds.min);
-        Vector3Int max = WorldToGraphCoordinates(bounds.max);
-        for (int i = Math.Max(0, min.x); i <= Math.Min(max.x, graph.Length - 1); i++)
-            for (int j = Math.Max(0, min.z); j <= Math.Min(max.z, graph[i].Length - 1); j++)
+        var position = WorldToGraphCoordinates(buildingToBuild.transform.position);
+
+        for (int i = Math.Max(0, position.x - posDelta.x); i <= Math.Min(graph.Length - 1, position.x + posDelta.x); i++)
+            for (int j = Math.Max(0, position.y - posDelta.y); j <= Math.Min(graph[i].Length - 1, position.y + posDelta.y); j++)
                 if (graph[i][j] != null)
                     return true;
         return false;
-
     }
 
-    private bool getLocation(ref Vector3 newLocation, int x, int z)
+    public bool IsOccupied(Vector3 location) => Get(location) != null;
+
+    public bool IsOccupied(Vector2Int location) => Get(location) != null;
+
+    public Vector3 ClosestDestination(Vector3 location) => GraphToWorldCoordinates(WorldToGraphCoordinates(location));
+
+    public void SetPoint(Selectable selectable, Vector3 selectablePos)
     {
-        newLocation = new Vector3(x, 0, z);
-        if (!IsOccupied(newLocation, false))
-        {
-            newLocation = GraphToWorldCoordinates(newLocation);
-            return true;
-        }
-        return false;
+        var position = WorldToGraphCoordinates(selectablePos);
+        graph[position.x][position.y] = selectable;
     }
 
-    public Vector3 ClosestDestination(Vector3 location)
+    public void SetRect(Selectable selectable, Vector3 selectablePos, Vector2Int posDelta)
     {
-        return GraphToWorldCoordinates(WorldToGraphCoordinates(location));
+        var position = WorldToGraphCoordinates(selectablePos);
+
+        var enumerator = GetEnumerator(position, Math.Max(posDelta.x, posDelta.y));
+        enumerator.MoveNext();
+
+        for (var v = enumerator.Current; enumerator.MoveNext(); v = enumerator.Current)
+            if (Math.Abs(position.x - v.x) <= posDelta.x && Math.Abs(position.y - v.y) <= posDelta.y)
+                graph[v.x][v.y] = selectable;
     }
 
-    public void Remove(Selectable selectable)
+    public void SetCircle(Selectable selectable, Vector3 selectablePos, int r)
     {
-        if (selectable == null)
-            return;
-        for (int i = 0; i < graph.Length; i++)
-            for (int j = 0; j < graph[i].Length; j++)
-                if (graph[i][j] == selectable)
-                    graph[i][j] = null;
+        if (selectablePos.x == -34 && selectablePos.z == 31)
+            Debug.Log("jdkfj");
+        var position = WorldToGraphCoordinates(selectablePos);
+
+        var enumerator = GetEnumerator(position, r);
+        enumerator.MoveNext();
+
+        for (var v = enumerator.Current; enumerator.MoveNext(); v = enumerator.Current)
+            if (Vector2.Distance(position, v) <= r)
+                graph[v.x][v.y] = selectable;
     }
 
-    public void Add(Selectable selectable)
+    public T GetNearbyResource<T>(Vector3 position, int maxSize, int minSize) where T : Resource
     {
-        if (selectable is Unit)
-        {
-            var position = WorldToGraphCoordinates(selectable.transform.position);
-            graph[position.x][position.z] = selectable;
-            return;
-        }
-        Bounds bounds = selectable.GetComponent<Collider>().bounds;
-        Vector3Int min = WorldToGraphCoordinates(bounds.min);
-        Vector3Int max = WorldToGraphCoordinates(bounds.max);
+        Vector2Int pos = WorldToGraphCoordinates(position);
 
-        for (int i = min.x; i <= max.x; i++)
-            for (int j = min.z; j <= max.z; j++)
-                graph[i][j] = selectable;
+        var enumerator = GetEnumerator(pos, maxSize, minSize);
+        enumerator.MoveNext();
+
+        for (var v = enumerator.Current; enumerator.MoveNext(); v = enumerator.Current)
+            if (Get(v) is T)
+            {
+                Debug.DrawRay(GraphToWorldCoordinates(v), Vector3.up * 5, Color.yellow, 10);
+                return (T)Get(v);
+            }
+        return null;
     }
 
-
-    public bool IsOccupied(Vector3 location, bool worldCoordinates = true)
-    {
-        return Get(location, worldCoordinates) != null;
-    }
-
-    private Selectable Get(Vector3 location, bool worldCoordinates = true)
-    {
-        if (worldCoordinates)
-            location = WorldToGraphCoordinates(location);
-        return graph[(int)location.x][(int)location.z];
-    }
+    private Selectable Get(Vector3 location) => Get(WorldToGraphCoordinates(location));
+    private Selectable Get(Vector2Int location) => graph[location.x][location.y];
 
     private void CreateGraph()
     {
@@ -139,23 +131,24 @@ public class GridGraph : NetworkBehaviour {
             graph[i] = new Selectable[width];
     }
 
-    private Vector3 GraphToWorldCoordinates(int x, int z)
-    {
-        return new Vector3(x + minx, 0, z + minz);
-    }
+    private Vector3 GraphToWorldCoordinates(Vector2Int pos) => new Vector3(pos.x + minx, 0, pos.y + minz);
+    private Vector2Int WorldToGraphCoordinates(Vector3 pos) => new Vector2Int((int)Math.Round(pos.x) - minx, (int)Math.Round(pos.z) - minz);
 
-    private Vector3 GraphToWorldCoordinates(Vector3 position)
+    private IEnumerator<Vector2Int> GetEnumerator(Vector2Int loc, int maxSize = int.MaxValue, int minSize = 0)
     {
-        return GraphToWorldCoordinates((int)position.x, (int)position.z);
-    }
-
-    private Vector3Int WorldToGraphCoordinates(float x, float z)
-    {
-        return new Vector3Int((int)Math.Round(x) - minx, 0, (int)Math.Round(z) - minz);
-    }
-
-    private Vector3Int WorldToGraphCoordinates(Vector3 position)
-    {
-        return WorldToGraphCoordinates(position.x, position.z);
+        if (minSize == 0)
+            yield return loc;
+        for (int i = minSize + 1; i <= maxSize; i++)
+        {
+            for (int j = Math.Min(graph[0].Length, loc.x + i); j > Math.Max(0, loc.x - i); j--)
+                yield return new Vector2Int(j, loc.y - i);
+            for (int j = Math.Max(0, loc.y - i); j < Math.Min(graph.Length, loc.y + i); j++)
+                yield return new Vector2Int(loc.x - i, j);
+            for (int j = Math.Max(0, loc.x - i); j < Math.Min(graph[0].Length, loc.x + i); j++)
+                yield return new Vector2Int(j, loc.y + i);
+            for (int j = Math.Min(graph.Length, loc.y + i); j > Math.Max(0, loc.y - i); j--)
+                yield return new Vector2Int(loc.x + i, j);
+        }
+        yield return loc;
     }
 }

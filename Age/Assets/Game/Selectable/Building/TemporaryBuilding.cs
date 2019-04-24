@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class TemporaryBuilding : Selectable
 {
@@ -12,6 +11,9 @@ public class TemporaryBuilding : Selectable
     private Job buildJob = null;
     [SyncVar(hook = "OnProgressChange")]
     private float progress = 0;
+
+    [SerializeField]
+    public Vector2Int posDelta;
 
     public override void OnStartClient()
     {
@@ -25,7 +27,7 @@ public class TemporaryBuilding : Selectable
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        PlayerState.Instance.SetWorkerAndBuilding(this);
+        PlayerState.Instance.SetTempBuilding(this);
         PlayerState.Instance.temporaryBuildings.Add(this);
     }
 
@@ -65,20 +67,19 @@ public class TemporaryBuilding : Selectable
             owner.CmdCreateBuilding(netId);
     }
 
-    public override void DrawBottomBar(Text nameText, Text selectedObjectText)
+    public override string GetObjectDescription()
     {
-        nameText.text = "Temporary Building";
-        selectedObjectText.text = string.Format("progress {0}/{1}", progress, maxProgress);
+        return string.Format("progress {0}/{1}", progress, maxProgress);
     }
 
-    protected override Job GetOwnJob(Commandable worker)
+    public override Job GetOwnJob(Commandable worker)
     {
         if (buildJob == null)
             buildJob = new JobBuild(this);
         return buildJob;
     }
 
-    protected override Job GetEnemyJob(Commandable worker)
+    public override Job GetEnemyJob(Commandable worker)
     {
         return new AttackJob(this);
     }
@@ -88,7 +89,7 @@ public class TemporaryBuilding : Selectable
         DrawProgressBar(progress / maxProgress);
     }
 
-    protected override void InitTransactions()
+    protected override void InitPurchases()
     {
     }
 
@@ -96,5 +97,7 @@ public class TemporaryBuilding : Selectable
     {
         base.OnDestroy();
         PlayerState.Instance?.temporaryBuildings.Remove(this);
+        GameState.Instance?.TemporaryBuildings.Remove(this);
+        GameState.Instance?.UpdateGraph(GetComponent<Collider>().bounds);
     }
 }

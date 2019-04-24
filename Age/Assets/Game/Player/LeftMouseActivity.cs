@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class LeftMouseActivity : MouseActivity {
 
@@ -13,10 +14,14 @@ public class LeftMouseActivity : MouseActivity {
     Vector3 hitPoint = Vector3.zero;
     Vector3 squareStartPosition = Vector3.zero;
     bool isClicking = false;
+    private int fingerID = -1;
 
     protected override void Awake()
     {
         base.Awake();
+        #if !UNITY_EDITOR
+            fingerID = 0; 
+        #endif
         inputOptions = gameObject.GetComponent<InputOptions>();
     }
 
@@ -64,6 +69,8 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
+        if (EventSystem.current.IsPointerOverGameObject(fingerID))
+            return;
         if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
             PlayerState.Instance.Deselect();
         if (PlayerState.Instance.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)

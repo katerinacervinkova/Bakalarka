@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4751553539154012}
   - component: {fileID: 119588751922476216}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: SelectionProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,8 +87,7 @@ GameObject:
   - component: {fileID: 136292108331750124}
   - component: {fileID: 114732594052462230}
   - component: {fileID: 114900470976806212}
-  - component: {fileID: 208602447074137780}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +120,7 @@ GameObject:
   - component: {fileID: 224268276071738670}
   - component: {fileID: 222134439463410350}
   - component: {fileID: 114380265800968118}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +138,7 @@ GameObject:
   - component: {fileID: 223574045821212846}
   - component: {fileID: 114367518562151820}
   - component: {fileID: 114229464581372158}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,7 +189,7 @@ GameObject:
   - component: {fileID: 224757210458229094}
   - component: {fileID: 222813365468665966}
   - component: {fileID: 114454451068177668}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: HealthBarBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +203,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1946295013976472}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0.00008}
+  m_LocalPosition: {x: -0.00014, y: 0, z: -0.00028}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4194971180854484}
@@ -217,7 +216,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1254848787001064}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00014, y: 0, z: -0.00031}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4194971180854484}
@@ -247,7 +246,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1843888123610382}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00011, y: -0.00018, z: -0.00028}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4194971180854484}
@@ -260,7 +259,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1548023355122722}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00015, y: 0, z: -0.00032}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4194971180854484}
@@ -286,7 +285,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1573847128982974}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.558431, y: -0.1, z: -24.819223}
+  m_LocalPosition: {x: 149, y: -0.1, z: -92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4194971180854484}
@@ -612,6 +611,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  size: 1
   capacity: 0
 --- !u!119 &119588751922476216
 Projector:
@@ -640,25 +640,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.1888332
+  m_Radius: 1
   m_Height: 4.39577
   m_Direction: 1
-  m_Center: {x: 0.06560516, y: 2.1478853, z: 0}
---- !u!208 &208602447074137780
-NavMeshObstacle:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1573847128982974}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.26, y: 0.55, z: 0.26}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: -0.1, z: 0}
-  m_TimeToStationary: 0.5
+  m_Center: {x: 0, y: 2.1478853, z: 0}
 --- !u!212 &212351051914336100
 SpriteRenderer:
   m_ObjectHideFlags: 1
