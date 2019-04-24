@@ -155,4 +155,9 @@ public class PlayerState : MonoBehaviour {
         Gold -= gold;
         return true;
     }
+
+    public void MinimapMove(Vector3 position)
+    {
+        SelectedObject?.RightMouseClickGround(position);
+    }
 }

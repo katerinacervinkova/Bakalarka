@@ -5,11 +5,6 @@ using UnityEngine.EventSystems;
 public class CameraMovement : MonoBehaviour {
 
     [SerializeField]
-    private Camera minimapCamera;
-    [SerializeField]
-    private RectTransform minimapButton;
-
-    [SerializeField]
     private InputOptions inputOptions;
     [SerializeField]
     private GameWindow gameWindow;
@@ -18,9 +13,6 @@ public class CameraMovement : MonoBehaviour {
     private readonly int panBorderThickness = 10;
 
     private readonly Vector3 panLimit = new Vector3(200, 0, 200);
-
-    private float mapRatio;
-    private Quaternion rotationMatrix;
 
     private int fingerID = -1;
 
@@ -31,12 +23,7 @@ public class CameraMovement : MonoBehaviour {
             fingerID = 0; 
         #endif
     }
-    private void Start()
-    {
 
-        mapRatio = 2 * minimapCamera.orthographicSize / minimapButton.rect.width;
-        rotationMatrix = Quaternion.Euler(-minimapButton.transform.rotation.eulerAngles);
-    }
     void Update ()
     {
         if (inputOptions.MoveCameraEnabled)
@@ -99,10 +86,8 @@ public class CameraMovement : MonoBehaviour {
         return 0;
     }
 
-    public void OnMinimapClick()
+    public void MinimapMove(Vector3 position)
     {
-        Vector3 translatedPosition = Input.mousePosition - minimapButton.transform.position;
-        Vector3 position = mapRatio * (rotationMatrix * translatedPosition);
-        transform.position = new Vector3(position.x, 0, position.y);
+        transform.position = position;
     }
 }

@@ -11,11 +11,10 @@ public class JobMine<T> : Job where T : Resource {
     {
         get
         {
-            /*T res = GameState.Instance.GetNearbyResource<T>(resourcePosition, 20, resourceSize);
+            T res = GameState.Instance.GetNearestResource(resource, resourcePosition, 20);
             if (res == null)
                 return null;
-            return new JobGo(res.transform.position, res.GetOwnJob(null));*/
-            return null;
+            return new JobGo(res.transform.position, res.GetOwnJob(null));
         }
     }
 

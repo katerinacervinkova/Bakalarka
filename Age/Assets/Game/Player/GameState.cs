@@ -1,5 +1,6 @@
 ﻿using Pathfinding;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -39,6 +40,12 @@ public class GameState : NetworkBehaviour {
             updatePhysics = true
         };
         AstarPath.active?.UpdateGraphs(guo);
+    }
+
+    public T GetNearestResource<T>(T resource, Vector3 position, int maxDistance) where T : Resource
+    {
+        return (T)Resources.Where(r => r is T && r != resource && Vector3.Distance(position, r.transform.position) < maxDistance).
+            OrderBy(b => Vector3.Distance(position, b.transform.position)).FirstOrDefault();
     }
 
     [ClientRpc]

@@ -62,13 +62,13 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCreateUnit(Vector3 position, Vector3 destination)
     {
-        /*NNConstraint nodeConstraint = new NNConstraint
+        NNConstraint nodeConstraint = new NNConstraint
         {
             constrainWalkability = true,
             walkable = true
         };
-        NNInfo nodeInfo = AstarPath.active.GetNearest(position, nodeConstraint);*/
-        Unit unit = factory.CreateUnit(position, netId);
+        NNInfo nodeInfo = AstarPath.active.GetNearest(position, nodeConstraint);
+        Unit unit = factory.CreateUnit(nodeInfo.position, netId);
         NetworkServer.SpawnWithClientAuthority(unit.gameObject, gameObject);
         if (destination != position)
             unit.SetJob(new JobGo(destination));
