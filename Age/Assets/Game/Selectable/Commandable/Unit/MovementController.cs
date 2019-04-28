@@ -9,6 +9,10 @@ public class MovementController : NetworkBehaviour {
 
     AIPath aIPath;
 
+    public Vector3 destination;
+
+    Vector3 lastPosition;
+
     private void Awake()
     {
         aIPath = GetComponent<AIPath>();
@@ -16,7 +20,22 @@ public class MovementController : NetworkBehaviour {
 
     private void Update()
     {
-        if (hasAuthority && aIPath.shouldRecalculatePath) CmdSearchPath(aIPath.destination);
+        if (hasAuthority && aIPath.shouldRecalculatePath)
+        {
+            if (!HasMoved())
+            {
+                var v = Random.insideUnitCircle * aIPath.endReachedDistance;
+                aIPath.destination += new Vector3(v.x, 0, v.y);
+                aIPath.endReachedDistance += 0.1f;
+            }
+            CmdSearchPath(aIPath.destination);
+            lastPosition = transform.position;
+        }
+    }
+
+    private bool HasMoved()
+    {
+        return Vector3.Distance(lastPosition, transform.position) > 0.1;
     }
 
     [Command]

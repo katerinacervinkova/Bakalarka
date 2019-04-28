@@ -1,8 +1,6 @@
 ﻿using Pathfinding;
-using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class Unit : Commandable
 {
@@ -24,11 +22,6 @@ public class Unit : Commandable
 
     protected AIPath aiPath;
     public MovementController movementController;
-
-    internal void ResetJob()
-    {
-        job = null;
-    }
 
     protected void Awake()
     {
@@ -99,9 +92,15 @@ public class Unit : Commandable
         this.job = job;
     }
 
+    public void ResetJob()
+    {
+        job = job.Following;
+    }
     public void Go(Vector3 destination)
     {
+        movementController.destination = destination;
         aiPath.destination = destination;
+        aiPath.endReachedDistance = 0.6f;
     }
 
     protected override void OnDestroy()
@@ -114,6 +113,5 @@ public class Unit : Commandable
     {
         if (job is JobGo)
             job.Completed = true;
-        //GameState.Instance.SetPoint(this, transform.position);
     }
 }

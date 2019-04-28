@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
 {

@@ -248,7 +248,7 @@ MonoBehaviour:
   alwaysDrawGizmos: 1
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
-  constrainInsideGraph: 1
+  constrainInsideGraph: 0
 --- !u!114 &114012610445523338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -271,6 +271,7 @@ MonoBehaviour:
   Healing: 0
   Crafting: 0
   Accuracy: 0
+  movementController: {fileID: 0}
 --- !u!114 &114233619122888600
 MonoBehaviour:
   m_ObjectHideFlags: 1

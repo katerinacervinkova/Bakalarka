@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Pathfinding;
 
 public class Regiment : Commandable {
 
@@ -30,7 +31,12 @@ public class Regiment : Commandable {
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
-        units.ForEach(u => u.SetJob(new JobGo(hitPoint)));
+        float ratio = Mathf.Sqrt(units.Count);
+        for (int i = 0; i < units.Count; i++)
+        {
+            var v = Random.insideUnitCircle * ratio;
+            units[i].SetJob(new JobGo(new Vector3(hitPoint.x + v.x, 0, hitPoint.z + v.y)));
+        }
     }
 
     public void Remove(Unit unit)
