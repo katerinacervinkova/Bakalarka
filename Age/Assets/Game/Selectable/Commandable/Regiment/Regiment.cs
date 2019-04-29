@@ -46,10 +46,13 @@ public class Regiment : Commandable {
 
     public override string GetObjectDescription()
     {
-        return string.Format("Health: {0}/{1}", units.Sum(u => u.Health), units.Sum(u => u.MaxHealth))
-        + "\nStrength: " + units.Sum(u => u.Gathering) + "\nIntelligence: " + units.Sum(u => u.Intelligence)
-        + "\nAgility: " + units.Sum(u => u.Agility) + "\nHealing: " + units.Sum(u => u.Healing)
-        + "\nBuilding: " + units.Sum(u => u.Building) + "\nAccuracy: " + units.Sum(u => u.Accuracy);
+        return $"Health: {(int)units.Sum(u => u.Health)}/{(int)units.Sum(u => u.MaxHealth)}\n" +
+            $"Strength: {(int)units.Sum(u => u.Gathering)}\n" +
+            $"Intelligence: {(int)units.Sum(u => u.Intelligence)}\n" +
+            $"Agility: {(int)units.Sum(u => u.Agility)}\n" +
+            $"Healing: {(int)units.Sum(u => u.Healing)}\n" +
+            $"Building: {(int)units.Sum(u => u.Building)}\n" +
+            $"Accuracy: {(int)units.Sum(u => u.Accuracy)}";
     }
     public void SetUnits(List<Unit> units)
     {
