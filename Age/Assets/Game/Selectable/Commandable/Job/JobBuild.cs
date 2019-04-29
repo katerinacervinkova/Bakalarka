@@ -38,7 +38,8 @@ public class JobBuild : Job {
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            building.Build(worker);
+            building.Build(worker.Building);
+            worker.owner.ChangeAttribute(worker, AttEnum.Building, worker.Building + 0.1f);
             timeElapsed -= minTime;
         }
     }

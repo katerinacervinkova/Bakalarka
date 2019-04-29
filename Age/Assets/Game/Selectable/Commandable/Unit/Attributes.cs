@@ -12,8 +12,8 @@ public class Attributes : NetworkBehaviour {
     private float Agility;
     [SyncVar(hook = "OnHealingChange")]
     private float Healing;
-    [SyncVar(hook = "OnCraftingChange")]
-    private float Crafting;
+    [SyncVar(hook = "OnBuildingChange")]
+    private float Building;
     [SyncVar(hook = "OnAccuracyChange")]
     private float Accuracy;
 
@@ -34,8 +34,8 @@ public class Attributes : NetworkBehaviour {
                 return Agility;
             case AttEnum.Healing:
                 return Healing;
-            case AttEnum.Crafting:
-                return Crafting;
+            case AttEnum.Building:
+                return Building;
             case AttEnum.Accuracy:
                 return Accuracy;
             default:
@@ -59,8 +59,8 @@ public class Attributes : NetworkBehaviour {
             case AttEnum.Healing:
                 Healing = value;
                 break;
-            case AttEnum.Crafting:
-                Crafting = value;
+            case AttEnum.Building:
+                Building = value;
                 break;
             case AttEnum.Accuracy:
                 Accuracy = value;
@@ -89,9 +89,9 @@ public class Attributes : NetworkBehaviour {
         Gathering = value;
         OnChange();
     }
-    private void OnCraftingChange(float value)
+    private void OnBuildingChange(float value)
     {
-        Crafting = value;
+        Building = value;
         OnChange();
     }
     private void OnAccuracyChange(float value)
@@ -108,11 +108,11 @@ public class Attributes : NetworkBehaviour {
 
     public string GetDescription()
     {
-        return $"Gathering: {Gathering}\n" +
-            $"Intelligence: {Intelligence}\n" +
-            $"Agility: {Agility}\n" +
-            $"Healing: {Healing}\n" +
-            $"Crafting: {Crafting}\n" +
-            $"Accuracy: {Accuracy}";
+        return $"Gathering: {(int)Gathering}\n" +
+            $"Intelligence: {(int)Intelligence}\n" +
+            $"Agility: {(int)Agility}\n" +
+            $"Healing: {(int)Healing}\n" +
+            $"Building: {(int)Building}\n" +
+            $"Accuracy: {(int)Accuracy}";
     }
 }

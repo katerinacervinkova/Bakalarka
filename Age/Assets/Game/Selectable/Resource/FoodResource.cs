@@ -6,10 +6,10 @@ public class FoodResource : Resource
 
     protected override float MaxCapacity => maxCapacity;
 
-    public override void Gather(Unit worker)
+    public override void Gather(float gathering, Player player)
     {
-        float amount = Math.Min(worker.Gathering, capacity);
-        worker.owner.Gather(amount, this);
+        float amount = Math.Min(gathering, capacity);
+        player.Gather(amount, this);
         PlayerState.Instance.Food += amount;
     }
 

@@ -15,7 +15,7 @@ public class Unit : Commandable
     public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
     public float Agility { get { return atts.Get(AttEnum.Agility); } set { atts.Set(AttEnum.Agility, value); } }
     public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
-    public float Crafting { get { return atts.Get(AttEnum.Crafting); } set { atts.Set(AttEnum.Crafting, value); } }
+    public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
     public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
 
     protected void Awake()
@@ -41,6 +41,11 @@ public class Unit : Commandable
     {
         JobUpdate();
         base.Update();
+    }
+
+    public void SetAttribute(AttEnum attEnum, float value)
+    {
+        atts.Set(attEnum, value);
     }
 
     protected virtual void JobUpdate()

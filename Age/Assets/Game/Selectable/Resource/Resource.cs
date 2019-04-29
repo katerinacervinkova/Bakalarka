@@ -12,7 +12,7 @@ public abstract class Resource : Selectable {
     [SyncVar(hook = "OnCapacityChange")]
     public float capacity = 0;
     protected abstract float MaxCapacity { get; }
-    public abstract void Gather(Unit worker);
+    public abstract void Gather(float gathering, Player player);
 
     protected void Start()
     {

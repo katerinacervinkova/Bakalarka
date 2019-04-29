@@ -42,6 +42,11 @@ public class Player : NetworkBehaviour
         CmdGather(amount, resource.netId);
     }
 
+    public void ChangeAttribute(Unit unit, AttEnum attEnum, float value)
+    {
+        CmdChangeAttribute(unit.netId, attEnum, value);
+    }
+
     public void CreateTemporaryMainBuilding()
     {
         CmdCreateTempBuilding();
@@ -82,6 +87,12 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
+    private void CmdChangeAttribute(NetworkInstanceId unitId, AttEnum attEnum, float value)
+    {
+        NetworkServer.objects[unitId].GetComponent<Unit>().SetAttribute(attEnum, value);
+    }
+
+    [Command]
     public void CmdCreateBuilding(NetworkInstanceId tempBuildingID)
     {
         GameState.Instance.RpcCreateBuilding(tempBuildingID);
@@ -105,11 +116,5 @@ public class Player : NetworkBehaviour
         temporaryBuilding.transform.position = position;
         temporaryBuilding.placed = true;
         GameState.Instance.RpcPlaceBuilding(position, tempBuildingId);
-    }
-
-    [Command]
-    public void CmdOnPathCompleted(NetworkInstanceId unitId)
-    {
-
     }
 }

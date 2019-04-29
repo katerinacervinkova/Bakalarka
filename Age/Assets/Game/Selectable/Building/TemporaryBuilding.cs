@@ -52,11 +52,11 @@ public class TemporaryBuilding : Selectable
     {
         progress += Math.Min(maxProgress - progress, strength);
     }
-    public void Build(Unit worker)
+    public void Build(float building)
     {
         if (!hasAuthority)
             return;
-        CmdBuild(worker.Crafting);
+        CmdBuild(building);
         ControlProgress();
     }
 

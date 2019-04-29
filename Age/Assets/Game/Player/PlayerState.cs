@@ -107,7 +107,7 @@ public class PlayerState : MonoBehaviour {
 
     private string GetResourceText()
     {
-        return string.Format("Food: {0}\nWood: {1}\nGold: {2}", Food, Wood, Gold);
+        return $"Food: {(int)Food}\nWood: {(int)Wood}\nGold: {(int)Gold}";
     }
 
     public void OnStateChange(Selectable selectable)

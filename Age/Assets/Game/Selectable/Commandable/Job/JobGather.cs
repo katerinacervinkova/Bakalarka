@@ -33,7 +33,8 @@ public class JobGather<T> : Job where T : Resource {
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            resource.Gather(worker);
+            resource.Gather(worker.Gathering, worker.owner);
+            worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + 0.1f);
             timeElapsed -= minTime;
         }
     }

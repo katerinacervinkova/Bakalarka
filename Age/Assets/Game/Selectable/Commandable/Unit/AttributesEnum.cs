@@ -4,6 +4,6 @@
     Intelligence,
     Agility,
     Healing,
-    Crafting,
+    Building,
     Accuracy
 }

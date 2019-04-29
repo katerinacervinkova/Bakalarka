@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Pathfinding;
 
 public class Regiment : Commandable {
 
@@ -50,7 +49,7 @@ public class Regiment : Commandable {
         return string.Format("Health: {0}/{1}", units.Sum(u => u.Health), units.Sum(u => u.MaxHealth))
         + "\nStrength: " + units.Sum(u => u.Gathering) + "\nIntelligence: " + units.Sum(u => u.Intelligence)
         + "\nAgility: " + units.Sum(u => u.Agility) + "\nHealing: " + units.Sum(u => u.Healing)
-        + "\nCrafting: " + units.Sum(u => u.Crafting) + "\nAccuracy: " + units.Sum(u => u.Accuracy);
+        + "\nBuilding: " + units.Sum(u => u.Building) + "\nAccuracy: " + units.Sum(u => u.Accuracy);
     }
     public void SetUnits(List<Unit> units)
     {
