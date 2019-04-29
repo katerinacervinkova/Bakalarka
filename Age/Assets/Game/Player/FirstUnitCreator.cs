@@ -8,10 +8,8 @@ public class FirstUnitCreator : MonoBehaviour {
     {
         if (player.CreateInitialUnit())
         {
-            for (int i = 0; i < 10; i++)
-            {
+            for (int i = 0; i < 0; i++)
                 player.CreateInitialUnit();
-            }
             Destroy(this);
         }
 	}

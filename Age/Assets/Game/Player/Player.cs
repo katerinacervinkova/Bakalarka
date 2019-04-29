@@ -37,9 +37,9 @@ public class Player : NetworkBehaviour
     }
 
 
-    public void Mine(int amount, Resource resource)
+    public void Gather(float amount, Resource resource)
     {
-        CmdMine(amount, resource.netId);
+        CmdGather(amount, resource.netId);
     }
 
     public void CreateTemporaryMainBuilding()
@@ -88,7 +88,7 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdMine(int amount, NetworkInstanceId resourceId)
+    public void CmdGather(float amount, NetworkInstanceId resourceId)
     {
         if (!NetworkServer.objects.ContainsKey(resourceId))
             return;

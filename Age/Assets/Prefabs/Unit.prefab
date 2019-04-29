@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 114705518619502384}
   - component: {fileID: 114357249546682940}
   - component: {fileID: 114011171590671994}
+  - component: {fileID: 114293455637386016}
   m_Layer: 9
   m_Name: Unit
   m_TagString: Untagged
@@ -265,12 +266,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 50
   MaxHealth: 100
-  Strength: 0
-  Intelligence: 0
-  Agility: 0
-  Healing: 0
-  Crafting: 0
-  Accuracy: 0
   movementController: {fileID: 0}
 --- !u!114 &114233619122888600
 MonoBehaviour:
@@ -363,6 +358,23 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114293455637386016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1021678367712600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e54ab5bcf4e23c49b5054dba34aefdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gathering: 0
+  Intelligence: 0
+  Agility: 0
+  Healing: 0
+  Crafting: 0
+  Accuracy: 0
 --- !u!114 &114357249546682940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -374,6 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2d48415330b2043b4718018837bc9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
 --- !u!114 &114633145230421730
 MonoBehaviour:
   m_ObjectHideFlags: 1

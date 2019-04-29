@@ -1,30 +1,26 @@
 ﻿using Pathfinding;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class Unit : Commandable
 {
-    public Regiment Reg { get; set; }
-    [SyncVar]
-    public int Strength;
-    [SyncVar]
-    public int Intelligence;
-    [SyncVar]
-    public int Agility;
-    [SyncVar]
-    public int Healing;
-    [SyncVar]
-    public int Crafting;
-    [SyncVar]
-    public int Accuracy;
-
     private Job job;
 
     protected AIPath aiPath;
+
     public MovementController movementController;
+    public Regiment Reg { get; set; }
+    private Attributes atts;
+
+    public float Gathering { get { return atts.Get(AttEnum.Gathering); } set { atts.Set(AttEnum.Gathering, value); } }
+    public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
+    public float Agility { get { return atts.Get(AttEnum.Agility); } set { atts.Set(AttEnum.Agility, value); } }
+    public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
+    public float Crafting { get { return atts.Get(AttEnum.Crafting); } set { atts.Set(AttEnum.Crafting, value); } }
+    public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
 
     protected void Awake()
     {
+        atts = GetComponent<Attributes>();
         aiPath = GetComponent<AIPath>();
         movementController = GetComponent<MovementController>();
     }
@@ -56,8 +52,7 @@ public class Unit : Commandable
         job?.Do(this);
     }
 
-
-
+    
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
         if (!hasAuthority)
@@ -67,12 +62,7 @@ public class Unit : Commandable
 
     public override string GetObjectDescription()
     {
-        if (hasAuthority)
-            return string.Format("Health: {0}/{1}", Health, MaxHealth)
-            + "\nStrength: " + Strength + "\nIntelligence: " + Intelligence
-            + "\nAgility: " + Agility + "\nHealing: " + Healing
-            + "\nCrafting: " + Crafting + "\nAccuracy: " + Accuracy;
-        return string.Format("Health: {0}/{1}", Health, MaxHealth);
+        return $"Health: {(int)Health}/{(int)MaxHealth}\n{atts.GetDescription()}";
     }
 
    

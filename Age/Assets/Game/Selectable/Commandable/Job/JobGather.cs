@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 
-public class JobMine<T> : Job where T : Resource {
+public class JobGather<T> : Job where T : Resource {
 
     private Vector3 resourcePosition;
-    private int resourceSize;
     private T resource;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
@@ -18,16 +17,15 @@ public class JobMine<T> : Job where T : Resource {
         }
     }
 
-    public JobMine(T resource)
+    public JobGather(T resource)
     {
         this.resource = resource;
-        resourceSize = resource.size;
         resourcePosition = resource.transform.position;
     }
 
     public override void Do(Unit worker)
     {
-        if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resourceSize + 3)
+        if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resource.size + 3)
         {
             worker.ResetJob();
             return;
@@ -35,18 +33,8 @@ public class JobMine<T> : Job where T : Resource {
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            resource.Mine(worker);
+            resource.Gather(worker);
             timeElapsed -= minTime;
         }
     }
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

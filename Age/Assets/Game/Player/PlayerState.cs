@@ -22,8 +22,8 @@ public class PlayerState : MonoBehaviour {
     public List<Building> buildings;
     public List<TemporaryBuilding> temporaryBuildings;
 
-    private int gold = 50;
-    public int Gold
+    private float gold = 50;
+    public float Gold
     {
         get { return gold; }
         set
@@ -32,8 +32,8 @@ public class PlayerState : MonoBehaviour {
             OnResourceChange();
         }
     }
-    private int wood = 50;
-    public int Wood
+    private float wood = 50;
+    public float Wood
     {
         get { return wood; }
         set
@@ -43,8 +43,8 @@ public class PlayerState : MonoBehaviour {
         }
     }
 
-    private int food = 50;
-    public int Food
+    private float food = 50;
+    public float Food
     {
         get { return food; }
         set

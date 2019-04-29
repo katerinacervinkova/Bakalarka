@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -52,18 +51,18 @@ public class Factory : MonoBehaviour
     private void SetRandomParameters(Unit unit)
     {
         int health = rnd.Next(100);
-        int strength = rnd.Next(100);
+        int gathering = rnd.Next(100);
         int intelligence = rnd.Next(100);
         int agility = rnd.Next(100);
         int healing = rnd.Next(100);
         int crafting = rnd.Next(100);
         int accuracy = rnd.Next(100);
 
-        int ratio = (health + strength + intelligence + agility + healing + crafting + accuracy);
+        int ratio = (health + gathering + intelligence + agility + healing + crafting + accuracy);
 
         unit.MaxHealth = 100 + health * sumOfProperties / ratio + 1;
         unit.Health = unit.MaxHealth;
-        unit.Strength = strength * sumOfProperties / ratio + 1;
+        unit.Gathering = gathering * sumOfProperties / ratio + 1;
         unit.Intelligence = intelligence * sumOfProperties / ratio + 1;
         unit.Agility = agility * sumOfProperties / ratio + 1;
         unit.Healing = healing * sumOfProperties / ratio + 1;

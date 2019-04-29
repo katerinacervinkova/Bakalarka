@@ -32,11 +32,11 @@ public class Purchase
         StringBuilder d = new StringBuilder();
         d.AppendLine("<b>" + Name + "</b>");
         if (food > 0)
-            d.AppendLine(ResourceDescription("Food", food, PlayerState.Instance.Food));
+            d.AppendLine(ResourceDescription("Food", food, (int)PlayerState.Instance.Food));
         if (wood > 0)
-            d.AppendLine(ResourceDescription("Wood", wood, PlayerState.Instance.Wood));
+            d.AppendLine(ResourceDescription("Wood", wood, (int)PlayerState.Instance.Wood));
         if (gold > 0)
-            d.AppendLine(ResourceDescription("Gold", gold, PlayerState.Instance.Gold));
+            d.AppendLine(ResourceDescription("Gold", gold, (int)PlayerState.Instance.Gold));
         d.Append(description);
         return d.ToString();
     }

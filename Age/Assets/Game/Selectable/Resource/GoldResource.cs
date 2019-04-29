@@ -2,21 +2,21 @@
 
 public class GoldResource : Resource
 {
-    private static readonly int maxCapacity = 100;
+    private static readonly float maxCapacity = 100;
 
-    protected override int MaxCapacity => maxCapacity;
+    protected override float MaxCapacity => maxCapacity;
 
-    public override void Mine(Unit worker)
+    public override void Gather(Unit worker)
     {
-        int amount = Math.Min(worker.Strength, capacity);
-        worker.owner.Mine(amount, this);
+        float amount = Math.Min(worker.Gathering, capacity);
+        worker.owner.Gather(amount, this);
         PlayerState.Instance.Gold += amount;
     }
 
     public override Job GetEnemyJob(Commandable worker)
     {
         if (miningJob == null)
-            miningJob = new JobMine<GoldResource>(this);
+            miningJob = new JobGather<GoldResource>(this);
         return miningJob;
     }
 }

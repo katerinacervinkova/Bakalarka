@@ -48,7 +48,7 @@ public class TemporaryBuilding : Selectable
     }
 
     [Command]
-    private void CmdBuild(int strength)
+    private void CmdBuild(float strength)
     {
         progress += Math.Min(maxProgress - progress, strength);
     }

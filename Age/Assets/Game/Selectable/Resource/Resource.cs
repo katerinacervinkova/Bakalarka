@@ -10,9 +10,9 @@ public abstract class Resource : Selectable {
     public int size;
 
     [SyncVar(hook = "OnCapacityChange")]
-    public int capacity = 0;
-    protected abstract int MaxCapacity { get; }
-    public abstract void Mine(Unit worker);
+    public float capacity = 0;
+    protected abstract float MaxCapacity { get; }
+    public abstract void Gather(Unit worker);
 
     protected void Start()
     {
@@ -25,7 +25,7 @@ public abstract class Resource : Selectable {
         minimapColor = minimapIcon.color;
     }
 
-    private void OnCapacityChange(int newCapacity)
+    private void OnCapacityChange(float newCapacity)
     {
         capacity = newCapacity;
         PlayerState.Instance.OnStateChange(this);

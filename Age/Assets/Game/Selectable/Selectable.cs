@@ -15,9 +15,9 @@ public abstract class Selectable : NetworkBehaviour {
     public Player owner;
 
     [SyncVar]
-    public int Health;
+    public float Health;
     [SyncVar]
-    public int MaxHealth = 100;
+    public float MaxHealth = 100;
 
     protected bool Selected { get; set; } = false;
 
