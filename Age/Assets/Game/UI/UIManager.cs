@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,8 @@ public class UIManager : MonoBehaviour {
     private Text objectText;
     [SerializeField]
     private Text resourceText;
+    [SerializeField]
+    private GameObject target;
 
 
     private void Start()
@@ -102,5 +105,16 @@ public class UIManager : MonoBehaviour {
     public void HideToolTip()
     {
         toolTip.gameObject.SetActive(false);
+    }
+
+    public void ShowTarget(Vector3 destination)
+    {
+        target.transform.position = destination;
+        target.SetActive(true);
+    }
+
+    public void HideTarget()
+    {
+        target.SetActive(false);
     }
 }

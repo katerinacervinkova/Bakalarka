@@ -44,7 +44,7 @@ public abstract class Resource : Selectable {
 
     public override string GetObjectDescription()
     {
-        return string.Format("Capacity: {0}/{1}", capacity, MaxCapacity);
+        return $"Capacity: {(int)capacity}/{(int)MaxCapacity}";
     }
 
     protected override void InitPurchases() { }

@@ -37,9 +37,15 @@ public abstract class Building : Selectable {
     {
         base.SetSelection(selected, player);
         if (selected)
+        {
             UIManager.Instance.ShowTransactions(transactions);
+            UIManager.Instance.ShowTarget(DefaultDestination);
+        }
         else
+        {
             UIManager.Instance.HideTransactions();
+            UIManager.Instance.HideTarget();
+        }
     }
 
     public void AddTransaction(Transaction transaction)
@@ -98,6 +104,7 @@ public abstract class Building : Selectable {
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
         DefaultDestination = hitPoint;
+        UIManager.Instance.ShowTarget(DefaultDestination);
     }
 
     public override string GetObjectDescription()

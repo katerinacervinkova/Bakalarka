@@ -12,6 +12,8 @@ public class RightMouseActivity : MouseActivity {
 
     private void RightMouseClick()
     {
+        if (inputOptions.IsMouseOverUI())
+            return;
         GameObject hitObject = FindHitObject();
         Vector3 hitPoint = FindHitPoint();
         if (!hitObject || !PlayerState.Instance.SelectedObject)

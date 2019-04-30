@@ -4,8 +4,8 @@ using System.Linq;
 
 public class Regiment : Commandable {
 
-    protected Vector3 destination;
     protected List<Unit> units;
+    private int unitsToArrive = 0;
 
     protected override void Update()
     {
@@ -24,12 +24,18 @@ public class Regiment : Commandable {
         if (selected)
             UIManager.Instance.ShowButtons(units[0].Purchases);
         else
+        {
             UIManager.Instance.HideButtons();
+            HideTarget();
+        }
 
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
+        unitsToArrive = units.Count;
+        destination = hitPoint;
+        ShowTarget();
         float ratio = Mathf.Sqrt(units.Count);
         for (int i = 0; i < units.Count; i++)
         {
@@ -40,6 +46,8 @@ public class Regiment : Commandable {
 
     public void Remove(Unit unit)
     {
+        if (unit.IsMoving)
+            MovementCompleted(unit);
         units.Remove(unit);
         unit.Reg = null;
     }
@@ -54,6 +62,14 @@ public class Regiment : Commandable {
             $"Building: {(int)units.Sum(u => u.Building)}\n" +
             $"Accuracy: {(int)units.Sum(u => u.Accuracy)}";
     }
+    public void MovementCompleted(Unit unit)
+    {
+        if (IsMoving)
+            unitsToArrive--;
+        if (unitsToArrive == 0)
+            HideTarget();
+    }
+
     public void SetUnits(List<Unit> units)
     {
         this.units = units;

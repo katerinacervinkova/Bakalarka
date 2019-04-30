@@ -69,7 +69,7 @@ public class TemporaryBuilding : Selectable
 
     public override string GetObjectDescription()
     {
-        return string.Format("progress {0}/{1}", progress, maxProgress);
+        return $"progress {(int)progress}/{maxProgress}";
     }
 
     public override Job GetOwnJob(Commandable worker)

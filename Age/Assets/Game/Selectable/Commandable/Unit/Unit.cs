@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Unit : Commandable
 {
-    private Job job;
-
     protected AIPath aiPath;
 
     public MovementController movementController;
@@ -17,6 +15,8 @@ public class Unit : Commandable
     public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
     public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
     public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
+
+    private Job job { get; set; }
 
     protected void Awake()
     {
@@ -42,7 +42,15 @@ public class Unit : Commandable
         JobUpdate();
         base.Update();
     }
+    public override void SetSelection(bool selected, Player player)
+    {
+        base.SetSelection(selected, player);
+        if (selected && IsMoving)
+            ShowTarget();
+        else
+            HideTarget();
 
+    }
     public void SetAttribute(AttEnum attEnum, float value)
     {
         atts.Set(attEnum, value);
@@ -53,7 +61,7 @@ public class Unit : Commandable
         if (!hasAuthority)
             return;
         if (job != null && job.Completed)
-            job = job.Following;
+            SetJob(job.Following);
         job?.Do(this);
     }
 
@@ -62,7 +70,7 @@ public class Unit : Commandable
     {
         if (!hasAuthority)
             return;
-        job = new JobGo(hitPoint);
+        SetJob(new JobGo(hitPoint));
     }
 
     public override string GetObjectDescription()
@@ -73,27 +81,30 @@ public class Unit : Commandable
    
     public override void DrawHealthBar()
     {
-        DrawProgressBar(Health / (float)MaxHealth);
+        DrawProgressBar(Health / MaxHealth);
     }
 
     public override void SetGoal(Selectable goal)
     {
         Job following = goal.CreateJob(this);
-        job = new JobGo(goal.transform.position, following);
+        SetJob(new JobGo(goal.transform.position, following));
     }
 
     public void SetJob(Job job)
     {
+        HideTarget();
+        destination = Vector3.positiveInfinity;
         this.job = job;
     }
 
     public void ResetJob()
     {
-        job = job.Following;
+        SetJob(job.Following);
     }
     public void Go(Vector3 destination)
     {
-        movementController.destination = destination;
+        this.destination = destination;
+        ShowTarget();
         aiPath.destination = destination;
         aiPath.endReachedDistance = 0.6f;
     }
@@ -101,11 +112,14 @@ public class Unit : Commandable
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Reg?.Remove(this);
         PlayerState.Instance?.units.Remove(this);
     }
 
     public void OnTargetReached()
     {
+        destination = Vector3.positiveInfinity;
+        Reg?.MovementCompleted(this);
         if (job is JobGo)
             job.Completed = true;
     }

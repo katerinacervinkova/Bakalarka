@@ -2,20 +2,14 @@
 
 public class MouseActivity : MonoBehaviour {
 
-    public GameWindow gameWindow;
+    protected GameWindow gameWindow;
+    protected InputOptions inputOptions;
 
     protected virtual void Awake()
     {
         gameWindow = gameObject.GetComponent<GameWindow>();
+        inputOptions = gameObject.GetComponent<InputOptions>();
     }
-    protected virtual void Start()
-    {
-    }
-
-    void Update ()
-    {
-		
-	}
 
     protected bool MouseInBounds()
     {

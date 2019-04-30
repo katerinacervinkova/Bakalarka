@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 
 public class LeftMouseActivity : MouseActivity {
-
-    public InputOptions inputOptions;
 
     public RectTransform selectionSquare;
     readonly float maxClickTime = 0.3f;
@@ -14,16 +11,6 @@ public class LeftMouseActivity : MouseActivity {
     Vector3 hitPoint = Vector3.zero;
     Vector3 squareStartPosition = Vector3.zero;
     bool isClicking = false;
-    private int fingerID = -1;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        #if !UNITY_EDITOR
-            fingerID = 0; 
-        #endif
-        inputOptions = gameObject.GetComponent<InputOptions>();
-    }
 
     private void Update ()
     {
@@ -69,7 +56,7 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (EventSystem.current.IsPointerOverGameObject(fingerID))
+        if (inputOptions.IsMouseOverUI())
             return;
         if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
             PlayerState.Instance.Deselect();
@@ -136,7 +123,7 @@ public class LeftMouseActivity : MouseActivity {
         bottomRight = new Vector3(Math.Max(squareStartPosition.x, squareEndPosition.x), Math.Max(squareStartPosition.y, squareEndPosition.y), 0);
     }
 
-    bool IsWithinRectangle(Vector3 topLeft, Vector3 bottomRight, Transform transform)
+    private bool IsWithinRectangle(Vector3 topLeft, Vector3 bottomRight, Transform transform)
     {
         var screenPos = Camera.main.WorldToScreenPoint(transform.position);
 

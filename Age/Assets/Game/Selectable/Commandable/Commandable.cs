@@ -1,6 +1,31 @@
-﻿public abstract class Commandable : Selectable {
+﻿using UnityEngine;
+
+public abstract class Commandable : Selectable {
+
+    protected Vector3 destination;
+    private bool causedShowingTarget = false;
+    public bool IsMoving => !float.IsPositiveInfinity(destination.x);
+
 
     public abstract void SetGoal(Selectable goal);
+
+    protected void HideTarget()
+    {
+        if (causedShowingTarget)
+        {
+            UIManager.Instance.HideTarget();
+            causedShowingTarget = false;
+        }
+    }
+
+    protected void ShowTarget()
+    {
+        if (PlayerState.Instance.SelectedObject == this)
+        {
+            UIManager.Instance.ShowTarget(destination);
+            causedShowingTarget = true;
+        }
+    }
 
     protected override void InitPurchases()
     {

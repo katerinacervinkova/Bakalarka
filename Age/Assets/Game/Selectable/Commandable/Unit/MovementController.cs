@@ -9,8 +9,6 @@ public class MovementController : NetworkBehaviour {
 
     AIPath aIPath;
 
-    public Vector3 destination;
-
     Vector3 lastPosition;
 
     private void Awake()
