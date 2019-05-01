@@ -162,8 +162,6 @@ namespace Pathfinding {
 		/// <summary>Helper which calculates points along the current path</summary>
 		protected PathInterpolator interpolator = new PathInterpolator();
 
-        protected Unit unit;
-
 		#region IAstarAI implementation
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::Teleport</summary>
@@ -238,14 +236,9 @@ namespace Pathfinding {
 		/// <summary>\copydoc Pathfinding::IAstarAI::canMove</summary>
 		bool IAstarAI.canMove { get { return canMove; } set { canMove = value; } }
 
-        #endregion
-        protected override void Awake()
-        {
-            base.Awake();
-            unit = GetComponent<Unit>();
-        }
+		#endregion
 
-        protected override void OnDisable () {
+		protected override void OnDisable () {
 			base.OnDisable();
 
 			// Release current path so that it can be pooled
@@ -262,78 +255,67 @@ namespace Pathfinding {
 		/// This method will be called again if a new path is calculated as the destination may have changed.
 		/// So when the agent is close to the destination this method will typically be called every <see cref="repathRate"/> seconds.
 		/// </summary>
-		public virtual void OnTargetReached ()
-        {
-            destination = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-            unit.OnTargetReached();
-        }
+		public virtual void OnTargetReached () {
+		}
 
-        /// <summary>
-        /// Called when a requested path has been calculated.
-        /// A path is first requested by <see cref="UpdatePath"/>, it is then calculated, probably in the same or the next frame.
-        /// Finally it is returned to the seeker which forwards it to this function.
-        /// </summary>
-        protected override void OnPathComplete (Path newPath)
-        {
-            unit.movementController.OnPathComplete(newPath);
-        }
+		/// <summary>
+		/// Called when a requested path has been calculated.
+		/// A path is first requested by <see cref="UpdatePath"/>, it is then calculated, probably in the same or the next frame.
+		/// Finally it is returned to the seeker which forwards it to this function.
+		/// </summary>
+		protected override void OnPathComplete (Path newPath) {
+			ABPath p = newPath as ABPath;
 
-        public void RpcOnPathComplete(Path newPath)
-        {
-            ABPath p = newPath as ABPath;
+			if (p == null) throw new System.Exception("This function only handles ABPaths, do not use special path types");
 
-            if (p == null) throw new System.Exception("This function only handles ABPaths, do not use special path types");
+			waitingForPathCalculation = false;
 
-            waitingForPathCalculation = false;
+			// Increase the reference count on the new path.
+			// This is used for object pooling to reduce allocations.
+			p.Claim(this);
 
-            // Increase the reference count on the new path.
-            // This is used for object pooling to reduce allocations.
-            p.Claim(this);
+			// Path couldn't be calculated of some reason.
+			// More info in p.errorLog (debug string)
+			if (p.error) {
+				p.Release(this);
+				return;
+			}
 
-            // Path couldn't be calculated of some reason.
-            // More info in p.errorLog (debug string)
-            if (p.error)
-            {
-                p.Release(this);
-                return;
-            }
+			// Release the previous path.
+			if (path != null) path.Release(this);
 
-            // Release the previous path.
-            if (path != null) path.Release(this);
+			// Replace the old path
+			path = p;
 
-            // Replace the old path
-            path = p;
+			// Make sure the path contains at least 2 points
+			if (path.vectorPath.Count == 1) path.vectorPath.Add(path.vectorPath[0]);
+			interpolator.SetPath(path.vectorPath);
 
-            // Make sure the path contains at least 2 points
-            if (path.vectorPath.Count == 1) path.vectorPath.Add(path.vectorPath[0]);
-            interpolator.SetPath(path.vectorPath);
+			var graph = path.path.Count > 0 ? AstarData.GetGraph(path.path[0]) as ITransformedGraph : null;
+			movementPlane = graph != null ? graph.transform : (orientation == OrientationMode.YAxisForward ? new GraphTransform(Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 270, 90), Vector3.one)) : GraphTransform.identityTransform);
 
-            var graph = path.path.Count > 0 ? AstarData.GetGraph(path.path[0]) as ITransformedGraph : null;
-            movementPlane = graph != null ? graph.transform : (orientation == OrientationMode.YAxisForward ? new GraphTransform(Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 270, 90), Vector3.one)) : GraphTransform.identityTransform);
+			// Reset some variables
+			reachedEndOfPath = false;
 
-            // Reset some variables
-            reachedEndOfPath = false;
+			// Simulate movement from the point where the path was requested
+			// to where we are right now. This reduces the risk that the agent
+			// gets confused because the first point in the path is far away
+			// from the current position (possibly behind it which could cause
+			// the agent to turn around, and that looks pretty bad).
+			interpolator.MoveToLocallyClosestPoint((GetFeetPosition() + p.originalStartPoint) * 0.5f);
+			interpolator.MoveToLocallyClosestPoint(GetFeetPosition());
 
-            // Simulate movement from the point where the path was requested
-            // to where we are right now. This reduces the risk that the agent
-            // gets confused because the first point in the path is far away
-            // from the current position (possibly behind it which could cause
-            // the agent to turn around, and that looks pretty bad).
-            interpolator.MoveToLocallyClosestPoint((GetFeetPosition() + p.originalStartPoint) * 0.5f);
-            interpolator.MoveToLocallyClosestPoint(GetFeetPosition());
+			// Update which point we are moving towards.
+			// Note that we need to do this here because otherwise the remainingDistance field might be incorrect for 1 frame.
+			// (due to interpolator.remainingDistance being incorrect).
+			interpolator.MoveToCircleIntersection2D(position, pickNextWaypointDist, movementPlane);
 
-            // Update which point we are moving towards.
-            // Note that we need to do this here because otherwise the remainingDistance field might be incorrect for 1 frame.
-            // (due to interpolator.remainingDistance being incorrect).
-            interpolator.MoveToCircleIntersection2D(position, pickNextWaypointDist, movementPlane);
-
-            var distanceToEnd = remainingDistance;
-            if (distanceToEnd <= endReachedDistance)
-            {
-                reachedEndOfPath = true;
-                OnTargetReached();
-            }
-        }
+			var distanceToEnd = remainingDistance;
+			if (distanceToEnd <= endReachedDistance) {
+				reachedEndOfPath = true;
+				OnTargetReached();
+			}
+		}
 
 		/// <summary>Called during either Update or FixedUpdate depending on if rigidbodies are used for movement or not</summary>
 		protected override void MovementUpdateInternal (float deltaTime, out Vector3 nextPosition, out Quaternion nextRotation) {

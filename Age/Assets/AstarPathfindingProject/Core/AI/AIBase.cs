@@ -285,7 +285,7 @@ namespace Pathfinding {
 		public System.Action onSearchPath { get; set; }
 
 		/// <summary>True if the path should be automatically recalculated as soon as possible</summary>
-		public virtual bool shouldRecalculatePath {
+		protected virtual bool shouldRecalculatePath {
 			get {
 				return Time.time - lastRepath >= repathRate && !waitingForPathCalculation && canSearch && !float.IsPositiveInfinity(destination.x);
 			}

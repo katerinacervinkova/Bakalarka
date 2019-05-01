@@ -7,26 +7,26 @@ public class MovementController : NetworkBehaviour {
 
     SyncListVector3 vectorPath = new SyncListVector3();
 
-    AIPath aIPath;
+    AIUnetPath aiUnetPath;
 
     Vector3 lastPosition;
 
     private void Awake()
     {
-        aIPath = GetComponent<AIPath>();
+        aiUnetPath = GetComponent<AIUnetPath>();
     }
 
     private void Update()
     {
-        if (hasAuthority && aIPath.shouldRecalculatePath)
+        if (hasAuthority && aiUnetPath.ShouldRecalculatePath)
         {
             if (!HasMoved())
             {
-                var v = Random.insideUnitCircle * aIPath.endReachedDistance;
-                aIPath.destination += new Vector3(v.x, 0, v.y);
-                aIPath.endReachedDistance += 0.1f;
+                var v = Random.insideUnitCircle * aiUnetPath.endReachedDistance;
+                aiUnetPath.destination += new Vector3(v.x, 0, v.y);
+                aiUnetPath.endReachedDistance += 0.1f;
             }
-            CmdSearchPath(aIPath.destination);
+            CmdSearchPath(aiUnetPath.destination);
             lastPosition = transform.position;
         }
     }
@@ -39,8 +39,8 @@ public class MovementController : NetworkBehaviour {
     [Command]
     private void CmdSearchPath(Vector3 destination)
     {
-        aIPath.destination = destination;
-        aIPath.SearchPath();
+        aiUnetPath.destination = destination;
+        aiUnetPath.SearchPath();
     }
 
     [ClientRpc]
@@ -50,7 +50,7 @@ public class MovementController : NetworkBehaviour {
         foreach (var vector in vectorPath)
             vPath.Add(vector);
         var path = ABPath.FakePath(vPath);
-        aIPath.RpcOnPathComplete(path);
+        aiUnetPath.RpcOnPathComplete(path);
     }
 
     public void OnPathComplete(Path p)

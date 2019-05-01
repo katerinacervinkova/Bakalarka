@@ -2,7 +2,7 @@
 
 public abstract class Commandable : Selectable {
 
-    protected Vector3 destination;
+    protected Vector3 destination = Vector3.positiveInfinity;
     private bool causedShowingTarget = false;
     public bool IsMoving => !float.IsPositiveInfinity(destination.x);
 

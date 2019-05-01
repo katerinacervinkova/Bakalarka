@@ -2,6 +2,15 @@
 /// \page changelog Changelog
 /// \order{-10}
 ///
+/// - 4.2.8 (2019-04-29)
+/// 	- Made it possible for nearest node queries on point graphs to find the closst connection instead of just the closest node.
+/// 		This will make it easier to use graphs when you have many long connections.
+/// 		See <see cref="Pathfinding.PointGraph.nearestNodeDistanceMode"/>.
+/// 	- Improved the Seeker->StartEndModifier's Connection snapping mode. Now it will behave better if the path only moves along a single connection in the graph.
+/// 	- Fixed a crash when deploying for Nintendo Switch due to a Unity bug when setting thread names. Thanks ToastyStoemp for reporting this.
+/// 	- Fixed some compiler warnings in the ObjImporter class that would show up on some platforms.
+/// 	- Fixed GridGraph.CalculateConnectionsForCellAndNeighbours would throw an exception when called with the coordinates for a node on the border of the grid. Thanks davidpare for reporting this.
+///
 /// - 4.2.7 (2019-04-05)
 /// 	- Significantly improved graph rendering performance for recast graphs when using a very large number of small tiles.
 /// 	- Fixed GridGraph.CountNodes throwing an exception when the graph is not scanned. Now it will return 0.

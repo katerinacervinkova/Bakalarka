@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Unit : Commandable
 {
-    protected AIPath aiPath;
+    protected AIUnetPath aiUnetPath;
 
     public MovementController movementController;
     public Regiment Reg { get; set; }
@@ -23,7 +23,7 @@ public class Unit : Commandable
     protected void Awake()
     {
         atts = GetComponent<Attributes>();
-        aiPath = GetComponent<AIPath>();
+        aiUnetPath = GetComponent<AIUnetPath>();
         movementController = GetComponent<MovementController>();
     }
 
@@ -121,8 +121,8 @@ public class Unit : Commandable
     {
         this.destination = destination;
         ShowTarget();
-        aiPath.destination = destination;
-        aiPath.endReachedDistance = 0.6f;
+        aiUnetPath.destination = destination;
+        aiUnetPath.endReachedDistance = 0.6f;
     }
 
     protected override void OnDestroy()
