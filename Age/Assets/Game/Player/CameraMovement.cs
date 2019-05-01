@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour {
 
@@ -13,16 +12,6 @@ public class CameraMovement : MonoBehaviour {
     private readonly int panBorderThickness = 10;
 
     private readonly Vector3 panLimit = new Vector3(200, 0, 200);
-
-    private int fingerID = -1;
-
-
-    private void Awake()
-    {
-        #if !UNITY_EDITOR
-            fingerID = 0; 
-        #endif
-    }
 
     void Update ()
     {
@@ -51,7 +40,7 @@ public class CameraMovement : MonoBehaviour {
         if (Input.GetKey("a") || Input.GetKey("w"))
             movement.z += panSpeed * Time.deltaTime;
 
-        if (!EventSystem.current.IsPointerOverGameObject(fingerID))
+        if (!inputOptions.MouseOverUI)
         {
             float m = HorizontalMovement(Input.mousePosition.x);
             movement += new Vector3(m, 0, -m);

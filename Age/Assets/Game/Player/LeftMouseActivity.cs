@@ -56,7 +56,7 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (inputOptions.IsMouseOverUI())
+        if (inputOptions.MouseOverUI)
             return;
         if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
             PlayerState.Instance.Deselect();
