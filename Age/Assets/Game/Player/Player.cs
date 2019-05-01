@@ -36,6 +36,10 @@ public class Player : NetworkBehaviour
         return false;
     }
 
+    public void EnterBuilding(Unit unit, Building building)
+    {
+        CmdEnterBuilding(unit.netId);
+    }
 
     public void Gather(float amount, Resource resource)
     {
@@ -61,6 +65,11 @@ public class Player : NetworkBehaviour
     {
         var position = temporaryBuilding.transform.position;
         CmdPlaceBuilding(new Vector3((float)Math.Round(position.x), position.y, (float)Math.Round(position.z)), temporaryBuilding.netId);
+    }
+    [Command]
+    public void CmdEnterBuilding(NetworkInstanceId unitId)
+    {
+        GameState.Instance.RpcEnterBuilding(unitId);
     }
 
     [Command]

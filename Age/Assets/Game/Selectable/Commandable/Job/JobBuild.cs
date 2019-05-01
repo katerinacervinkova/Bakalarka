@@ -15,7 +15,6 @@ public class JobBuild : Job {
         buildingCollider = building.GetComponent<Collider>();
     }
 
-    // hledat další stavbu
     public override Job Following
     {
         get
@@ -32,7 +31,7 @@ public class JobBuild : Job {
     {
         if (!building || Vector3.Distance(buildingCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > 3)
         {
-            worker.ResetJob();
+            worker.SetNextJob();
             return;
         }
         timeElapsed += Time.deltaTime;

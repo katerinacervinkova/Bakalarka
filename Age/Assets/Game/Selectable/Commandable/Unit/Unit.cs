@@ -1,4 +1,5 @@
-﻿using Pathfinding;
+﻿using System;
+using Pathfinding;
 using UnityEngine;
 
 public class Unit : Commandable
@@ -12,6 +13,7 @@ public class Unit : Commandable
     public float Gathering { get { return atts.Get(AttEnum.Gathering); } set { atts.Set(AttEnum.Gathering, value); } }
     public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
     public float Agility { get { return atts.Get(AttEnum.Agility); } set { atts.Set(AttEnum.Agility, value); } }
+
     public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
     public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
     public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
@@ -40,8 +42,18 @@ public class Unit : Commandable
     protected override void Update()
     {
         JobUpdate();
+        //VisibilityUpdate();
         base.Update();
     }
+
+    private void VisibilityUpdate()
+    {
+        if (hasAuthority)
+            return;
+        if (gameObject.activeInHierarchy != !PlayerState.Instance.IsWithinSight(transform.position))
+            gameObject.SetActive(!gameObject.activeInHierarchy);
+    }
+
     public override void SetSelection(bool selected, Player player)
     {
         base.SetSelection(selected, player);
@@ -97,9 +109,13 @@ public class Unit : Commandable
         this.job = job;
     }
 
-    public void ResetJob()
+    public void SetNextJob()
     {
         SetJob(job.Following);
+    }
+    public void ResetJob()
+    {
+        SetJob(null);
     }
     public void Go(Vector3 destination)
     {

@@ -1,4 +1,5 @@
 ﻿using Pathfinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -66,7 +67,13 @@ public class GameState : NetworkBehaviour {
     }
 
     [ClientRpc]
-    internal void RpcCreateBuilding(NetworkInstanceId tempBuildingID)
+    public void RpcEnterBuilding(NetworkInstanceId unitId)
+    {
+        ClientScene.objects[unitId].gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void RpcCreateBuilding(NetworkInstanceId tempBuildingID)
     {
         var tempBuilding = ClientScene.objects[tempBuildingID].GetComponent<TemporaryBuilding>();
         Building building = tempBuilding.gameObject.AddComponent<MainBuilding>() as MainBuilding;

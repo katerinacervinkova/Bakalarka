@@ -27,7 +27,7 @@ public class JobGather<T> : Job where T : Resource {
     {
         if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resource.size + 3)
         {
-            worker.ResetJob();
+            worker.SetNextJob();
             return;
         }
         timeElapsed += Time.deltaTime;

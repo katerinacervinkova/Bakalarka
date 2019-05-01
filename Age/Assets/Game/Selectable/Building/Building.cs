@@ -1,4 +1,4 @@
-﻿using Pathfinding;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +11,9 @@ public abstract class Building : Selectable {
     private readonly int maxTransactions = 16;
     private Transaction activeTransaction;
     public List<Transaction> transactions = new List<Transaction>();
+
+    protected List<Unit> unitsInside = new List<Unit>();
+    protected int unitCapacity = 10;
 
     public override void OnStartClient()
     {
@@ -31,6 +34,14 @@ public abstract class Building : Selectable {
             PlayerState.Instance.buildings.Add(this);
             InitPurchases();
         }
+    }
+
+    public bool Enter(Unit unit)
+    {
+        if (unitsInside.Count + 1 >= unitCapacity)
+            return false;
+        unitsInside.Add(unit);
+        return true;
     }
 
     public override void SetSelection(bool selected, Player player)
@@ -109,7 +120,12 @@ public abstract class Building : Selectable {
 
     public override string GetObjectDescription()
     {
-        return "";
+        return unitsInside.Count.ToString();
+    }
+
+    public override Job GetOwnJob(Commandable worker)
+    {
+        return new JobEnter(this);
     }
 
     public override Job GetEnemyJob(Commandable worker)

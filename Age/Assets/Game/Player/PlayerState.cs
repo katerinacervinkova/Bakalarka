@@ -105,6 +105,13 @@ public class PlayerState : MonoBehaviour {
         UIManager.Instance.ChangeResourceText(GetResourceText());
     }
 
+    public bool IsWithinSight(Vector3 position)
+    {
+        return units.Any(u => u.IsWithinSight(position)) ||
+            buildings.Any(u => u.IsWithinSight(position)) ||
+            temporaryBuildings.Any(t => t.IsWithinSight(position));
+    }
+
     private string GetResourceText()
     {
         return $"Food: {(int)Food}\nWood: {(int)Wood}\nGold: {(int)Gold}";

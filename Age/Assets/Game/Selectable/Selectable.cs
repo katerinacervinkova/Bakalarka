@@ -18,6 +18,8 @@ public abstract class Selectable : NetworkBehaviour {
     public float Health;
     [SyncVar]
     public float MaxHealth = 100;
+    [SyncVar]
+    protected float lineOfSight = 10;
 
     protected bool Selected { get; set; } = false;
 
@@ -93,8 +95,6 @@ public abstract class Selectable : NetworkBehaviour {
         healthBar.fillAmount = value;
     }
 
-    public virtual void RemoveBottomBar(Text selectedObjectText) { }
-
     protected virtual void OnDestroy()
     {
         if (GetEnemyJob() != null)
@@ -103,5 +103,10 @@ public abstract class Selectable : NetworkBehaviour {
             GetOwnJob().Completed = true;
         if (Selected)
             PlayerState.Instance?.Deselect();
+    }
+
+    public bool IsWithinSight(Vector3 position)
+    {
+        return Vector3.Distance(transform.position, position) < lineOfSight;
     }
 }
