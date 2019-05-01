@@ -115,6 +115,6 @@ public class UIManager : MonoBehaviour {
 
     public void HideTarget()
     {
-        target.SetActive(false);
+        target?.SetActive(false);
     }
 }

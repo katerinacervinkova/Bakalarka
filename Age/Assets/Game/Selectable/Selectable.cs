@@ -95,18 +95,18 @@ public abstract class Selectable : NetworkBehaviour {
         healthBar.fillAmount = value;
     }
 
+    public bool IsWithinSight(Vector3 position)
+    {
+        return Vector3.Distance(transform.position, position) < lineOfSight;
+    }
+    
     protected virtual void OnDestroy()
     {
         if (GetEnemyJob() != null)
-         GetEnemyJob().Completed = true;
+            GetEnemyJob().Completed = true;
         if (GetOwnJob() != null)
             GetOwnJob().Completed = true;
         if (Selected)
             PlayerState.Instance?.Deselect();
-    }
-
-    public bool IsWithinSight(Vector3 position)
-    {
-        return Vector3.Distance(transform.position, position) < lineOfSight;
     }
 }

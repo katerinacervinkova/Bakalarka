@@ -135,7 +135,7 @@ public abstract class Building : Selectable {
 
     public override void DrawHealthBar()
     {
-        DrawProgressBar(Health / (float)MaxHealth);
+        DrawProgressBar(Health / MaxHealth);
     }
 
     protected override void OnDestroy()
