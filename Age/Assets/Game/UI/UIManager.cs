@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour {
 
     [SerializeField]
     private Image toolTip;
+    [SerializeField]
     private Text toolTipText;
     [SerializeField]
     private List<PurchaseButton> buttons;
@@ -30,12 +31,12 @@ public class UIManager : MonoBehaviour {
     private Text resourceText;
     [SerializeField]
     private GameObject target;
+    [SerializeField]
+    private Button unitsButton;
+    [SerializeField]
+    private BuildingWindow buildingWindow;
 
-
-    private void Start()
-    {
-        toolTipText = toolTip.GetComponentInChildren<Text>();
-    }
+    public bool BuildingWindowShown { get; private set; }
 
     public void ShowButtons(List<Purchase> transactions)
     {
@@ -68,6 +69,18 @@ public class UIManager : MonoBehaviour {
             else
                 schedulers[i].gameObject.SetActive(false);
         }
+    }
+
+    public void ShowUnitsButton(Action action)
+    {
+        unitsButton.onClick.AddListener(() => action.Invoke());
+        unitsButton.gameObject.SetActive(true);
+    }
+
+    public void HideUnitsButton()
+    {
+        unitsButton.onClick.RemoveAllListeners();
+        unitsButton.gameObject.SetActive(false);
     }
 
     public void HideTransactions()
@@ -116,5 +129,17 @@ public class UIManager : MonoBehaviour {
     public void HideTarget()
     {
         target?.SetActive(false);
+    }
+
+    public void ShowBuildingWindow(Building building, List<Unit> units, Action<Unit> action = null)
+    {
+        buildingWindow.Show(building, units, action);
+        BuildingWindowShown = true;
+    }
+
+    public void HideBuildingWindow()
+    {
+        buildingWindow.Hide();
+        BuildingWindowShown = false;
     }
 }

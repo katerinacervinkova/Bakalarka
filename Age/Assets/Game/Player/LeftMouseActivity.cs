@@ -14,6 +14,8 @@ public class LeftMouseActivity : MouseActivity {
 
     private void Update ()
     {
+        if (PlayerState.Instance == null || BuildingWindowShown)
+            return;
         if (PlayerState.Instance.BuildingToBuild != null)
         {
             Vector3 hitPoint = FindHitPoint();

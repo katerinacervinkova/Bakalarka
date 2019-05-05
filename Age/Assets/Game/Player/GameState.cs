@@ -1,4 +1,5 @@
 ﻿using Pathfinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -56,7 +57,6 @@ public class GameState : NetworkBehaviour {
         temporaryBuilding.SetActive(true);
         Collider collider = temporaryBuilding.GetComponent<Collider>();
         collider.enabled = true;
-        Debug.Log("Updating");
         var guo = new GraphUpdateObject(collider.bounds)
         {
             modifyWalkability = true,
@@ -69,6 +69,25 @@ public class GameState : NetworkBehaviour {
     public void RpcEnterBuilding(NetworkInstanceId unitId)
     {
         ClientScene.objects[unitId].gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void RpcExitBuildingDestination(NetworkInstanceId unitId, Vector3 position, Vector3 destination)
+    {
+        Unit unit = ClientScene.objects[unitId].GetComponent<Unit>();
+        unit.transform.position = position;
+        if (unit.hasAuthority)
+            unit.SetJob(new JobGo(destination));
+        unit.gameObject.SetActive(true);
+    }
+
+    [ClientRpc]
+    public void RpcExitBuilding(NetworkInstanceId unitId, Vector3 position)
+    {
+        Unit unit = ClientScene.objects[unitId].GetComponent<Unit>();
+        unit.transform.position = position;
+        unit.ResetJob();
+        unit.gameObject.SetActive(true);
     }
 
     [ClientRpc]

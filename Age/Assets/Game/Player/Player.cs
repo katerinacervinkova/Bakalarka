@@ -23,6 +23,11 @@ public class Player : NetworkBehaviour
         }
     }
 
+    public void ExitBuilding(Unit unit, Building building)
+    {
+        CmdExitBuilding(unit.netId, building.transform.position, building.DefaultDestination);
+    }
+
     public bool CreateInitialUnit()
     {
         if (!hasAuthority)
@@ -66,22 +71,37 @@ public class Player : NetworkBehaviour
         var position = temporaryBuilding.transform.position;
         CmdPlaceBuilding(new Vector3((float)Math.Round(position.x), position.y, (float)Math.Round(position.z)), temporaryBuilding.netId);
     }
-    [Command]
-    public void CmdEnterBuilding(NetworkInstanceId unitId)
-    {
-        GameState.Instance.RpcEnterBuilding(unitId);
-    }
 
-    [Command]
-    public void CmdCreateUnit(Vector3 position, Vector3 destination)
+    private Vector3 NearestWalkable(Vector3 position)
     {
         NNConstraint nodeConstraint = new NNConstraint
         {
             constrainWalkability = true,
             walkable = true
         };
-        NNInfo nodeInfo = AstarPath.active.GetNearest(position, nodeConstraint);
-        Unit unit = factory.CreateUnit(nodeInfo.position, netId);
+        return AstarPath.active.GetNearest(position, nodeConstraint).position;
+    }
+
+    [Command]
+    private void CmdEnterBuilding(NetworkInstanceId unitId)
+    {
+        GameState.Instance.RpcEnterBuilding(unitId);
+    }
+    
+    [Command]
+    private void CmdExitBuilding(NetworkInstanceId unitId, Vector3 position, Vector3 destination)
+    {
+        Vector3 pos = NearestWalkable(position);
+        if (position == destination)
+            GameState.Instance.RpcExitBuilding(unitId, pos);
+        else
+            GameState.Instance.RpcExitBuildingDestination(unitId, pos, destination);
+    }
+
+    [Command]
+    private void CmdCreateUnit(Vector3 position, Vector3 destination)
+    {
+        Unit unit = factory.CreateUnit(NearestWalkable(position), netId);
         NetworkServer.SpawnWithClientAuthority(unit.gameObject, gameObject);
         if (destination != position)
             unit.SetJob(new JobGo(destination));

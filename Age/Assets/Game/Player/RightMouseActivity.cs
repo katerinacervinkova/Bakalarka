@@ -4,7 +4,7 @@ public class RightMouseActivity : MouseActivity {
 	
 	void Update ()
     {
-        if (PlayerState.Instance == null)
+        if (PlayerState.Instance == null || BuildingWindowShown)
             return;
         if (Input.GetMouseButtonDown(1))
             RightMouseClick();

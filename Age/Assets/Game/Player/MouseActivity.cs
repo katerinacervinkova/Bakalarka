@@ -11,6 +11,8 @@ public class MouseActivity : MonoBehaviour {
         inputOptions = gameObject.GetComponent<InputOptions>();
     }
 
+    protected bool BuildingWindowShown => UIManager.Instance.BuildingWindowShown;
+
     protected bool MouseInBounds()
     {
         Vector3 mousePosition = Input.mousePosition;

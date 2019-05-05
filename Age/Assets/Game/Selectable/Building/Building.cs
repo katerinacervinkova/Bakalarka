@@ -20,6 +20,13 @@ public abstract class Building : Selectable {
         GameState.Instance.Buildings.Add(this);
         GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
     }
+
+    public void OnUnitsChange()
+    {
+        UIManager.Instance.HideBuildingWindow();
+        ShowUnitsWindow();
+    }
+
     public override void Init()
     {
         base.Init();
@@ -36,6 +43,26 @@ public abstract class Building : Selectable {
         }
     }
 
+    public override void SetSelection(bool selected, Player player)
+    {
+        base.SetSelection(selected, player);
+        if (UIManager.Instance != null)
+        {
+            if (selected)
+            {
+                UIManager.Instance.ShowTransactions(transactions);
+                UIManager.Instance.ShowTarget(DefaultDestination);
+                UIManager.Instance.ShowUnitsButton(ShowUnitsWindow);
+            }
+            else
+            {
+                UIManager.Instance.HideTransactions();
+                UIManager.Instance.HideTarget();
+                UIManager.Instance.HideUnitsButton();
+            }
+        }
+    }
+
     public bool Enter(Unit unit)
     {
         if (unitsInside.Count + 1 >= unitCapacity)
@@ -44,19 +71,23 @@ public abstract class Building : Selectable {
         return true;
     }
 
-    public override void SetSelection(bool selected, Player player)
+    public void Exit(Unit unit)
     {
-        base.SetSelection(selected, player);
-        if (selected)
-        {
-            UIManager.Instance.ShowTransactions(transactions);
-            UIManager.Instance.ShowTarget(DefaultDestination);
-        }
-        else
-        {
-            UIManager.Instance.HideTransactions();
-            UIManager.Instance.HideTarget();
-        }
+        if (unitsInside.Remove(unit))
+            owner.ExitBuilding(unit, this);
+        PlayerState.Instance.OnStateChange(this);
+    }
+
+    public void Exit()
+    {
+        unitsInside.ForEach(u => owner.ExitBuilding(u, this));
+        unitsInside.Clear();
+        PlayerState.Instance.OnStateChange(this);
+    }
+
+    public virtual void ShowUnitsWindow()
+    {
+        UIManager.Instance.ShowBuildingWindow(this, unitsInside);
     }
 
     public void AddTransaction(Transaction transaction)
