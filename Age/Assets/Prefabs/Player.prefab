@@ -103,7 +103,7 @@ MonoBehaviour:
   player: {fileID: 114682149439794398}
   mainBuildingPrefab: {fileID: 114019076716311038, guid: 28511fe201e0a7948b88664883879c86,
     type: 2}
-  libraryPrefab: {fileID: 114302404517504904, guid: 11f73808d48e7184bb65ebe54760150f,
+  libraryPrefab: {fileID: 114056039034686244, guid: c1b7855cbed71004ab756258f66ea6ad,
     type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}

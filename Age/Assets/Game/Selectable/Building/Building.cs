@@ -41,6 +41,8 @@ public abstract class Building : Selectable {
     }
 
     protected abstract void UpdateUnit(Unit unit);
+    protected abstract void ChangeColour();
+
 
     public override void Init()
     {
@@ -49,17 +51,14 @@ public abstract class Building : Selectable {
         minimapIcon.color = minimapColor; 
         DefaultDestination = SpawnPoint = transform.position;
         DrawHealthBar();
-        if (this is MainBuilding)
-        {
-            transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
-            transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
-        }
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);
             InitPurchases();
         }
+        ChangeColour();
     }
+
 
     public override void SetSelection(bool selected, Player player)
     {
