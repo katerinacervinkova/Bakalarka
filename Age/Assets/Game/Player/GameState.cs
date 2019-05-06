@@ -1,5 +1,4 @@
 ﻿using Pathfinding;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -91,10 +90,22 @@ public class GameState : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcCreateBuilding(NetworkInstanceId tempBuildingID)
+    public void RpcCreateBuilding(NetworkInstanceId tempBuildingID, BuildingEnum buildingType)
     {
         var tempBuilding = ClientScene.objects[tempBuildingID].GetComponent<TemporaryBuilding>();
-        Building building = tempBuilding.gameObject.AddComponent<MainBuilding>() as MainBuilding;
+        Building building;
+        switch (buildingType)
+        {
+            case BuildingEnum.MainBuilding:
+                building = tempBuilding.gameObject.AddComponent<MainBuilding>() as MainBuilding;
+                break;
+            case BuildingEnum.Library:
+                building = tempBuilding.gameObject.AddComponent<Library>() as Library;
+                break;
+            default:
+                building = null;
+                break;
+        }
         building.owner = tempBuilding.owner;
         building.Init();
         if (PlayerState.Instance.SelectedObject == tempBuilding)

@@ -7,12 +7,14 @@ public class Regiment : Commandable {
     protected List<Unit> units;
     private int unitsToArrive = 0;
 
-    protected override void Update()
+    public override string Name => $"Units({units.Count})";
+
+    protected virtual void Update()
     {
         if (!Selected || units.Count == 0)
         {
-            Destroy(gameObject);
             units.ForEach(u => u.Reg = null);
+            Destroy(gameObject);
         }
     }
 

@@ -2,6 +2,8 @@
 
 public class WoodResource : Resource
 {
+    public override string Name => "Tree";
+
     private static readonly int maxCapacity = 100;
 
     protected override float MaxCapacity => maxCapacity;

@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 114121454109239844}
   - component: {fileID: 114019076716311038}
   m_Layer: 10
-  m_Name: Building
+  m_Name: MainBuilding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -322,11 +322,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a79bd2967c6b04ebbdfa8a204a35cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
   Image: {fileID: 0}
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  buildingType: 0
   placed: 0
   posDelta: {x: 5, y: 5}
 --- !u!114 &114121454109239844

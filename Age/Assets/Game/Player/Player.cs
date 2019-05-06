@@ -56,9 +56,9 @@ public class Player : NetworkBehaviour
         CmdChangeAttribute(unit.netId, attEnum, value);
     }
 
-    public void CreateTemporaryMainBuilding()
+    public void CreateTempBuilding(BuildingEnum buildingType)
     {
-        CmdCreateTempBuilding();
+        CmdCreateTempBuilding(buildingType);
     }
 
     public void CreateUnit(Building building)
@@ -108,9 +108,9 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdCreateTempBuilding()
+    public void CmdCreateTempBuilding(BuildingEnum buildingType)
     {
-        var tempBuilding = factory.CreateTemporaryMainBuilding(netId);
+        var tempBuilding = factory.CreateTemporaryMainBuilding(netId, buildingType);
         NetworkServer.SpawnWithClientAuthority(tempBuilding.gameObject, gameObject);
         tempBuilding.RpcOnCreate();
     }
@@ -122,9 +122,9 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdCreateBuilding(NetworkInstanceId tempBuildingID)
+    public void CmdCreateBuilding(NetworkInstanceId tempBuildingID, BuildingEnum buildingType)
     {
-        GameState.Instance.RpcCreateBuilding(tempBuildingID);
+        GameState.Instance.RpcCreateBuilding(tempBuildingID, buildingType);
     }
 
     [Command]

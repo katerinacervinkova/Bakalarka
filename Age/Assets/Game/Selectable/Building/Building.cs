@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +14,9 @@ public abstract class Building : Selectable {
     protected List<Unit> unitsInside = new List<Unit>();
     protected int unitCapacity = 10;
 
+    private readonly float minTime = 1;
+    private float timeElapsed = 0;
+
     public override void OnStartClient()
     {
         GameState.Instance.Buildings.Add(this);
@@ -27,6 +29,19 @@ public abstract class Building : Selectable {
         ShowUnitsWindow();
     }
 
+    protected virtual void Update()
+    {
+        timeElapsed += Time.deltaTime;
+        while (timeElapsed > minTime)
+        {
+            foreach (Unit unit in unitsInside)
+                UpdateUnit(unit);
+            timeElapsed -= minTime;
+        }
+    }
+
+    protected abstract void UpdateUnit(Unit unit);
+
     public override void Init()
     {
         base.Init();
@@ -34,8 +49,11 @@ public abstract class Building : Selectable {
         minimapIcon.color = minimapColor; 
         DefaultDestination = SpawnPoint = transform.position;
         DrawHealthBar();
-        transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
-        transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
+        if (this is MainBuilding)
+        {
+            transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
+            transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
+        }
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);

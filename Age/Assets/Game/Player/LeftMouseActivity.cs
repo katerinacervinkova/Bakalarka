@@ -88,7 +88,7 @@ public class LeftMouseActivity : MouseActivity {
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
 
-        PlayerState.Instance.Select(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform));
+        PlayerState.Instance.Select(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform) && unit.isActiveAndEnabled);
     }
 
     private void DrawRectangle()

@@ -89,7 +89,6 @@ MonoBehaviour:
   Name: "\u0158eho\u0159"
   color: {r: 1, g: 0.003, b: 0, a: 0}
   factory: {fileID: 114881949609890668}
-  unitPrefab: {fileID: 1021678367712600, guid: 306508b1a11cf8d47b055b78b3965e0a, type: 2}
 --- !u!114 &114881949609890668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -102,13 +101,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 114682149439794398}
-  tempBuildingPrefab: {fileID: 114019076716311038, guid: 28511fe201e0a7948b88664883879c86,
+  mainBuildingPrefab: {fileID: 114019076716311038, guid: 28511fe201e0a7948b88664883879c86,
+    type: 2}
+  libraryPrefab: {fileID: 114302404517504904, guid: 11f73808d48e7184bb65ebe54760150f,
     type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
   unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,
     type: 2}
-  panel: {fileID: 0}
 --- !u!114 &114918450667427504
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,32 +1,27 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class Factory : MonoBehaviour
 {
-    protected System.Random rnd;
+    protected System.Random rnd = new System.Random();
     protected int sumOfProperties = 35;
 
     public Player player;
-    public TemporaryBuilding tempBuildingPrefab;
-    public Regiment regimentPrefab;
-    public Unit unitPrefab;
-
-    public Image panel;
-
-    protected virtual void Start()
-    {
-        rnd = new System.Random();
-        panel = GameObject.Find("Panel").GetComponent<Image>();
-    }
+    [SerializeField]
+    private TemporaryBuilding mainBuildingPrefab;
+    [SerializeField]
+    private TemporaryBuilding libraryPrefab;
+    [SerializeField]
+    private Regiment regimentPrefab;
+    [SerializeField]
+    private Unit unitPrefab;
    
     public Regiment CreateRegiment(Player owner, List<Unit> units)
     {
         Regiment regiment = Instantiate(regimentPrefab);
         regiment.owner = owner;
         regiment.SetUnits(units);
-        regiment.Name = string.Format("Units({0})", units.Count);
         regiment.gameObject.SetActive(true);
         return regiment;
     }
@@ -34,16 +29,27 @@ public class Factory : MonoBehaviour
     public Unit CreateUnit(Vector3 spawnPoint, NetworkInstanceId playerId)
     {
         Unit unit = Instantiate(unitPrefab, spawnPoint, Quaternion.identity);
-        unit.Name = "Unit";
         unit.playerID = playerId;
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
         return unit;
     }
 
-    public TemporaryBuilding CreateTemporaryMainBuilding(NetworkInstanceId playerId)
+    public TemporaryBuilding CreateTemporaryMainBuilding(NetworkInstanceId playerId, BuildingEnum buildingType)
     {
-        TemporaryBuilding building = Instantiate(tempBuildingPrefab);
+        TemporaryBuilding building;
+        switch (buildingType)
+        {
+            case BuildingEnum.MainBuilding:
+                building = Instantiate(mainBuildingPrefab);
+                break;
+            case BuildingEnum.Library:
+                building = Instantiate(libraryPrefab);
+                break;
+            default:
+                building = null;
+                break;
+        }
         building.playerID = playerId;
         return building;
     }

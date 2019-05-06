@@ -29,7 +29,8 @@ public abstract class Commandable : Selectable {
 
     protected override void InitPurchases()
     {
-        Purchases.Add(new Purchase("Building", "Create Main Building", owner.CreateTemporaryMainBuilding, food: 0, wood: 50, gold: 0));
+        Purchases.Add(new Purchase("Main building", "Create Main Building", () => owner.CreateTempBuilding(BuildingEnum.MainBuilding), food: 0, wood: 50, gold: 0));
+        Purchases.Add(new Purchase("Library", "Create Library, which increases units' intelligence", () => owner.CreateTempBuilding(BuildingEnum.Library), food: 0, wood: 20, gold: 10));
     }
 
     public override void RightMouseClickObject(Selectable hitObject)

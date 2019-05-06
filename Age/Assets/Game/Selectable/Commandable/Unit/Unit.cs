@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Unit : Commandable
 {
+
+    public override string Name => "Unit";
+
     protected AIUnetPath aiUnetPath;
 
     public MovementController movementController;
@@ -39,11 +42,10 @@ public class Unit : Commandable
         base.OnStartAuthority();
         PlayerState.Instance.units.Add(this);
     }
-    protected override void Update()
+    protected virtual void Update()
     {
         JobUpdate();
         //VisibilityUpdate();
-        base.Update();
     }
 
     private void VisibilityUpdate()

@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 
 public class TemporaryBuilding : Selectable
 {
+    public BuildingEnum buildingType;
     static readonly int maxProgress = 100;
     [SyncVar]
     public bool placed = false;
@@ -15,10 +16,13 @@ public class TemporaryBuilding : Selectable
     [SerializeField]
     public Vector2Int posDelta;
 
+    public override string Name => buildingType.ToString();
+
     public override void OnStartClient()
     {
         base.OnStartClient();
-        transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
+        if (buildingType == BuildingEnum.MainBuilding)
+            transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
 
@@ -64,7 +68,7 @@ public class TemporaryBuilding : Selectable
     {
         buildJob.Completed = progress >= maxProgress;
         if (buildJob.Completed)
-            owner.CmdCreateBuilding(netId);
+            owner.CmdCreateBuilding(netId, buildingType);
     }
 
     public override string GetObjectDescription()

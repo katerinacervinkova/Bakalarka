@@ -6,8 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Collider))]
 public abstract class Selectable : NetworkBehaviour {
 
-    [SyncVar]
-    public string Name;
+    public abstract string Name { get; }
     public Texture2D Image;
 
     [SyncVar]
@@ -60,8 +59,6 @@ public abstract class Selectable : NetworkBehaviour {
     {
         InitPurchases();
     }
-
-    protected virtual void Update() { }
 
     public virtual void SetSelection(bool selected, Player player)
     {
