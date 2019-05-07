@@ -18,21 +18,40 @@ public class TemporaryBuilding : Selectable
 
     public override string Name => buildingType.ToString();
 
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        if (buildingType == BuildingEnum.MainBuilding)
-            transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
-        minimapColor = owner.color;
-        minimapIcon.color = minimapColor;
-
-    }
-
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
         PlayerState.Instance.SetTempBuilding(this);
         PlayerState.Instance.temporaryBuildings.Add(this);
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        minimapColor = owner.color;
+        minimapIcon.color = minimapColor;
+        ChangeColor();
+    }
+
+    private void ChangeColor()
+    {
+        switch (buildingType)
+        {
+            case BuildingEnum.MainBuilding:
+                transform.Find("MainBuilding/Main Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+                transform.Find("MainBuilding/Roof 1").GetComponent<MeshRenderer>().material.color = owner.color;
+                transform.Find("MainBuilding/Roof 2").GetComponent<MeshRenderer>().material.color = owner.color;
+                break;
+            case BuildingEnum.Library:
+                transform.Find("Library/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+                break;
+            case BuildingEnum.Barracks:
+                transform.Find("Barracks/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+                transform.Find("Barracks/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
+                break;
+            default:
+                break;
+        }
     }
 
     private void OnProgressChange(float newProgress)

@@ -13,8 +13,13 @@ public class UnitRow : MonoBehaviour {
     [SerializeField]
     private Text unitText;
 
-    public void SetActions(Building building, Unit unit, Action<Unit> action)
+    private Unit unit;
+    private Building building;
+
+    public void Init(Building building, Unit unit, Action<Unit> action)
     {
+        this.unit = unit;
+        this.building = building;
         if (action == null)
             actionButton.gameObject.SetActive(false);
         else
@@ -24,11 +29,12 @@ public class UnitRow : MonoBehaviour {
             building.Exit(unit);
             building.OnUnitsChange();
         });
+        unitNameText.text = unit.Name;
+        UpdateDescription();
     }
 
-    public void SetText(string name, string text)
+    public void UpdateDescription()
     {
-        unitText.text = text;
-        unitNameText.text = name;
+        unitText.text = building.UnitTextFunc.Invoke(unit);
     }
 }

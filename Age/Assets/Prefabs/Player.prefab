@@ -105,6 +105,8 @@ MonoBehaviour:
     type: 2}
   libraryPrefab: {fileID: 114056039034686244, guid: c1b7855cbed71004ab756258f66ea6ad,
     type: 2}
+  barracksPrefab: {fileID: 114240467502079042, guid: 26f0fabd8587b24429bf97812e11530b,
+    type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
   unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,

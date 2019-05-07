@@ -15,7 +15,7 @@ public class Unit : Commandable
 
     public float Gathering { get { return atts.Get(AttEnum.Gathering); } set { atts.Set(AttEnum.Gathering, value); } }
     public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
-    public float Agility { get { return atts.Get(AttEnum.Agility); } set { atts.Set(AttEnum.Agility, value); } }
+    public float Swordsmanship { get { return atts.Get(AttEnum.Swordsmanship); } set { atts.Set(AttEnum.Swordsmanship, value); } }
 
     public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
     public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
@@ -89,9 +89,8 @@ public class Unit : Commandable
 
     public override string GetObjectDescription()
     {
-        return $"Health: {(int)Health}/{(int)MaxHealth}\n{atts.GetDescription()}";
+        return $"{base.GetObjectDescription()}\n{atts.GetDescription()}";
     }
-
    
     public override void DrawHealthBar()
     {

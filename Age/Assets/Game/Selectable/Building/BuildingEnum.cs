@@ -1,5 +1,6 @@
 ﻿public enum BuildingEnum
 {
     MainBuilding,
-    Library
+    Library,
+    Barracks
 }

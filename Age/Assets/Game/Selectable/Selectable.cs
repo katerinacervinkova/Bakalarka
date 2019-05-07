@@ -36,7 +36,6 @@ public abstract class Selectable : NetworkBehaviour {
     public abstract Job GetEnemyJob(Commandable worker = null);
     public abstract void DrawHealthBar();
     protected abstract void InitPurchases();
-    public abstract string GetObjectDescription();
 
     public override void OnStartClient()
     {
@@ -76,6 +75,12 @@ public abstract class Selectable : NetworkBehaviour {
                 UIManager.Instance?.HideButtons();
         }
     }
+
+    public virtual string GetObjectDescription()
+    {
+        return $"Health: {(int)Health}/{(int)MaxHealth}";
+    }
+
 
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
     public virtual void RightMouseClickObject(Selectable hitObject) { }

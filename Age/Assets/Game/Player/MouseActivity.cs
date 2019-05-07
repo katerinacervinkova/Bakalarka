@@ -11,7 +11,7 @@ public class MouseActivity : MonoBehaviour {
         inputOptions = gameObject.GetComponent<InputOptions>();
     }
 
-    protected bool BuildingWindowShown => UIManager.Instance.BuildingWindowShown;
+    protected bool BuildingWindowShown => UIManager.Instance.BuildingWindowShown != null;
 
     protected bool MouseInBounds()
     {

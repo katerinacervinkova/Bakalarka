@@ -1,18 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
 
 public class Library : Building {
 
     public override string Name => "Library";
+
+    public override Func<Unit, string> UnitTextFunc => u => $"Intelligence: {(int)u.Intelligence}";
 
     protected override void InitPurchases() { }
 
     protected override void UpdateUnit(Unit unit)
     {
         owner.ChangeAttribute(unit, AttEnum.Intelligence, unit.Intelligence + 0.1f);
-    }
-
-    protected override void ChangeColour()
-    {
-        transform.Find("Library/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 }

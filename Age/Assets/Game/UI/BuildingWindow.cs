@@ -20,8 +20,7 @@ public class BuildingWindow : MonoBehaviour {
         units.ForEach(u =>
         {
             UnitRow unitRow = Instantiate(unitRowPrefab, unitsArea.transform).GetComponent<UnitRow>();
-            unitRow.SetActions(building, u, action);
-            unitRow.SetText(u.Name, u.GetObjectDescription());
+            unitRow.Init(building, u, action);
             unitRows.Add(unitRow);
         });
         gameObject.SetActive(true);
@@ -32,5 +31,10 @@ public class BuildingWindow : MonoBehaviour {
         gameObject.SetActive(false);
         unitRows.ForEach(ur => Destroy(ur.gameObject));
         unitRows.Clear();
+    }
+
+    public void UpdateDescriptions()
+    {
+        unitRows.ForEach(ur => ur.UpdateDescription());
     }
 }

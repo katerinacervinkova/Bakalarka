@@ -59,7 +59,7 @@ public class Regiment : Commandable {
         return $"Health: {(int)units.Sum(u => u.Health)}/{(int)units.Sum(u => u.MaxHealth)}\n" +
             $"Strength: {(int)units.Sum(u => u.Gathering)}\n" +
             $"Intelligence: {(int)units.Sum(u => u.Intelligence)}\n" +
-            $"Agility: {(int)units.Sum(u => u.Agility)}\n" +
+            $"Swordsmanship: {(int)units.Sum(u => u.Swordsmanship)}\n" +
             $"Healing: {(int)units.Sum(u => u.Healing)}\n" +
             $"Building: {(int)units.Sum(u => u.Building)}\n" +
             $"Accuracy: {(int)units.Sum(u => u.Accuracy)}";

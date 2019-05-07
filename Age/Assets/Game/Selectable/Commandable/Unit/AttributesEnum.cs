@@ -2,7 +2,7 @@
 {
     Gathering,
     Intelligence,
-    Agility,
+    Swordsmanship,
     Healing,
     Building,
     Accuracy

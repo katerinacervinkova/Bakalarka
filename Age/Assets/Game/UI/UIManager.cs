@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     private BuildingWindow buildingWindow;
 
-    public bool BuildingWindowShown { get; private set; }
+    public Building BuildingWindowShown { get; private set; }
 
     public void ShowButtons(List<Purchase> transactions)
     {
@@ -106,7 +106,8 @@ public class UIManager : MonoBehaviour {
 
     public void HideObjectText()
     {
-        objectText.gameObject.SetActive(false);
+        if (objectText != null)
+            objectText.gameObject.SetActive(false);
     }
     
     public void ShowToolTip(Vector3 position, string description)
@@ -128,18 +129,24 @@ public class UIManager : MonoBehaviour {
 
     public void HideTarget()
     {
-        target?.SetActive(false);
+        if (target != null)
+            target.SetActive(false);
     }
 
     public void ShowBuildingWindow(Building building, List<Unit> units, Action<Unit> action = null)
     {
         buildingWindow.Show(building, units, action);
-        BuildingWindowShown = true;
+        BuildingWindowShown = building;
     }
 
     public void HideBuildingWindow()
     {
         buildingWindow.Hide();
-        BuildingWindowShown = false;
+        BuildingWindowShown = null;
+    }
+
+    public void UpdateBuildingWindowDescriptions()
+    {
+        buildingWindow.UpdateDescriptions();
     }
 }

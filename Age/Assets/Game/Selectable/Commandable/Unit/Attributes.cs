@@ -8,8 +8,8 @@ public class Attributes : NetworkBehaviour {
     private float Gathering;
     [SyncVar(hook = "OnIntelligenceChange")]
     private float Intelligence;
-    [SyncVar(hook = "OnAgilityChange")]
-    private float Agility;
+    [SyncVar(hook = "OnSwordsmanshipChange")]
+    private float Swordsmanship;
     [SyncVar(hook = "OnHealingChange")]
     private float Healing;
     [SyncVar(hook = "OnBuildingChange")]
@@ -30,8 +30,8 @@ public class Attributes : NetworkBehaviour {
                 return Gathering;
             case AttEnum.Intelligence:
                 return Intelligence;
-            case AttEnum.Agility:
-                return Agility;
+            case AttEnum.Swordsmanship:
+                return Swordsmanship;
             case AttEnum.Healing:
                 return Healing;
             case AttEnum.Building:
@@ -53,8 +53,8 @@ public class Attributes : NetworkBehaviour {
             case AttEnum.Intelligence:
                 Intelligence = value;
                 break;
-            case AttEnum.Agility:
-                Agility = value;
+            case AttEnum.Swordsmanship:
+                Swordsmanship = value;
                 break;
             case AttEnum.Healing:
                 Healing = value;
@@ -79,9 +79,9 @@ public class Attributes : NetworkBehaviour {
         OnChange();
     }
 
-    private void OnAgilityChange(float value)
+    private void OnSwordsmanshipChange(float value)
     {
-        Agility = value;
+        Swordsmanship = value;
         OnChange();
     }
     private void OnHealingChange(float value)
@@ -110,7 +110,7 @@ public class Attributes : NetworkBehaviour {
     {
         return $"Gathering: {(int)Gathering}\n" +
             $"Intelligence: {(int)Intelligence}\n" +
-            $"Agility: {(int)Agility}\n" +
+            $"Swordsmanship: {(int)Swordsmanship}\n" +
             $"Healing: {(int)Healing}\n" +
             $"Building: {(int)Building}\n" +
             $"Accuracy: {(int)Accuracy}";

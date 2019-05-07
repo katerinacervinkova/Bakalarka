@@ -13,6 +13,8 @@ public class Factory : MonoBehaviour
     [SerializeField]
     private TemporaryBuilding libraryPrefab;
     [SerializeField]
+    private TemporaryBuilding barracksPrefab;
+    [SerializeField]
     private Regiment regimentPrefab;
     [SerializeField]
     private Unit unitPrefab;
@@ -46,6 +48,9 @@ public class Factory : MonoBehaviour
             case BuildingEnum.Library:
                 building = Instantiate(libraryPrefab);
                 break;
+            case BuildingEnum.Barracks:
+                building = Instantiate(barracksPrefab);
+                break;
             default:
                 building = null;
                 break;
@@ -59,18 +64,18 @@ public class Factory : MonoBehaviour
         int health = rnd.Next(100);
         int gathering = rnd.Next(100);
         int intelligence = rnd.Next(100);
-        int agility = rnd.Next(100);
+        int swordsmanship = rnd.Next(100);
         int healing = rnd.Next(100);
         int building = rnd.Next(100);
         int accuracy = rnd.Next(100);
 
-        int ratio = (health + gathering + intelligence + agility + healing + building + accuracy);
+        int ratio = (health + gathering + intelligence + swordsmanship + healing + building + accuracy);
 
         unit.MaxHealth = 100 + health * sumOfProperties / ratio + 1;
         unit.Health = unit.MaxHealth;
         unit.Gathering = gathering * sumOfProperties / ratio + 1;
         unit.Intelligence = intelligence * sumOfProperties / ratio + 1;
-        unit.Agility = agility * sumOfProperties / ratio + 1;
+        unit.Swordsmanship = swordsmanship * sumOfProperties / ratio + 1;
         unit.Healing = healing * sumOfProperties / ratio + 1;
         unit.Building = building * sumOfProperties / ratio + 1;
         unit.Accuracy = accuracy * sumOfProperties / ratio + 1;

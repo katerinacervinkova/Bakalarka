@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ public abstract class Building : Selectable {
 
     private readonly float minTime = 1;
     private float timeElapsed = 0;
+
+    protected abstract void UpdateUnit(Unit unit);
+    public abstract Func<Unit, string> UnitTextFunc { get; }
 
     public override void OnStartClient()
     {
@@ -37,11 +41,10 @@ public abstract class Building : Selectable {
             foreach (Unit unit in unitsInside)
                 UpdateUnit(unit);
             timeElapsed -= minTime;
+            if (UIManager.Instance.BuildingWindowShown == this)
+                UIManager.Instance.UpdateBuildingWindowDescriptions();
         }
     }
-
-    protected abstract void UpdateUnit(Unit unit);
-    protected abstract void ChangeColour();
 
 
     public override void Init()
@@ -56,7 +59,6 @@ public abstract class Building : Selectable {
             PlayerState.Instance.buildings.Add(this);
             InitPurchases();
         }
-        ChangeColour();
     }
 
 
@@ -168,7 +170,7 @@ public abstract class Building : Selectable {
 
     public override string GetObjectDescription()
     {
-        return unitsInside.Count.ToString();
+        return $"{base.GetObjectDescription()}\n{unitsInside.Count} unit(s) inside";
     }
 
     public override Job GetOwnJob(Commandable worker)

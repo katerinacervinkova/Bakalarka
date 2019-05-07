@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class MainBuilding : Building {
 
     public override string Name => "Main building";
+
+    public override Func<Unit, string> UnitTextFunc => u => $"Health: {u.Health}";
 
     protected override void InitPurchases()
     {
@@ -10,10 +13,4 @@ public class MainBuilding : Building {
     }
 
     protected override void UpdateUnit(Unit unit) { }
-
-    protected override void ChangeColour()
-    {
-        transform.Find("Floor1").GetComponent<MeshRenderer>().material.color = owner.color;
-        transform.Find("Floor2").GetComponent<MeshRenderer>().material.color = owner.color;
-    }
 }
