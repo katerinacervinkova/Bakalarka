@@ -13,8 +13,6 @@ public class TemporaryBuilding : Selectable
     [SyncVar(hook = "OnProgressChange")]
     private float progress = 0;
 
-    [SerializeField]
-    public Vector2Int posDelta;
 
     public override string Name => buildingType.ToString();
 

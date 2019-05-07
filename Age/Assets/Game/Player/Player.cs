@@ -87,6 +87,7 @@ public class Player : NetworkBehaviour
         return AstarPath.active.GetNearest(position, nodeConstraint).position;
     }
 
+    [Command]
     private void CmdChangeHealth(NetworkInstanceId selectableId, float value)
     {
         Selectable selectable = NetworkServer.objects[selectableId].GetComponent<Selectable>();
