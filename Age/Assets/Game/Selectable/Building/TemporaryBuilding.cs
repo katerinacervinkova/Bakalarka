@@ -49,6 +49,9 @@ public class TemporaryBuilding : Selectable
                 transform.Find("Barracks/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
                 transform.Find("Barracks/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
                 break;
+            case BuildingEnum.Infirmary:
+                transform.Find("Infirmary/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+                break;
             default:
                 break;
         }

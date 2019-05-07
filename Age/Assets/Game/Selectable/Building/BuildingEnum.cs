@@ -2,5 +2,6 @@
 {
     MainBuilding,
     Library,
-    Barracks
+    Barracks,
+    Infirmary
 }

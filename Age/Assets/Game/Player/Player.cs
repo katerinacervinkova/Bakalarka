@@ -72,6 +72,11 @@ public class Player : NetworkBehaviour
         CmdPlaceBuilding(new Vector3((float)Math.Round(position.x), position.y, (float)Math.Round(position.z)), temporaryBuilding.netId);
     }
 
+    public void ChangeHealth(Selectable selectable, float value)
+    {
+        CmdChangeHealth(selectable.netId, value);
+    }
+
     private Vector3 NearestWalkable(Vector3 position)
     {
         NNConstraint nodeConstraint = new NNConstraint
@@ -80,6 +85,16 @@ public class Player : NetworkBehaviour
             walkable = true
         };
         return AstarPath.active.GetNearest(position, nodeConstraint).position;
+    }
+
+    private void CmdChangeHealth(NetworkInstanceId selectableId, float value)
+    {
+        Selectable selectable = NetworkServer.objects[selectableId].GetComponent<Selectable>();
+        selectable.Health = Mathf.Clamp(value, 0, selectable.MaxHealth);
+        if (selectable.Health == 0)
+        {
+            // TODO die
+        }
     }
 
     [Command]

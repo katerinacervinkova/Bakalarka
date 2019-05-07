@@ -105,6 +105,9 @@ public class GameState : NetworkBehaviour {
             case BuildingEnum.Barracks:
                 building = tempBuilding.gameObject.AddComponent<Barracks>() as Barracks;
                 break;
+            case BuildingEnum.Infirmary:
+                building = tempBuilding.gameObject.AddComponent<Infirmary>() as Infirmary;
+                break;
             default:
                 building = null;
                 break;

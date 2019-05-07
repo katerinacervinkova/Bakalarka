@@ -15,6 +15,8 @@ public class Factory : MonoBehaviour
     [SerializeField]
     private TemporaryBuilding barracksPrefab;
     [SerializeField]
+    private TemporaryBuilding infirmaryPrefab;
+    [SerializeField]
     private Regiment regimentPrefab;
     [SerializeField]
     private Unit unitPrefab;
@@ -50,6 +52,9 @@ public class Factory : MonoBehaviour
                 break;
             case BuildingEnum.Barracks:
                 building = Instantiate(barracksPrefab);
+                break;
+            case BuildingEnum.Infirmary:
+                building = Instantiate(infirmaryPrefab);
                 break;
             default:
                 building = null;
