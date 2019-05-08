@@ -16,7 +16,6 @@ public class Unit : Commandable
     public float Gathering { get { return atts.Get(AttEnum.Gathering); } set { atts.Set(AttEnum.Gathering, value); } }
     public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
     public float Swordsmanship { get { return atts.Get(AttEnum.Swordsmanship); } set { atts.Set(AttEnum.Swordsmanship, value); } }
-
     public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
     public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
     public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
@@ -35,7 +34,7 @@ public class Unit : Commandable
         base.OnStartClient();
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
-        transform.Find("Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Unit/Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
     }
     public override void OnStartAuthority()
     {

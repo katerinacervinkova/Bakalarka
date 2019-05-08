@@ -3,5 +3,6 @@
     MainBuilding,
     Library,
     Barracks,
-    Infirmary
+    Infirmary,
+    House
 }

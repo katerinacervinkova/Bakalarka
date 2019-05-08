@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections.Generic;
 
 public class LeftMouseActivity : MouseActivity {
 
-    public RectTransform selectionSquare;
-    readonly float maxClickTime = 0.3f;
-    float lastClickTime = 0;
-    GameObject hitObject = null;
-    Vector3 hitPoint = Vector3.zero;
-    Vector3 squareStartPosition = Vector3.zero;
-    bool isClicking = false;
+    [SerializeField]
+    private RectTransform selectionSquare;
+    private readonly float maxClickTime = 0.3f;
+    private float lastClickTime = 0;
+    private GameObject hitObject = null;
+    private Vector3 hitPoint = Vector3.zero;
+    private Vector3 squareStartPosition = Vector3.zero;
+    private bool isClicking = false;
 
     private void Update ()
     {
@@ -22,6 +22,7 @@ public class LeftMouseActivity : MouseActivity {
             hitPoint.y = 0;
             PlayerState.Instance.MoveBuildingToBuild(hitPoint);
         }
+
         if (!isClicking && !MouseInBounds())
             return;
         if (Input.GetMouseButtonUp(0))
@@ -83,7 +84,6 @@ public class LeftMouseActivity : MouseActivity {
     {
         inputOptions.MoveCameraEnabled = true;
         selectionSquare.gameObject.SetActive(false);
-        var selectedUnits = new List<Unit>();
 
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);

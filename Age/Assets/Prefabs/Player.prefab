@@ -109,9 +109,11 @@ MonoBehaviour:
     type: 2}
   infirmaryPrefab: {fileID: 114644031746134020, guid: a1dbc13f32efbd84095ac2f2388caaa7,
     type: 2}
+  housePrefab: {fileID: 114251242508473602, guid: 1220e6964f01af646b3ab36acdf54e52,
+    type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
-  unitPrefab: {fileID: 114012610445523338, guid: 306508b1a11cf8d47b055b78b3965e0a,
+  unitPrefab: {fileID: 114252306648027516, guid: 306508b1a11cf8d47b055b78b3965e0a,
     type: 2}
 --- !u!114 &114918450667427504
 MonoBehaviour:
