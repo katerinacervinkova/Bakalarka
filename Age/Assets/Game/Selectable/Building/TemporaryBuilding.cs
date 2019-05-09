@@ -15,6 +15,7 @@ public class TemporaryBuilding : Selectable
 
 
     public override string Name => buildingType.ToString();
+    public override float HealthValue => progress / maxProgress;
 
     public override void OnStartAuthority()
     {
@@ -28,6 +29,7 @@ public class TemporaryBuilding : Selectable
         base.Init();
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
+        GameState.Instance.TemporaryBuildings.Add(this);
         ChangeColor();
     }
 
@@ -61,8 +63,12 @@ public class TemporaryBuilding : Selectable
     private void OnProgressChange(float newProgress)
     {
         progress = newProgress;
-        PlayerState.Instance.OnStateChange(this);
-        DrawHealthBar();
+        if (initialized && PlayerState.Instance.SelectedObject != this)
+        {
+            PlayerState.Instance.OnStateChange(this);
+            healthBar.gameObject.SetActive(true);
+            healthBar.HideAfter();
+        }
     }
 
     [ClientRpc]
@@ -104,16 +110,6 @@ public class TemporaryBuilding : Selectable
         if (buildJob == null)
             buildJob = new JobBuild(this);
         return buildJob;
-    }
-
-    public override Job GetEnemyJob(Commandable worker)
-    {
-        return new AttackJob(this);
-    }
-
-    public override void DrawHealthBar()
-    {
-        DrawProgressBar(progress / maxProgress);
     }
 
     protected override void InitPurchases()

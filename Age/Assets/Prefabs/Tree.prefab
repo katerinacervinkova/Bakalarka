@@ -606,11 +606,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b712ae07d2ee30d409af3f424b1d582d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
   Image: {fileID: 0}
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  healthBarOffset: 6
   size: 1
   capacity: 0
 --- !u!119 &119588751922476216

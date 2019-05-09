@@ -28,7 +28,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1049875677083222
 GameObject:
   m_ObjectHideFlags: 1
@@ -242,8 +242,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1771390634385888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -89.49107, y: -6.658319e-17, z: 119.9456}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -87.73715, y: -0.4, z: -4.1386547}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children:
   - {fileID: 224997562927661360}
   - {fileID: 4701363686695966}
@@ -514,6 +514,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  healthBarOffset: 8
   buildingType: 2
   placed: 0
 --- !u!114 &114285215252840946

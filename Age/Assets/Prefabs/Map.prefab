@@ -37,7 +37,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4511774570157832}
   - component: {fileID: 64908899991621682}
-  - component: {fileID: 114827588764501252}
   - component: {fileID: 114480189637969422}
   m_Layer: 8
   m_Name: Map
@@ -54,7 +53,7 @@ Transform:
   m_GameObject: {fileID: 1656437453268504}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 1, z: 20}
+  m_LocalScale: {x: 40, y: 1, z: 40}
   m_Children:
   - {fileID: 4808429729169308}
   m_Father: {fileID: 0}
@@ -160,14 +159,3 @@ MonoBehaviour:
     i15: 78
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114827588764501252
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1656437453268504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b81932dd729a484fa0fad709ddcca8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -46,19 +46,21 @@ public abstract class Building : Selectable {
         }
     }
 
-
     public override void Init()
     {
         base.Init();
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
         DefaultDestination = SpawnPoint = transform.position;
-        DrawHealthBar();
+        healthBar.gameObject.SetActive(true);
+        healthBar.HideAfter();
+        GameState.Instance.Buildings.Add(this);
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);
             InitPurchases();
         }
+        initialized = true;
     }
 
 
@@ -176,16 +178,6 @@ public abstract class Building : Selectable {
     public override Job GetOwnJob(Commandable worker)
     {
         return new JobEnter(this);
-    }
-
-    public override Job GetEnemyJob(Commandable worker)
-    {
-        return new AttackJob(this);
-    }
-
-    public override void DrawHealthBar()
-    {
-        DrawProgressBar(Health / MaxHealth);
     }
 
     protected override void OnDestroy()

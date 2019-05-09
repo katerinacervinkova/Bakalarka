@@ -186,7 +186,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1631603489596718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -96.73081, y: -6.0053623e-17, z: 108.18298}
+  m_LocalPosition: {x: -59.287918, y: 1.0333086e-17, z: -18.614433}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224389632543861874}
@@ -517,9 +517,9 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  healthBarOffset: 7
   buildingType: 3
   placed: 0
-  posDelta: {x: 0, y: 0}
 --- !u!114 &114903765808046776
 MonoBehaviour:
   m_ObjectHideFlags: 1

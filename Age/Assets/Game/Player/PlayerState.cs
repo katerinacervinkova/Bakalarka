@@ -121,7 +121,6 @@ public class PlayerState : MonoBehaviour {
     {
         if (SelectedObject == selectable)
             UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
-
     }
 
     public void MoveBuildingToBuild(Vector3 hitPoint)

@@ -21,8 +21,7 @@ public class Regiment : Commandable {
     public override void SetSelection(bool selected, Player player)
     {
         Selected = selected;
-        foreach (Unit unit in units)
-            unit.SetSelection(selected, player);
+        units.ForEach(u => u.SetSelection(selected, player));
         if (selected)
             UIManager.Instance.ShowButtons(units[0].Purchases);
         else
@@ -76,11 +75,6 @@ public class Regiment : Commandable {
     {
         this.units = units;
         units.ForEach(u => u.Reg = this);
-    }
-
-    public override void DrawHealthBar()
-    {
-        units.ForEach(u => u.DrawHealthBar());
     }
 
     public override void SetGoal(Selectable goal)

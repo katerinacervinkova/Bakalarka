@@ -324,7 +324,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1955272682375512}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.1398468, y: 1.56, z: -1.2061539}
+  m_LocalPosition: {x: 0.12, y: 1.56, z: -0.98}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4018241348065902}
@@ -753,6 +753,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 50
   MaxHealth: 100
+  healthBarOffset: 4
   movementController: {fileID: 0}
 --- !u!114 &114337482534771234
 MonoBehaviour:
@@ -926,10 +927,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.55
+  m_Height: 2.3
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.15, z: 0}
 --- !u!143 &143359224586752948
 CharacterController:
   m_ObjectHideFlags: 1
@@ -1086,7 +1087,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1021678367712600}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -107.96318, y: 0, z: 112.4575}
+  m_LocalPosition: {x: 134.66245, y: 0, z: -107.71478}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224145433756087686}
@@ -1098,6 +1099,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -107.96318, y: -5.452258e-15}
+  m_AnchoredPosition: {x: 134.66245, y: -4.4496902e-15}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

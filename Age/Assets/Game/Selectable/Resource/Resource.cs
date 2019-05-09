@@ -11,6 +11,9 @@ public abstract class Resource : Selectable {
 
     [SyncVar(hook = "OnCapacityChange")]
     public float capacity = 0;
+
+    public override float HealthValue => capacity / MaxCapacity;
+
     protected abstract float MaxCapacity { get; }
     public abstract void Gather(float gathering, Player player);
 
@@ -22,19 +25,19 @@ public abstract class Resource : Selectable {
     public override void OnStartClient()
     {
         Init();
+        initialized = true;
         minimapColor = minimapIcon.color;
     }
 
     private void OnCapacityChange(float newCapacity)
     {
         capacity = newCapacity;
-        PlayerState.Instance.OnStateChange(this);
-        DrawHealthBar();
-    }
-
-    public override void DrawHealthBar()
-    {
-        DrawProgressBar((float)capacity / MaxCapacity);
+        if (initialized && PlayerState.Instance.SelectedObject != this)
+        {
+            PlayerState.Instance.OnStateChange(this);
+            healthBar.gameObject.SetActive(true);
+            healthBar.HideAfter();
+        }
     }
 
     public override Job GetOwnJob(Commandable worker)

@@ -1,4 +1,5 @@
 ﻿using Pathfinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,9 +46,15 @@ public class GameState : NetworkBehaviour {
     public T GetNearestResource<T>(T resource, Vector3 position, int maxDistance) where T : Resource
     {
         return (T)Resources.Where(r => r is T && r != resource && Vector3.Distance(position, r.transform.position) < maxDistance).
-            OrderBy(b => Vector3.Distance(position, b.transform.position)).FirstOrDefault();
+            OrderBy(r => Vector3.Distance(position, r.transform.position)).FirstOrDefault();
     }
 
+    public Selectable GetNearestTarget(Vector3 position, int maxDistance)
+    {
+        return ((IEnumerable<Selectable>)Units).Concat(Buildings).Where(s => s != null && !s.hasAuthority && Vector3.Distance(position, s.transform.position) < maxDistance).
+            OrderBy(s => Vector3.Distance(position, s.transform.position)).FirstOrDefault();
+    }
+     
     [ClientRpc]
     public void RpcPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)
     {
@@ -115,6 +122,7 @@ public class GameState : NetworkBehaviour {
                 building = null;
                 break;
         }
+        building.healthBarOffset = tempBuilding.healthBarOffset;
         building.owner = tempBuilding.owner;
         building.Init();
         if (PlayerState.Instance.SelectedObject == tempBuilding)

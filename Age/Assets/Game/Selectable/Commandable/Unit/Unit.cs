@@ -29,22 +29,30 @@ public class Unit : Commandable
         movementController = GetComponent<MovementController>();
     }
 
-    public override void OnStartClient()
+    public override void Init()
     {
-        base.OnStartClient();
+        base.Init();
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
+        GameState.Instance.Units.Add(this);
         transform.Find("Unit/Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
     }
+
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
         PlayerState.Instance.units.Add(this);
     }
+
     protected virtual void Update()
     {
         JobUpdate();
         //VisibilityUpdate();
+    }
+
+    private void OnDisable()
+    {
+        healthBar.gameObject.SetActive(false);
     }
 
     private void VisibilityUpdate()
@@ -89,11 +97,6 @@ public class Unit : Commandable
     public override string GetObjectDescription()
     {
         return $"{base.GetObjectDescription()}\n{atts.GetDescription()}";
-    }
-   
-    public override void DrawHealthBar()
-    {
-        DrawProgressBar(Health / MaxHealth);
     }
 
     public override void SetGoal(Selectable goal)

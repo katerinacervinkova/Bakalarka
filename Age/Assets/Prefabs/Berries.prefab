@@ -363,11 +363,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99898b8434deac8409bf3d596258f6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
   Image: {fileID: 0}
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  healthBarOffset: 1
   size: 1
   capacity: 0
 --- !u!114 &114539528555002018

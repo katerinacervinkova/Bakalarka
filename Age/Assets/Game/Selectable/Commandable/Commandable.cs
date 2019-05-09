@@ -44,8 +44,4 @@ public abstract class Commandable : Selectable {
     {
         return null;
     }
-    public override Job GetEnemyJob(Commandable worker)
-    {
-        return new AttackJob(this);
-    }
 }

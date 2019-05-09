@@ -93,8 +93,8 @@ public class Player : NetworkBehaviour
         Selectable selectable = NetworkServer.objects[selectableId].GetComponent<Selectable>();
         selectable.Health = Mathf.Clamp(value, 0, selectable.MaxHealth);
         if (selectable.Health == 0)
-        {
-            // TODO die
+        { 
+            NetworkServer.Destroy(selectable.gameObject);
         }
     }
 

@@ -382,7 +382,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1002605280894830}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -49.643864, y: 9.4457954e-18, z: -17.016033}
+  m_LocalPosition: {x: 133.8445, y: 6.0391e-17, z: -108.79074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224288513232496806}
@@ -424,9 +424,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1328830449058252}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3161354, y: 1.12, z: -1.5039673}
-  m_LocalScale: {x: 0.8, y: 0.65, z: 0.8}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 1.8, y: 1.12, z: -1.31}
+  m_LocalScale: {x: 0.9, y: 0.7, z: 0.9}
   m_Children:
   - {fileID: 4197747825759824}
   - {fileID: 4417082464260424}
@@ -443,7 +443,7 @@ Transform:
   - {fileID: 4475977905861892}
   m_Father: {fileID: 4130677088963100}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!4 &4367675026488872
 Transform:
   m_ObjectHideFlags: 1
@@ -1130,8 +1130,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 8, y: 6.882622, z: 8}
-  m_Center: {x: 0, y: 3.441311, z: 0}
+  m_Size: {x: 4.6, y: 3.4, z: 4.6}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &114056039034686244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1147,6 +1147,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  healthBarOffset: 6
   buildingType: 1
   placed: 0
 --- !u!114 &114400769096550954
@@ -1373,7 +1374,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1901483049254028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.18, z: 0}
+  m_LocalPosition: {x: 0, y: 6.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224503645446637000}
@@ -1382,7 +1383,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 6.18}
+  m_AnchoredPosition: {x: 0, y: 6.83}
   m_SizeDelta: {x: 2, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224503645446637000

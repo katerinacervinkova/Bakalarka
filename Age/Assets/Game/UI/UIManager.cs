@@ -16,7 +16,8 @@ public class UIManager : MonoBehaviour {
         }
     }
 
-
+    [SerializeField]
+    private GameObject healthBarsContainer;
     [SerializeField]
     private Image toolTip;
     [SerializeField]
@@ -35,6 +36,8 @@ public class UIManager : MonoBehaviour {
     private Button unitsButton;
     [SerializeField]
     private BuildingWindow buildingWindow;
+    [SerializeField]
+    private HealthBar healthBarPrefab;
 
     public Building BuildingWindowShown { get; private set; }
 
@@ -54,7 +57,7 @@ public class UIManager : MonoBehaviour {
 
     public void HideButtons()
     {
-        buttons.ForEach(b => b.gameObject.SetActive(false));
+        buttons.ForEach(b => { if (b != null) b.gameObject.SetActive(false); });
     }
 
     public void ShowTransactions(List<Transaction> transactions)
@@ -71,6 +74,14 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    public HealthBar CreateHealthBar(Selectable selectable, float offset)
+    {
+        HealthBar healthBar = Instantiate(healthBarPrefab, healthBarsContainer.transform);
+        healthBar.positionOffset = offset;
+        healthBar.selectable = selectable;
+        return healthBar;
+    }
+
     public void ShowUnitsButton(Action action)
     {
         unitsButton.onClick.AddListener(() => action.Invoke());
@@ -85,7 +96,7 @@ public class UIManager : MonoBehaviour {
 
     public void HideTransactions()
     {
-        schedulers.ForEach(s => s.gameObject.SetActive(false));
+        schedulers.ForEach(s => { if (s != null) s.gameObject.SetActive(false); });
     }
 
     public void OnClickScheduler(int index)

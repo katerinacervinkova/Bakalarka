@@ -15,7 +15,10 @@ public class LeftMouseActivity : MouseActivity {
     private void Update ()
     {
         if (PlayerState.Instance == null || BuildingWindowShown)
+        {
+            selectionSquare.gameObject.SetActive(false);
             return;
+        }
         if (PlayerState.Instance.BuildingToBuild != null)
         {
             Vector3 hitPoint = FindHitPoint();
@@ -39,6 +42,8 @@ public class LeftMouseActivity : MouseActivity {
 
     private void LeftMouseDown()
     {
+        if (inputOptions.MouseOverUI)
+            return;
         lastClickTime = Time.time;
         hitObject = FindHitObject();
         hitPoint = FindHitPoint();
@@ -59,8 +64,6 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
-        if (inputOptions.MouseOverUI)
-            return;
         if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
             PlayerState.Instance.Deselect();
         if (PlayerState.Instance.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
@@ -102,6 +105,7 @@ public class LeftMouseActivity : MouseActivity {
 
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
+        Debug.Log($"top left: {topLeft}, bottom right: {bottomRight}");
 
         var width = bottomRight.x - topLeft.x;
         var heigth = bottomRight.y - topLeft.y;
@@ -114,15 +118,13 @@ public class LeftMouseActivity : MouseActivity {
 
     private void RectangleCoordinates(out Vector3 topLeft, out Vector3 bottomRight)
     {
-        Vector3 squareEndPosition = Input.mousePosition;
+        Vector3 endPos = Input.mousePosition;
 
-        squareEndPosition.x = Math.Max(gameWindow.LeftBorder, squareEndPosition.x);
-        squareEndPosition.y = Math.Max(gameWindow.BottomBorder, squareEndPosition.y);
-        squareEndPosition.x = Math.Min(gameWindow.RightBorder, squareEndPosition.x);
-        squareEndPosition.y = Math.Min(gameWindow.TopBorder, squareEndPosition.y);
+        endPos.x = Mathf.Clamp(endPos.x, gameWindow.LeftBorder, gameWindow.RightBorder);
+        endPos.y = Mathf.Clamp(endPos.y, gameWindow.BottomBorder, gameWindow.TopBorder);
 
-        topLeft = new Vector3(Math.Min(squareStartPosition.x, squareEndPosition.x), Math.Min(squareStartPosition.y, squareEndPosition.y), 0);
-        bottomRight = new Vector3(Math.Max(squareStartPosition.x, squareEndPosition.x), Math.Max(squareStartPosition.y, squareEndPosition.y), 0);
+        topLeft = new Vector3(Math.Min(squareStartPosition.x, endPos.x), Math.Min(squareStartPosition.y, endPos.y), 0);
+        bottomRight = new Vector3(Math.Max(squareStartPosition.x, endPos.x), Math.Max(squareStartPosition.y, endPos.y), 0);
     }
 
     private bool IsWithinRectangle(Vector3 topLeft, Vector3 bottomRight, Transform transform)

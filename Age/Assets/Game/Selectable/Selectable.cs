@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public abstract class Selectable : NetworkBehaviour {
@@ -13,7 +12,7 @@ public abstract class Selectable : NetworkBehaviour {
     public NetworkInstanceId playerID;
     public Player owner;
 
-    [SyncVar]
+    [SyncVar(hook = "OnHealthChange")]
     public float Health;
     [SyncVar]
     public float MaxHealth = 100;
@@ -22,25 +21,28 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected bool Selected { get; set; } = false;
 
-    protected GameObject healthBarCanvas;
     protected GameObject selector;
     protected SpriteRenderer minimapIcon;
     protected Color minimapColor;
 
-    protected Image healthBar;
-    protected Quaternion healthBarRotation;
+    [SerializeField]
+    public float healthBarOffset;
+    protected HealthBar healthBar;
 
+    protected bool initialized = false;
+
+    public virtual float HealthValue => Health / MaxHealth;
     public List<Purchase> Purchases { get; private set; } = new List<Purchase>();
 
     public abstract Job GetOwnJob(Commandable worker = null);
-    public abstract Job GetEnemyJob(Commandable worker = null);
-    public abstract void DrawHealthBar();
+    public virtual Job GetEnemyJob(Commandable worker = null) => new AttackJob(this);
     protected abstract void InitPurchases();
 
     public override void OnStartClient()
     {
         owner = ClientScene.objects[playerID].GetComponent<Player>();
         Init();
+        initialized = true;
     }
 
     public virtual void Init()
@@ -48,10 +50,8 @@ public abstract class Selectable : NetworkBehaviour {
         minimapIcon = transform.Find("MinimapIcon").GetComponent<SpriteRenderer>();
         selector = transform.Find("SelectionProjector").gameObject;
         selector.SetActive(false);
-        healthBarCanvas = transform.Find("Canvas").gameObject;
-        healthBar = transform.Find("Canvas/HealthBarBG/HealthBar").GetComponent<Image>();
-        healthBarRotation = healthBarCanvas.transform.rotation;
         Health = MaxHealth;
+        healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
     }
 
     public override void OnStartAuthority()
@@ -64,9 +64,8 @@ public abstract class Selectable : NetworkBehaviour {
         Selected = selected;
         selector.SetActive(selected);
         minimapIcon.color = selected ? Color.white : minimapColor;
-        healthBarCanvas.SetActive(selected);
-        if (selected)
-            DrawHealthBar();
+        if (healthBar != null)
+            healthBar.gameObject.SetActive(selected);
         if (hasAuthority)
         {
             if (selected)
@@ -81,7 +80,6 @@ public abstract class Selectable : NetworkBehaviour {
         return $"Health: {(int)Health}/{(int)MaxHealth}";
     }
 
-
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
     public virtual void RightMouseClickObject(Selectable hitObject) { }
     public virtual Job CreateJob(Commandable worker)
@@ -91,19 +89,25 @@ public abstract class Selectable : NetworkBehaviour {
         return GetEnemyJob(worker);
     }
 
-    protected virtual void DrawProgressBar(float value)
-    {
-        healthBarCanvas.transform.rotation = healthBarRotation;
-        healthBar.fillAmount = value;
-    }
-
     public bool IsWithinSight(Vector3 position)
     {
         return Vector3.Distance(transform.position, position) < lineOfSight;
     }
     
+    protected virtual void OnHealthChange(float value)
+    {
+        Health = value;
+        if (initialized && PlayerState.Instance.SelectedObject != this)
+        {
+            PlayerState.Instance.OnStateChange(this);
+            healthBar.gameObject.SetActive(true);
+            healthBar.HideAfter();
+        }
+    }
     protected virtual void OnDestroy()
     {
+        if (healthBar != null)
+            Destroy(healthBar.gameObject);
         if (GetEnemyJob() != null)
             GetEnemyJob().Completed = true;
         if (GetOwnJob() != null)

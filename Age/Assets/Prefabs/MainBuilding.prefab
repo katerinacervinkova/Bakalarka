@@ -269,7 +269,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1290759734880566}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 144.09625, y: 6.1277394e-17, z: -110.387535}
+  m_LocalPosition: {x: 134.72151, y: 6.074491e-17, z: -109.42829}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4267676464722948}
@@ -626,7 +626,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 4, z: 10}
+  m_Size: {x: 8, y: 4, z: 8}
   m_Center: {x: 0, y: 2, z: -0}
 --- !u!114 &114019076716311038
 MonoBehaviour:
@@ -643,6 +643,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  healthBarOffset: 12
   buildingType: 0
   placed: 0
 --- !u!114 &114121454109239844
