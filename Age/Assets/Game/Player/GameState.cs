@@ -66,7 +66,8 @@ public class GameState : NetworkBehaviour {
         var guo = new GraphUpdateObject(collider.bounds)
         {
             modifyWalkability = true,
-            updatePhysics = true
+            updatePhysics = true,
+            setWalkability = false
         };
         AstarPath.active.UpdateGraphs(guo);
     }
@@ -128,5 +129,16 @@ public class GameState : NetworkBehaviour {
         if (PlayerState.Instance.SelectedObject == tempBuilding)
             PlayerState.Instance.Select(building);
         Destroy(tempBuilding);
+    }
+
+    public void RpcDestroyObject(Bounds bounds)
+    {
+        var guo = new GraphUpdateObject(bounds)
+        {
+            modifyWalkability = true,
+            updatePhysics = true,
+            setWalkability = true
+        };
+        AstarPath.active.UpdateGraphs(guo);
     }
 }

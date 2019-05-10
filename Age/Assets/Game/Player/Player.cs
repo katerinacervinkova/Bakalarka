@@ -35,7 +35,6 @@ public class Player : NetworkBehaviour
         if (connectionToClient == null || connectionToClient.isReady)
         {
             CmdCreateUnit(transform.position, transform.position);
-
             return true;
         }
         return false;
@@ -93,9 +92,7 @@ public class Player : NetworkBehaviour
         Selectable selectable = NetworkServer.objects[selectableId].GetComponent<Selectable>();
         selectable.Health = Mathf.Clamp(value, 0, selectable.MaxHealth);
         if (selectable.Health == 0)
-        { 
-            NetworkServer.Destroy(selectable.gameObject);
-        }
+            CmdDestroy(selectableId);
     }
 
     [Command]
@@ -151,7 +148,7 @@ public class Player : NetworkBehaviour
         Resource resource = NetworkServer.objects[resourceId].GetComponent<Resource>();
         resource.capacity -= amount;
         if (resource.capacity <= 0)
-            NetworkServer.Destroy(resource.gameObject);
+            CmdDestroy(resourceId);
     }
 
     [Command]
@@ -161,5 +158,13 @@ public class Player : NetworkBehaviour
         temporaryBuilding.transform.position = position;
         temporaryBuilding.placed = true;
         GameState.Instance.RpcPlaceBuilding(position, tempBuildingId);
+    }
+
+    [Command]
+    public void CmdDestroy(NetworkInstanceId selectableId)
+    {
+        GameObject temporaryBuilding = NetworkServer.objects[selectableId].gameObject;
+        GameState.Instance.RpcDestroyObject(temporaryBuilding.GetComponent<Collider>().bounds);
+        NetworkServer.Destroy(temporaryBuilding);
     }
 }
