@@ -32,12 +32,9 @@ public abstract class Resource : Selectable {
     private void OnCapacityChange(float newCapacity)
     {
         capacity = newCapacity;
+        PlayerState.Instance.OnStateChange(this);
         if (initialized && PlayerState.Instance.SelectedObject != this)
-        {
-            PlayerState.Instance.OnStateChange(this);
-            healthBar.gameObject.SetActive(true);
             healthBar.HideAfter();
-        }
     }
 
     public override Job GetOwnJob(Commandable worker)

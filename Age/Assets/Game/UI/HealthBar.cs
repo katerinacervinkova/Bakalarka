@@ -9,6 +9,7 @@ public class HealthBar : MonoBehaviour {
     [SerializeField]
     private Image image;
     private bool temporary = false;
+    private bool permanent = false;
     private float remainingSeconds = 0;
 
     private void OnEnable()
@@ -25,7 +26,8 @@ public class HealthBar : MonoBehaviour {
             if (remainingSeconds <= 0)
             {
                 temporary = false;
-                gameObject.SetActive(false);
+                if (!permanent)
+                    gameObject.SetActive(false);
             }
         }
     }
@@ -37,7 +39,21 @@ public class HealthBar : MonoBehaviour {
 
     public void HideAfter(float duration = 1)
     {
+        gameObject.SetActive(true);
         remainingSeconds = duration;
         temporary = true;
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        permanent = true;
+    }
+
+    public void Hide()
+    {
+        permanent = false;
+        if (!temporary)
+            gameObject.SetActive(false);
     }
 }

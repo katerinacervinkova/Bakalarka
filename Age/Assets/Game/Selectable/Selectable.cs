@@ -65,7 +65,12 @@ public abstract class Selectable : NetworkBehaviour {
         selector.SetActive(selected);
         minimapIcon.color = selected ? Color.white : minimapColor;
         if (healthBar != null)
-            healthBar.gameObject.SetActive(selected);
+        {
+            if (selected)
+                healthBar.Show();
+            else
+                healthBar.Hide();
+        }
         if (hasAuthority)
         {
             if (selected)
@@ -97,12 +102,9 @@ public abstract class Selectable : NetworkBehaviour {
     protected virtual void OnHealthChange(float value)
     {
         Health = value;
+        PlayerState.Instance.OnStateChange(this);
         if (initialized && PlayerState.Instance.SelectedObject != this)
-        {
-            PlayerState.Instance.OnStateChange(this);
-            healthBar.gameObject.SetActive(true);
             healthBar.HideAfter();
-        }
     }
     protected virtual void OnDestroy()
     {

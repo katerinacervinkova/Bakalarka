@@ -52,7 +52,8 @@ public class Unit : Commandable
 
     private void OnDisable()
     {
-        healthBar.gameObject.SetActive(false);
+        if (healthBar != null)
+            healthBar.gameObject.SetActive(false);
     }
 
     private void VisibilityUpdate()

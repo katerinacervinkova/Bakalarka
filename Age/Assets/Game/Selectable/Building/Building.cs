@@ -52,8 +52,6 @@ public abstract class Building : Selectable {
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
         DefaultDestination = SpawnPoint = transform.position;
-        healthBar.gameObject.SetActive(true);
-        healthBar.HideAfter();
         GameState.Instance.Buildings.Add(this);
         if (hasAuthority)
         {
