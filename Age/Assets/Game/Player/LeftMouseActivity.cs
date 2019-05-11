@@ -42,8 +42,6 @@ public class LeftMouseActivity : MouseActivity {
 
     private void LeftMouseDown()
     {
-        if (inputOptions.MouseOverUI)
-            return;
         lastClickTime = Time.time;
         hitObject = FindHitObject();
         hitPoint = FindHitPoint();
@@ -64,6 +62,8 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseClick()
     {
+        if (inputOptions.MouseOverUI)
+            return;
         if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
             PlayerState.Instance.Deselect();
         if (PlayerState.Instance.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)

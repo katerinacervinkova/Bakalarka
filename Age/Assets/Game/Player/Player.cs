@@ -25,8 +25,6 @@ public class Player : NetworkBehaviour
 
     public bool Init()
     {
-        if (!hasAuthority)
-            return false;
         if (connectionToClient == null || connectionToClient.isReady)
         {
             factory.CreatePlayerState();

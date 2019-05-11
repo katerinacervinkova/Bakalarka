@@ -6,7 +6,7 @@ public class FirstUnitCreator : MonoBehaviour {
 	
 	void Update ()
     {
-        if (player.Init())
+        if (!player.hasAuthority || player.Init())
             Destroy(this);
 	}
 }
