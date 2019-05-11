@@ -11,7 +11,7 @@ public abstract class Commandable : Selectable {
 
     protected void HideTarget()
     {
-        if (causedShowingTarget)
+        if (causedShowingTarget && UIManager.Instance != null)
         {
             UIManager.Instance.HideTarget();
             causedShowingTarget = false;

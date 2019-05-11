@@ -25,7 +25,7 @@ public class Player : NetworkBehaviour
 
     public void ExitBuilding(Unit unit, Building building)
     {
-        CmdExitBuilding(unit.netId, building.transform.position, building.DefaultDestination);
+        CmdExitBuilding(unit.netId, building.FrontPosition, building.DefaultDestination);
     }
 
     public bool CreateInitialUnit()
@@ -62,7 +62,7 @@ public class Player : NetworkBehaviour
 
     public void CreateUnit(Building building)
     {
-        CmdCreateUnit(building.SpawnPoint, building.DefaultDestination);
+        CmdCreateUnit(building.FrontPosition, building.DefaultDestination);
     }
 
     public void PlaceBuilding(TemporaryBuilding temporaryBuilding)

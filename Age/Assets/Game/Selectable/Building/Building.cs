@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Building : Selectable {
-
-    public Vector3 SpawnPoint { get; private set; }
     public Vector3 DefaultDestination { get; private set; }
 
     private readonly int maxTransactions = 16;
@@ -51,13 +49,14 @@ public abstract class Building : Selectable {
         base.Init();
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
-        DefaultDestination = SpawnPoint = transform.position;
+        DefaultDestination = FrontPosition;
         GameState.Instance.Buildings.Add(this);
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);
             InitPurchases();
         }
+        Debug.DrawRay(FrontPosition, Vector3.up * 10, Color.green, 5000);
         initialized = true;
     }
 

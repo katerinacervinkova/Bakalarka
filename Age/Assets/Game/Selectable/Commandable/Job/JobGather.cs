@@ -25,7 +25,7 @@ public class JobGather<T> : Job where T : Resource {
 
     public override void Do(Unit worker)
     {
-        if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resource.size + 3)
+        if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resource.size.x + 3)
         {
             worker.SetNextJob();
             return;

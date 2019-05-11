@@ -26,11 +26,15 @@ public abstract class Selectable : NetworkBehaviour {
     protected Color minimapColor;
 
     [SerializeField]
+    public Vector3 size;
+
+    [SerializeField]
     public float healthBarOffset;
     protected HealthBar healthBar;
 
     protected bool initialized = false;
 
+    public Vector3 FrontPosition { get { var pos = transform.position; pos.x -= size.x / 2; pos.z -= size.z / 2; return pos; } }
     public virtual float HealthValue => Health / MaxHealth;
     public List<Purchase> Purchases { get; private set; } = new List<Purchase>();
 

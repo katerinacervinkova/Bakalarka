@@ -1,5 +1,4 @@
 ﻿using Pathfinding;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -125,6 +124,7 @@ public class GameState : NetworkBehaviour {
         }
         building.healthBarOffset = tempBuilding.healthBarOffset;
         building.owner = tempBuilding.owner;
+        building.size = tempBuilding.size;
         building.Init();
         if (PlayerState.Instance.SelectedObject == tempBuilding)
             PlayerState.Instance.Select(building);

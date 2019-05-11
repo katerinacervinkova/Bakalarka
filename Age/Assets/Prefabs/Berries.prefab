@@ -367,6 +367,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  size: {x: 0.5, y: 0, z: 0.5}
   healthBarOffset: 1
   size: 1
   capacity: 0

@@ -242,6 +242,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  size: {x: 2, y: 0, z: 2}
   healthBarOffset: 1
   size: 5
   capacity: 0

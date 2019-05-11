@@ -571,6 +571,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
+  size: {x: 3.3, y: 0, z: 5}
   healthBarOffset: 8
   buildingType: 4
   placed: 0

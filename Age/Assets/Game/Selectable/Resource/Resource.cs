@@ -6,9 +6,6 @@ public abstract class Resource : Selectable {
 
     protected Job miningJob = null;
 
-    [SerializeField]
-    public int size;
-
     [SyncVar(hook = "OnCapacityChange")]
     public float capacity = 0;
 

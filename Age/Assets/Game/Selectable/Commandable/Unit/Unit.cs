@@ -1,6 +1,4 @@
-﻿using System;
-using Pathfinding;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Unit : Commandable
 {
@@ -103,7 +101,7 @@ public class Unit : Commandable
     public override void SetGoal(Selectable goal)
     {
         Job following = goal.CreateJob(this);
-        SetJob(new JobGo(goal.transform.position, following));
+        SetJob(new JobGo(goal.FrontPosition, following));
     }
 
     public void SetJob(Job job)
