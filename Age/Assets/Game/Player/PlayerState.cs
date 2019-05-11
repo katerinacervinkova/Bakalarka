@@ -29,7 +29,7 @@ public class PlayerState : MonoBehaviour {
         set
         {
             maxPopulation = value;
-            OnResourceChange();
+            OnPlayerStateChange();
         }
     }
     private int population = 5;
@@ -39,7 +39,7 @@ public class PlayerState : MonoBehaviour {
         set
         {
             population = value;
-            OnResourceChange();
+            OnPlayerStateChange();
         }
     }
     private float gold = 50;
@@ -49,7 +49,7 @@ public class PlayerState : MonoBehaviour {
         set
         {
             gold = value;
-            OnResourceChange();
+            OnPlayerStateChange();
         }
     }
     private float wood = 50;
@@ -59,7 +59,7 @@ public class PlayerState : MonoBehaviour {
         set
         {
             wood = value;
-            OnResourceChange();
+            OnPlayerStateChange();
         }
     }
 
@@ -70,7 +70,7 @@ public class PlayerState : MonoBehaviour {
         set
         {
             food = value;
-            OnResourceChange();
+            OnPlayerStateChange();
         }
     }
 
@@ -91,7 +91,7 @@ public class PlayerState : MonoBehaviour {
         if (SelectedObject != null)
             Deselect();
         SelectedObject = selectable;
-        selectable.SetSelection(true, player);
+        selectable.SetSelection(true);
         UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
     }
 
@@ -109,7 +109,7 @@ public class PlayerState : MonoBehaviour {
     public void Deselect()
     {
         UIManager.Instance?.HideObjectText();
-        SelectedObject.SetSelection(false, player);
+        SelectedObject.SetSelection(false);
 
         SelectedObject = null;
     }
@@ -120,7 +120,7 @@ public class PlayerState : MonoBehaviour {
             UIManager.Instance.ShowTransactions(building.transactions);
     }
 
-    public void OnResourceChange()
+    public void OnPlayerStateChange()
     {
         if (UIManager.Instance != null && player != null)
             UIManager.Instance.ChangePlayerStateText(player.Name, GetResourceText());
@@ -187,10 +187,11 @@ public class PlayerState : MonoBehaviour {
     {
         if (Food < food || Wood < wood || Gold < gold || Population + population > MaxPopulation)
             return false;
-        Food -= food;
-        Wood -= wood;
-        Gold -= gold;
-        Population += population;
+        this.food -= food;
+        this.wood -= wood;
+        this.gold -= gold;
+        this.population += population;
+        OnPlayerStateChange();
         return true;
     }
 

@@ -179,10 +179,14 @@ public abstract class Building : Selectable {
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        if (hasAuthority && PlayerState.Instance != null)
+        if (hasAuthority)
         {
-            PlayerState.Instance.buildings.Remove(this);
-            PlayerState.Instance.MaxPopulation -= MaxPopulationIncrease;
+            if (PlayerState.Instance != null)
+            {
+                PlayerState.Instance.buildings.Remove(this);
+                PlayerState.Instance.MaxPopulation -= MaxPopulationIncrease;
+            }
+            unitsInside.ForEach(u => owner.ExitBuilding(u, this));
         }
         GameState.Instance?.Buildings.Remove(this);
     }

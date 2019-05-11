@@ -20,8 +20,6 @@ public abstract class Selectable : NetworkBehaviour {
     [SyncVar]
     protected float lineOfSight = 10;
 
-    protected bool Selected { get; set; } = false;
-
     protected GameObject selector;
     protected SpriteRenderer minimapIcon;
     protected Color minimapColor;
@@ -64,9 +62,20 @@ public abstract class Selectable : NetworkBehaviour {
         InitPurchases();
     }
 
-    public virtual void SetSelection(bool selected, Player player)
+    public virtual void SetSelection(bool selected)
     {
-        Selected = selected;
+        SetVisualSelection(selected);
+        if (hasAuthority && UIManager.Instance != null)
+        {
+            if (selected)
+                ShowAllButtons();
+            else
+                HideAllButtons();
+        }
+    }
+
+    public virtual void SetVisualSelection(bool selected)
+    {
         selector.SetActive(selected);
         minimapIcon.color = selected ? Color.white : minimapColor;
         if (healthBar != null)
@@ -75,13 +84,6 @@ public abstract class Selectable : NetworkBehaviour {
                 healthBar.Show();
             else
                 healthBar.Hide();
-        }
-        if (hasAuthority && UIManager.Instance != null)
-        {
-            if (selected)
-                ShowAllButtons();
-            else
-                HideAllButtons();
         }
     }
 
@@ -129,7 +131,7 @@ public abstract class Selectable : NetworkBehaviour {
             GetEnemyJob().Completed = true;
         if (GetOwnJob() != null)
             GetOwnJob().Completed = true;
-        if (Selected)
-            PlayerState.Instance?.Deselect();
+        if (PlayerState.Instance != null && PlayerState.Instance.SelectedObject == this)
+            PlayerState.Instance.Deselect();
     }
 }

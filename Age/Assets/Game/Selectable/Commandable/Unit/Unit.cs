@@ -62,14 +62,13 @@ public class Unit : Commandable
             gameObject.SetActive(!gameObject.activeInHierarchy);
     }
 
-    public override void SetSelection(bool selected, Player player)
+    public override void SetSelection(bool selected)
     {
-        base.SetSelection(selected, player);
+        base.SetSelection(selected);
         if (selected && IsMoving)
             ShowTarget();
         else
             HideTarget();
-
     }
 
     protected override void ShowAllButtons()

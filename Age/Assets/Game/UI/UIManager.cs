@@ -125,7 +125,8 @@ public class UIManager : MonoBehaviour {
 
     public void ChangePlayerStateText(string playerName, string description)
     {
-        playerStateText.text = $"<b><i>{playerName}</i></b>\n{description}";
+        if (playerStateText != null)
+            playerStateText.text = $"<b><i>{playerName}</i></b>\n{description}";
     }
 
     public void ShowObjectText(string objectName, string description)

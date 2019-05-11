@@ -105,7 +105,6 @@ public class LeftMouseActivity : MouseActivity {
 
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
-        Debug.Log($"top left: {topLeft}, bottom right: {bottomRight}");
 
         var width = bottomRight.x - topLeft.x;
         var heigth = bottomRight.y - topLeft.y;

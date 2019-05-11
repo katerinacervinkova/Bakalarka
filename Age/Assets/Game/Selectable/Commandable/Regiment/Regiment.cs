@@ -11,25 +11,34 @@ public class Regiment : Commandable {
 
     protected virtual void Update()
     {
-        if (!Selected || units.Count == 0)
+        if (PlayerState.Instance.SelectedObject != this || units.Count == 0)
         {
             units.ForEach(u => u.Reg = null);
             Destroy(gameObject);
         }
     }
 
-    public override void SetSelection(bool selected, Player player)
+    public override void SetSelection(bool selected)
     {
-        Selected = selected;
-        units.ForEach(u => u.SetSelection(selected, player));
-        if (selected)
-            UIManager.Instance.ShowButtons(units[0].Purchases);
-        else
+        units.ForEach(u => u.SetVisualSelection(selected));
+        if (UIManager.Instance != null)
         {
-            UIManager.Instance.HideButtons();
-            HideTarget();
+            if (selected)
+                ShowAllButtons();
+            else
+                HideAllButtons();
         }
+    }
 
+    protected override void ShowAllButtons()
+    {
+        UIManager.Instance.ShowButtons(units[0].Purchases);
+    }
+
+    protected override void HideAllButtons()
+    {
+        base.HideAllButtons();
+        HideTarget();
     }
 
     public override void RightMouseClickGround(Vector3 hitPoint)

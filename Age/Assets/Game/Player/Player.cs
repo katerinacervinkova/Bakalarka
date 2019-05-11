@@ -19,7 +19,7 @@ public class Player : NetworkBehaviour
         if (PlayerState.Instance != null)
         {
             PlayerState.Instance.player = this;
-            PlayerState.Instance.OnResourceChange();
+            PlayerState.Instance.OnPlayerStateChange();
         }
     }
 
