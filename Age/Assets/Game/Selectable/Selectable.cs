@@ -119,9 +119,12 @@ public abstract class Selectable : NetworkBehaviour {
     protected virtual void OnHealthChange(float value)
     {
         Health = value;
-        PlayerState.Instance.OnStateChange(this);
-        if (initialized && PlayerState.Instance.SelectedObject != this)
-            healthBar.HideAfter();
+        if (PlayerState.Instance != null)
+        {
+            PlayerState.Instance.OnStateChange(this);
+            if (initialized && PlayerState.Instance.SelectedObject != this)
+                healthBar.HideAfter();
+        }
     }
     protected virtual void OnDestroy()
     {

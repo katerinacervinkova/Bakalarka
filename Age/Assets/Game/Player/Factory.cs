@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,6 +9,10 @@ public class Factory : MonoBehaviour
     protected int sumOfProperties = 35;
 
     public Player player;
+    [SerializeField]
+    private PlayerState playerStatePrefab;
+    [SerializeField]
+    private PlayerPurchases playerPurchasesPrefab;
     [SerializeField]
     private TemporaryBuilding mainBuildingPrefab;
     [SerializeField]
@@ -32,6 +37,13 @@ public class Factory : MonoBehaviour
         return regiment;
     }
 
+    public void CreatePlayerState()
+    {
+        PlayerState playerState = Instantiate(playerStatePrefab);
+        playerState.player = player;
+        playerState.OnPlayerStateChange();
+    }
+
     public Unit CreateUnit(Vector3 spawnPoint, NetworkInstanceId playerId)
     {
         Unit unit = Instantiate(unitPrefab, spawnPoint, Quaternion.identity);
@@ -39,6 +51,14 @@ public class Factory : MonoBehaviour
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
         return unit;
+    }
+
+    public PlayerPurchases CreatePlayerPurchases()
+    {
+        PlayerPurchases playerPurchases = Instantiate(playerPurchasesPrefab);
+        playerPurchases.player = player;
+        return playerPurchases;
+
     }
 
     public TemporaryBuilding CreateTemporaryMainBuilding(NetworkInstanceId playerId, BuildingEnum buildingType)

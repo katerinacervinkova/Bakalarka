@@ -6,11 +6,7 @@ public class FirstUnitCreator : MonoBehaviour {
 	
 	void Update ()
     {
-        if (player.CreateInitialUnit())
-        {
-            for (int i = 0; i < 0; i++)
-                player.CreateInitialUnit();
+        if (player.Init())
             Destroy(this);
-        }
 	}
 }

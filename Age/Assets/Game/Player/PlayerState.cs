@@ -17,10 +17,11 @@ public class PlayerState : MonoBehaviour {
     }
 
     public Player player;
+    public PlayerPurchases playerPurchases;
 
-    public List<Unit> units;
-    public List<Building> buildings;
-    public List<TemporaryBuilding> temporaryBuildings;
+    public List<Unit> units = new List<Unit>();
+    public List<Building> buildings = new List<Building>();
+    public List<TemporaryBuilding> temporaryBuildings = new List<TemporaryBuilding>();
 
     private int maxPopulation = 5;
     public int MaxPopulation
@@ -76,13 +77,6 @@ public class PlayerState : MonoBehaviour {
 
     public Selectable SelectedObject { get; set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
-
-    public void Start()
-    {
-        foreach (var player in FindObjectsOfType<Player>())
-            if (player.hasAuthority)
-                this.player = player;
-    }
 
     public void Select(Selectable selectable)
     {

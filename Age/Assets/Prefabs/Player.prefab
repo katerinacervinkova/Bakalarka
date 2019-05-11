@@ -101,6 +101,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 114682149439794398}
+  playerStatePrefab: {fileID: 114422777194877240, guid: 1fdffc8eca766c746a96cbe2d7b6aeec,
+    type: 2}
+  playerPurchasesPrefab: {fileID: 114739441308816094, guid: 0ddb3b9580ce8c143a2220344152a723,
+    type: 2}
   mainBuildingPrefab: {fileID: 114019076716311038, guid: 28511fe201e0a7948b88664883879c86,
     type: 2}
   libraryPrefab: {fileID: 114056039034686244, guid: c1b7855cbed71004ab756258f66ea6ad,

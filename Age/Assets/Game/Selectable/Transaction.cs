@@ -4,22 +4,24 @@ public class Transaction
 {
     public float Progress = 0;
     public readonly float MaxProgress = 10;
-    private readonly float Speed;
+    private readonly float speed;
+    private Building building;
 
     public LoadingPurchase purchase;
 
-    public Transaction(LoadingPurchase purchase, float Speed)
+    public Transaction(Building building, LoadingPurchase purchase, float speed)
     {
         this.purchase = purchase;
-        this.Speed = Speed;
+        this.speed = speed;
+        this.building = building;
     }
 
     public bool Load(float deltaTime)
     {
-        Progress = Math.Min(Progress + Speed * deltaTime, MaxProgress);
+        Progress = Math.Min(Progress + speed * deltaTime, MaxProgress);
         if (Progress == MaxProgress)
         {
-            purchase.InvokeAction();
+            purchase.InvokeAction(building);
             return true;
         }
         return false;

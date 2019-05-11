@@ -139,6 +139,15 @@ public class Unit : Commandable
         aiUnetPath.endReachedDistance = 0.6f;
     }
 
+    protected override void InitPurchases()
+    {
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Barracks));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.House));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Infirmary));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Library));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.MainBuilding));
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();

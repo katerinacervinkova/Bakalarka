@@ -2,26 +2,24 @@
 
 public class LoadingPurchase : Purchase {
 
-    public Building building;
-
     private readonly float Speed;
 
-	public LoadingPurchase(float Speed, Building building, string Name, string description, Action action, int food, int wood, int gold, int population = 0)
+	public LoadingPurchase(float Speed, string Name, string description, Action<Selectable> action, int food, int wood, int gold, int population = 0)
         : base(Name, description, action, food, wood, gold, population)
     {
         this.Speed = Speed;
-        this.building = building;
     }
 
-    public override void Do()
+    public override void Do(Selectable selectable)
     {
+        Building building = selectable as Building;
         if (building.CanStartTransaction() && PlayerState.Instance.Pay(food, wood, gold, population))
-                building.AddTransaction(new Transaction(this, Speed));
+                building.AddTransaction(new Transaction(building, this, Speed));
     }
 
-    public void InvokeAction()
+    public void InvokeAction(Selectable selectable)
     {
-        action.Invoke();
+        action.Invoke(selectable);
     }
 
     public void Reset()
