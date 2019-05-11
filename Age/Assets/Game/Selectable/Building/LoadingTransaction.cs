@@ -6,8 +6,8 @@ public class LoadingPurchase : Purchase {
 
     private readonly float Speed;
 
-	public LoadingPurchase(float Speed, Building building, string Name, string description, Action action, int food, int wood, int gold)
-        : base(Name, description, action, food, wood, gold)
+	public LoadingPurchase(float Speed, Building building, string Name, string description, Action action, int food, int wood, int gold, int population = 0)
+        : base(Name, description, action, food, wood, gold, population)
     {
         this.Speed = Speed;
         this.building = building;
@@ -15,7 +15,7 @@ public class LoadingPurchase : Purchase {
 
     public override void Do()
     {
-        if (building.CanStartTransaction() && PlayerState.Instance.Pay(food, wood, gold))
+        if (building.CanStartTransaction() && PlayerState.Instance.Pay(food, wood, gold, population))
                 building.AddTransaction(new Transaction(this, Speed));
     }
 
@@ -26,6 +26,6 @@ public class LoadingPurchase : Purchase {
 
     public void Reset()
     {
-        PlayerState.Instance.Pay(-food, -wood, -gold);
+        PlayerState.Instance.Pay(-food, -wood, -gold, -population);
     }
 }

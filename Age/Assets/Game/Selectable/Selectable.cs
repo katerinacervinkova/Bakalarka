@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -75,13 +76,23 @@ public abstract class Selectable : NetworkBehaviour {
             else
                 healthBar.Hide();
         }
-        if (hasAuthority)
+        if (hasAuthority && UIManager.Instance != null)
         {
             if (selected)
-                UIManager.Instance?.ShowButtons(Purchases);
+                ShowAllButtons();
             else
-                UIManager.Instance?.HideButtons();
+                HideAllButtons();
         }
+    }
+
+    protected virtual void ShowAllButtons()
+    {
+        UIManager.Instance.ShowButtons(Purchases);
+    }
+
+    protected virtual void HideAllButtons()
+    {
+        UIManager.Instance.HideButtons();
     }
 
     public virtual string GetObjectDescription()

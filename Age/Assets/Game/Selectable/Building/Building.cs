@@ -16,6 +16,8 @@ public abstract class Building : Selectable {
     private readonly float minTime = 1;
     private float timeElapsed = 0;
 
+    protected abstract int MaxPopulationIncrease { get; }
+
     protected abstract void UpdateUnit(Unit unit);
     public abstract Func<Unit, string> UnitTextFunc { get; }
 
@@ -54,31 +56,28 @@ public abstract class Building : Selectable {
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);
+            PlayerState.Instance.MaxPopulation += MaxPopulationIncrease;
             InitPurchases();
         }
-        Debug.DrawRay(FrontPosition, Vector3.up * 10, Color.green, 5000);
         initialized = true;
     }
 
-
-    public override void SetSelection(bool selected, Player player)
+    protected override void ShowAllButtons()
     {
-        base.SetSelection(selected, player);
-        if (UIManager.Instance != null)
-        {
-            if (selected)
-            {
-                UIManager.Instance.ShowTransactions(transactions);
-                UIManager.Instance.ShowTarget(DefaultDestination);
-                UIManager.Instance.ShowUnitsButton(ShowUnitsWindow);
-            }
-            else
-            {
-                UIManager.Instance.HideTransactions();
-                UIManager.Instance.HideTarget();
-                UIManager.Instance.HideUnitsButton();
-            }
-        }
+        base.ShowAllButtons();
+        UIManager.Instance.ShowTransactions(transactions);
+        UIManager.Instance.ShowTarget(DefaultDestination);
+        UIManager.Instance.ShowBuildingWindowButton();
+        UIManager.Instance.ShowDestroyButton();
+    }
+
+    protected override void HideAllButtons()
+    {
+        base.HideAllButtons();
+        UIManager.Instance.HideTransactions();
+        UIManager.Instance.HideTarget();
+        UIManager.Instance.HideBuildingWindowButton();
+        UIManager.Instance.HideDestroyButton();
     }
 
     public bool Enter(Unit unit)
@@ -180,8 +179,11 @@ public abstract class Building : Selectable {
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        PlayerState.Instance?.buildings.Remove(this);
+        if (hasAuthority && PlayerState.Instance != null)
+        {
+            PlayerState.Instance.buildings.Remove(this);
+            PlayerState.Instance.MaxPopulation -= MaxPopulationIncrease;
+        }
         GameState.Instance?.Buildings.Remove(this);
-        GameState.Instance?.UpdateGraph(GetComponent<Collider>().bounds);
     }
 }

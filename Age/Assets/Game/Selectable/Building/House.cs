@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class House : Building
 {
     public override Func<Unit, string> UnitTextFunc => u => "";
 
     public override string Name => "House";
+
+    protected override int MaxPopulationIncrease => 10;
 
     protected override void InitPurchases() { }
 

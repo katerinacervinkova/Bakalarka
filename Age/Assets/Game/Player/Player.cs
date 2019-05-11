@@ -35,6 +35,7 @@ public class Player : NetworkBehaviour
         if (connectionToClient == null || connectionToClient.isReady)
         {
             CmdCreateUnit(transform.position, transform.position);
+            PlayerState.Instance.Population = 1;
             return true;
         }
         return false;
@@ -74,6 +75,11 @@ public class Player : NetworkBehaviour
     public void ChangeHealth(Selectable selectable, float value)
     {
         CmdChangeHealth(selectable.netId, value);
+    }
+
+    public void DestroySelectedObject(Selectable selectedObject)
+    {
+        CmdDestroy(selectedObject.netId);
     }
 
     private Vector3 NearestWalkable(Vector3 position)
@@ -163,8 +169,8 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdDestroy(NetworkInstanceId selectableId)
     {
-        GameObject temporaryBuilding = NetworkServer.objects[selectableId].gameObject;
-        GameState.Instance.RpcDestroyObject(temporaryBuilding.GetComponent<Collider>().bounds);
-        NetworkServer.Destroy(temporaryBuilding);
+        GameObject selectable = NetworkServer.objects[selectableId].gameObject;
+        GameState.Instance.RpcDestroyObject(selectable.GetComponent<Collider>().bounds);
+        NetworkServer.Destroy(selectable);
     }
 }

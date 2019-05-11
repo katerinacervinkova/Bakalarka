@@ -109,6 +109,18 @@ public class TemporaryBuilding : Selectable
         return buildJob;
     }
 
+    protected override void ShowAllButtons()
+    {
+        base.ShowAllButtons();
+        UIManager.Instance.ShowDestroyButton();
+    }
+
+    protected override void HideAllButtons()
+    {
+        base.HideAllButtons();
+        UIManager.Instance.HideDestroyButton();
+    }
+
     protected override void InitPurchases()
     {
     }

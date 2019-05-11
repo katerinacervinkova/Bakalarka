@@ -6,6 +6,8 @@ public class Library : Building {
 
     public override Func<Unit, string> UnitTextFunc => u => $"Intelligence: {(int)u.Intelligence}";
 
+    protected override int MaxPopulationIncrease => 0;
+
     protected override void InitPurchases() { }
 
     protected override void UpdateUnit(Unit unit)

@@ -6,6 +6,8 @@ public class Barracks : Building
 
     public override string Name => "Barracks";
 
+    protected override int MaxPopulationIncrease => 0;
+
     protected override void InitPurchases() { }
 
     protected override void UpdateUnit(Unit unit)

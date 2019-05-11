@@ -29,11 +29,13 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     private Text objectText;
     [SerializeField]
-    private Text resourceText;
+    private Text playerStateText;
     [SerializeField]
     private GameObject target;
     [SerializeField]
     private Button unitsButton;
+    [SerializeField]
+    private Button destroyButton;
     [SerializeField]
     private BuildingWindow buildingWindow;
     [SerializeField]
@@ -74,6 +76,11 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    public void HideTransactions()
+    {
+        schedulers.ForEach(s => { if (s != null) s.gameObject.SetActive(false); });
+    }
+
     public HealthBar CreateHealthBar(Selectable selectable, float offset)
     {
         HealthBar healthBar = Instantiate(healthBarPrefab, healthBarsContainer.transform);
@@ -82,21 +89,23 @@ public class UIManager : MonoBehaviour {
         return healthBar;
     }
 
-    public void ShowUnitsButton(Action action)
+    public void ShowBuildingWindowButton()
     {
-        unitsButton.onClick.AddListener(() => action.Invoke());
         unitsButton.gameObject.SetActive(true);
     }
 
-    public void HideUnitsButton()
+    public void HideBuildingWindowButton()
     {
-        unitsButton.onClick.RemoveAllListeners();
         unitsButton.gameObject.SetActive(false);
     }
-
-    public void HideTransactions()
+    public void ShowDestroyButton()
     {
-        schedulers.ForEach(s => { if (s != null) s.gameObject.SetActive(false); });
+        destroyButton.gameObject.SetActive(true);
+    }
+
+    public void HideDestroyButton()
+    {
+        destroyButton.gameObject.SetActive(false);
     }
 
     public void OnClickScheduler(int index)
@@ -104,14 +113,24 @@ public class UIManager : MonoBehaviour {
         ((Building)PlayerState.Instance.SelectedObject).RemoveTransaction(index);
     }
 
-    public void ChangeResourceText(string resourceString)
+    public void OnClickBuildingWindow()
     {
-        resourceText.text = resourceString;
+        ((Building)PlayerState.Instance.SelectedObject).ShowUnitsWindow();
     }
 
-    public void ShowObjectText(string name, string description)
+    public void OnClickDestroyButton()
     {
-        objectText.text = string.Format("<b><i>{0}</i></b>\n{1}", name, description);
+        PlayerState.Instance.SelectedObject.owner.DestroySelectedObject(PlayerState.Instance.SelectedObject);
+    }
+
+    public void ChangePlayerStateText(string playerName, string description)
+    {
+        playerStateText.text = $"<b><i>{playerName}</i></b>\n{description}";
+    }
+
+    public void ShowObjectText(string objectName, string description)
+    {
+        objectText.text = $"<b><i>{objectName}</i></b>\n{description}";
         objectText.gameObject.SetActive(true);
     }
 

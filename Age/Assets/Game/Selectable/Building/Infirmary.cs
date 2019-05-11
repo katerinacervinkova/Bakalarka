@@ -6,6 +6,8 @@ public class Infirmary : Building
 
     public override string Name => "Infirmary";
 
+    protected override int MaxPopulationIncrease => 0;
+
     protected override void InitPurchases() { }
 
     protected override void UpdateUnit(Unit unit)

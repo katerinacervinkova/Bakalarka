@@ -22,6 +22,26 @@ public class PlayerState : MonoBehaviour {
     public List<Building> buildings;
     public List<TemporaryBuilding> temporaryBuildings;
 
+    private int maxPopulation = 5;
+    public int MaxPopulation
+    {
+        get { return maxPopulation; }
+        set
+        {
+            maxPopulation = value;
+            OnResourceChange();
+        }
+    }
+    private int population = 5;
+    public int Population
+    {
+        get { return population; }
+        set
+        {
+            population = value;
+            OnResourceChange();
+        }
+    }
     private float gold = 50;
     public float Gold
     {
@@ -102,7 +122,8 @@ public class PlayerState : MonoBehaviour {
 
     public void OnResourceChange()
     {
-        UIManager.Instance.ChangeResourceText(GetResourceText());
+        if (UIManager.Instance != null && player != null)
+            UIManager.Instance.ChangePlayerStateText(player.Name, GetResourceText());
     }
 
     public bool IsWithinSight(Vector3 position)
@@ -114,7 +135,17 @@ public class PlayerState : MonoBehaviour {
 
     private string GetResourceText()
     {
-        return $"Food: {(int)Food}\nWood: {(int)Wood}\nGold: {(int)Gold}";
+        string colorStart = "";
+        string colorEnd = "";
+        if (Population > MaxPopulation)
+        {
+            colorStart = "<color=red>";
+            colorEnd = "</color>";
+        }
+        return $"Food: {(int)Food}\n" +
+            $"Wood: {(int)Wood}\n" +
+            $"Gold: {(int)Gold}\n" +
+            $"{colorStart}Population: {Population}/{MaxPopulation}{colorEnd}";
     }
 
     public void OnStateChange(Selectable selectable)
@@ -152,13 +183,14 @@ public class PlayerState : MonoBehaviour {
         return temporaryBuildings.Where(b => b != build && Vector3.Distance(position, b.transform.position) < maxDistance).
             OrderBy(b => Vector3.Distance(position, b.transform.position)).FirstOrDefault();
     }
-    public bool Pay(int food, int wood, int gold)
+    public bool Pay(int food, int wood, int gold, int population)
     {
-        if (Food < food || Wood < wood || Gold < gold)
+        if (Food < food || Wood < wood || Gold < gold || Population + population > MaxPopulation)
             return false;
         Food -= food;
         Wood -= wood;
         Gold -= gold;
+        Population += population;
         return true;
     }
 

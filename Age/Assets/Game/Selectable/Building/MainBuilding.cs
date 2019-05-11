@@ -7,9 +7,11 @@ public class MainBuilding : Building {
 
     public override Func<Unit, string> UnitTextFunc => u => $"Health: {u.Health}";
 
+    protected override int MaxPopulationIncrease => 5;
+
     protected override void InitPurchases()
     {
-        Purchases.Add(new LoadingPurchase(1, this, "Unit", "Create a unit", () => owner.CreateUnit(this), food: 20, wood: 0, gold: 0));
+        Purchases.Add(new LoadingPurchase(1, this, "Unit", "Create a unit", () => owner.CreateUnit(this), food: 20, wood: 0, gold: 0, population: 1));
     }
 
     protected override void UpdateUnit(Unit unit) { }

@@ -71,6 +71,19 @@ public class Unit : Commandable
             HideTarget();
 
     }
+
+    protected override void ShowAllButtons()
+    {
+        base.ShowAllButtons();
+        UIManager.Instance.ShowDestroyButton();
+    }
+
+    protected override void HideAllButtons()
+    {
+        base.HideAllButtons();
+        UIManager.Instance.HideDestroyButton();
+    }
+
     public void SetAttribute(AttEnum attEnum, float value)
     {
         atts.Set(attEnum, value);
@@ -131,7 +144,11 @@ public class Unit : Commandable
     {
         base.OnDestroy();
         Reg?.Remove(this);
-        PlayerState.Instance?.units.Remove(this);
+        if (hasAuthority && PlayerState.Instance != null)
+        {
+            PlayerState.Instance.units.Remove(this);
+            PlayerState.Instance.Population--;
+        }
     }
 
     public void OnTargetReached()
