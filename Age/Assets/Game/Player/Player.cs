@@ -20,7 +20,8 @@ public class Player : NetworkBehaviour
 
     public void ExitBuilding(Unit unit, Building building)
     {
-        CmdExitBuilding(unit.netId, building.FrontPosition, building.DefaultDestination);
+        if (unit != null && building != null)
+            CmdExitBuilding(unit.netId, building.FrontPosition, building.DefaultDestination);
     }
 
     public bool Init()

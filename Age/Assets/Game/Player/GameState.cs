@@ -118,6 +118,9 @@ public class GameState : NetworkBehaviour {
             case BuildingEnum.House:
                 building = tempBuilding.gameObject.AddComponent<House>() as House;
                 break;
+            case BuildingEnum.Mill:
+                building = tempBuilding.gameObject.AddComponent<Mill>() as Mill;
+                break;
             default:
                 building = null;
                 break;

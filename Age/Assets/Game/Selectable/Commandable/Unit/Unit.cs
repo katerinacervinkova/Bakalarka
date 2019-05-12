@@ -141,11 +141,12 @@ public class Unit : Commandable
 
     protected override void InitPurchases()
     {
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Barracks));
         Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.House));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Barracks));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Mill));
+        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.MainBuilding));
         Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Infirmary));
         Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Library));
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.MainBuilding));
     }
 
     protected override void OnDestroy()

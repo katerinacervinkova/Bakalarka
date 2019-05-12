@@ -57,6 +57,10 @@ public class TemporaryBuilding : Selectable
             case BuildingEnum.House:
                 transform.Find("House/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
                 break;
+            case BuildingEnum.Mill:
+                transform.Find("Mill/Small roof").GetComponent<MeshRenderer>().material.color = owner.color;
+                transform.Find("Mill/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
+                break;
             default:
                 break;
         }

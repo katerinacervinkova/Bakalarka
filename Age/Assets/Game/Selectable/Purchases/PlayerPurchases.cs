@@ -18,30 +18,36 @@ public class PlayerPurchases : MonoBehaviour {
     [SerializeField]
     private Texture2D houseImage;
     [SerializeField]
+    private Texture2D millImage;
+    [SerializeField]
     private Texture2D unitImage;
 
     private void Awake() {
         purchases = new Dictionary<PurchasesEnum, Purchase>
         {
             [PurchasesEnum.MainBuilding] = new Purchase(
-                "Main building", mainBuildingImage, "Create Main Building", 
+                "Main building", mainBuildingImage, "Create Main Building.", 
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.MainBuilding), 
                 food: 0, wood: 50, gold: 0),
             [PurchasesEnum.Library] = new Purchase(
-                "Library", libraryImage, "Create Library, which increases units' intelligence", 
+                "Library", libraryImage, "Create Library, which increases units' intelligence.", 
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.Library), 
                 food: 0, wood: 20, gold: 10),
             [PurchasesEnum.Barracks] = new Purchase(
-                "Barracks", barracksImage, "Create Barracks, which increase units' swordsmanship", 
+                "Barracks", barracksImage, "Create Barracks, which increase units' swordsmanship.", 
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.Barracks), 
                 food: 0, wood: 20, gold: 20),
             [PurchasesEnum.Infirmary] = new Purchase(
-                "Infirmary", infirmaryImage, "Create Infirmary, which increases units' health", 
+                "Infirmary", infirmaryImage, "Create Infirmary, which increases units' health.", 
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.Infirmary), 
                 food: 0, wood: 20, gold: 0),
             [PurchasesEnum.House] = new Purchase(
-                "House", houseImage, "Create House, which increases maximum population", 
+                "House", houseImage, "Create House, which increases maximum population.", 
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.House), 
+                food: 0, wood: 10, gold: 0),
+            [PurchasesEnum.Mill] = new Purchase(
+                "House", millImage, "Create Mill to gather food.",
+                s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.Mill),
                 food: 0, wood: 10, gold: 0),
             [PurchasesEnum.Unit] = new LoadingPurchase(
                 1, "Unit", unitImage, "Create a unit", 
@@ -69,6 +75,8 @@ public class PlayerPurchases : MonoBehaviour {
                 return Get(PurchasesEnum.Infirmary);
             case BuildingEnum.House:
                 return Get(PurchasesEnum.House);
+            case BuildingEnum.Mill:
+                return Get(PurchasesEnum.Mill);
             default:
                 return null;
         }

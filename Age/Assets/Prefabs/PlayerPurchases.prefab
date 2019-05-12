@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1033672169012986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 85.48776, y: 6.4188375e-17, z: -115.63149}
+  m_LocalPosition: {x: 83.88077, y: 6.148215e-17, z: -110.75639}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -57,4 +57,5 @@ MonoBehaviour:
   barracksImage: {fileID: 2800000, guid: abbe24ddd27d75e48adf96790d4a0dc0, type: 3}
   infirmaryImage: {fileID: 2800000, guid: 1808aaf328818114196be6815205d724, type: 3}
   houseImage: {fileID: 2800000, guid: 46f54490c934edf47b7091f7b26d43c6, type: 3}
+  millImage: {fileID: 2800000, guid: 6c8bef770f41e224696d262232be9e6f, type: 3}
   unitImage: {fileID: 2800000, guid: 0de014ef540d7dd4291d8f56ab24a9db, type: 3}

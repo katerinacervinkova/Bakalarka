@@ -5,6 +5,7 @@
     Infirmary,
     Library,
     MainBuilding,
+    Mill,
     Unit
 }
 

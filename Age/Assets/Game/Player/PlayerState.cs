@@ -175,8 +175,6 @@ public class PlayerState : MonoBehaviour {
 
     public void PlaceBuilding()
     {
-       /* if (GameState.Instance.IsOccupied(BuildingToBuild))
-            return;*/
         player.PlaceBuilding(BuildingToBuild);
         ((Commandable)SelectedObject)?.SetGoal(BuildingToBuild);
         BuildingToBuild = null;

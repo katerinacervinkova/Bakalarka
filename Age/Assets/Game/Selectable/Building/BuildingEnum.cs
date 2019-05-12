@@ -4,5 +4,6 @@
     Library,
     Barracks,
     Infirmary,
-    House
+    House,
+    Mill
 }
