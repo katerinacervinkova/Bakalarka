@@ -130,6 +130,5 @@ public class TemporaryBuilding : Selectable
         base.OnDestroy();
         PlayerState.Instance?.temporaryBuildings.Remove(this);
         GameState.Instance?.TemporaryBuildings.Remove(this);
-        GameState.Instance?.UpdateGraph(GetComponent<Collider>().bounds);
     }
 }

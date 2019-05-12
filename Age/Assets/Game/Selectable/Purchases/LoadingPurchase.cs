@@ -21,9 +21,4 @@ public class LoadingPurchase : Purchase {
     {
         action.Invoke(selectable);
     }
-
-    public void Reset()
-    {
-        PlayerState.Instance.Pay(-food, -wood, -gold, -population);
-    }
 }

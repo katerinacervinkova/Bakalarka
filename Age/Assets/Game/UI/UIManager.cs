@@ -105,7 +105,8 @@ public class UIManager : MonoBehaviour {
 
     public void HideDestroyButton()
     {
-        destroyButton.gameObject.SetActive(false);
+        if (destroyButton != null)
+            destroyButton.gameObject.SetActive(false);
     }
 
     public void OnClickScheduler(int index)

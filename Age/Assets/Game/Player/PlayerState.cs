@@ -33,6 +33,9 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
+
+
+
     private int population = 5;
     public int Population
     {
@@ -161,6 +164,13 @@ public class PlayerState : MonoBehaviour {
     public void SetTempBuilding(TemporaryBuilding building)
     {
         BuildingToBuild = building;
+    }
+
+    public void ResetBuildingToBuild()
+    {
+        playerPurchases.Get(BuildingToBuild.buildingType).Reset();
+        player.DestroySelectedObject(BuildingToBuild);
+        BuildingToBuild = null;
     }
 
     public void PlaceBuilding()

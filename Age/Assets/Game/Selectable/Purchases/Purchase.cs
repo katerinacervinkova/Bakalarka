@@ -28,6 +28,11 @@ public class Purchase
             action.Invoke(selectable);
     }
 
+    public void Reset()
+    {
+        PlayerState.Instance.Pay(-food, -wood, -gold, -population);
+    }
+
     public string GetDescription()
     {
         StringBuilder d = new StringBuilder();

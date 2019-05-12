@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerPurchases : MonoBehaviour {
@@ -21,5 +22,24 @@ public class PlayerPurchases : MonoBehaviour {
     public Purchase Get(PurchasesEnum purchasesEnum)
     {
         return purchases[purchasesEnum];
+    }
+
+    public Purchase Get(BuildingEnum buildingType)
+    {
+        switch (buildingType)
+        {
+            case BuildingEnum.MainBuilding:
+                return Get(PurchasesEnum.MainBuilding);
+            case BuildingEnum.Library:
+                return Get(PurchasesEnum.Library);
+            case BuildingEnum.Barracks:
+                return Get(PurchasesEnum.Barracks);
+            case BuildingEnum.Infirmary:
+                return Get(PurchasesEnum.Infirmary);
+            case BuildingEnum.House:
+                return Get(PurchasesEnum.House);
+            default:
+                return null;
+        }
     }
 }

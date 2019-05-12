@@ -21,6 +21,11 @@ public class LeftMouseActivity : MouseActivity {
         }
         if (PlayerState.Instance.BuildingToBuild != null)
         {
+            if (Input.GetKeyDown("r"))
+            {
+                PlayerState.Instance.ResetBuildingToBuild();
+                return;
+            }
             Vector3 hitPoint = FindHitPoint();
             hitPoint.y = 0;
             PlayerState.Instance.MoveBuildingToBuild(hitPoint);
