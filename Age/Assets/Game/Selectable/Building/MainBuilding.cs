@@ -9,6 +9,13 @@ public class MainBuilding : Building {
 
     protected override int MaxPopulationIncrease => 5;
 
+    protected override void ChangeColor()
+    {
+        transform.Find("Building/Main Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Roof 1").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Roof 2").GetComponent<MeshRenderer>().material.color = owner.color;
+    }
+
     protected override void InitPurchases()
     {
         Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Unit));

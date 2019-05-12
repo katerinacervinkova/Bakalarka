@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerPurchases : MonoBehaviour {
@@ -46,7 +45,7 @@ public class PlayerPurchases : MonoBehaviour {
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.House), 
                 food: 0, wood: 10, gold: 0),
             [PurchasesEnum.Mill] = new Purchase(
-                "House", millImage, "Create Mill to gather food.",
+                "Mill", millImage, "Create Mill to gather food.",
                 s => PlayerState.Instance.player.CreateTempBuilding(BuildingEnum.Mill),
                 food: 0, wood: 10, gold: 0),
             [PurchasesEnum.Unit] = new LoadingPurchase(

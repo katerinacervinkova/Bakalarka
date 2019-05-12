@@ -21,7 +21,7 @@ public class JobBuild : Job {
             TemporaryBuilding tempBuilding = PlayerState.Instance.GetNearestTempBuilding(building, buildingPos, 20);
             if (tempBuilding == null)
                 return null;
-            return new JobGo(tempBuilding.transform.position, tempBuilding.GetOwnJob(null));
+            return new JobGo(tempBuilding.FrontPosition, tempBuilding.GetOwnJob(null));
         }
     }
 

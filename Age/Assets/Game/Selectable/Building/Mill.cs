@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class Mill : Building
 {
@@ -7,6 +8,12 @@ public class Mill : Building
     public override string Name => "Mill";
 
     protected override int MaxPopulationIncrease => 0;
+
+    protected override void ChangeColor()
+    {
+        transform.Find("Building/Small roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
+    }
 
     protected override void InitPurchases() { }
 

@@ -16,7 +16,7 @@ public class JobLookForTarget : Job
             if (target != null)
             {
                 Completed = true;
-                following = new JobGo(target.transform.position, new AttackJob(target));
+                following = new JobGo(target.FrontPosition, new AttackJob(target));
             }
             timeElapsed -= minTime;
         }

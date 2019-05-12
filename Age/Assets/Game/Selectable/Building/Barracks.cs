@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class Barracks : Building
 {
@@ -7,6 +8,12 @@ public class Barracks : Building
     public override string Name => "Barracks";
 
     protected override int MaxPopulationIncrease => 0;
+
+    protected override void ChangeColor()
+    {
+        transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
+    }
 
     protected override void InitPurchases() { }
 

@@ -19,6 +19,9 @@ public abstract class Building : Selectable {
     protected abstract int MaxPopulationIncrease { get; }
 
     protected abstract void UpdateUnit(Unit unit);
+
+    protected abstract void ChangeColor();
+
     public abstract Func<Unit, string> UnitTextFunc { get; }
 
     public override void OnStartClient()
@@ -59,6 +62,10 @@ public abstract class Building : Selectable {
             PlayerState.Instance.MaxPopulation += MaxPopulationIncrease;
             InitPurchases();
         }
+        ChangeColor();
+        transform.Find("Building").gameObject.SetActive(true);
+        Destroy(transform.Find("Fence").gameObject);
+        Destroy(transform.Find("Image").gameObject);
         initialized = true;
     }
 

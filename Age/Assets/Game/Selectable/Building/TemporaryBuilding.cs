@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class TemporaryBuilding : Selectable
 {
@@ -31,39 +32,8 @@ public class TemporaryBuilding : Selectable
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
         GameState.Instance.TemporaryBuildings.Add(this);
-        ChangeColor();
+        transform.Find("Image").GetComponent<SpriteRenderer>().color = owner.color;
         coll = GetComponent<Collider>();
-    }
-
-    private void ChangeColor()
-    {
-        switch (buildingType)
-        {
-            case BuildingEnum.MainBuilding:
-                transform.Find("MainBuilding/Main Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                transform.Find("MainBuilding/Roof 1").GetComponent<MeshRenderer>().material.color = owner.color;
-                transform.Find("MainBuilding/Roof 2").GetComponent<MeshRenderer>().material.color = owner.color;
-                break;
-            case BuildingEnum.Library:
-                transform.Find("Library/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                break;
-            case BuildingEnum.Barracks:
-                transform.Find("Barracks/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                transform.Find("Barracks/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
-                break;
-            case BuildingEnum.Infirmary:
-                transform.Find("Infirmary/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                break;
-            case BuildingEnum.House:
-                transform.Find("House/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                break;
-            case BuildingEnum.Mill:
-                transform.Find("Mill/Small roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                transform.Find("Mill/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
-                break;
-            default:
-                break;
-        }
     }
 
     private void OnProgressChange(float newProgress)

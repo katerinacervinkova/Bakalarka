@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class Infirmary : Building
 {
@@ -7,6 +8,11 @@ public class Infirmary : Building
     public override string Name => "Infirmary";
 
     protected override int MaxPopulationIncrease => 0;
+
+    protected override void ChangeColor()
+    {
+        transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+    }
 
     protected override void InitPurchases() { }
 
