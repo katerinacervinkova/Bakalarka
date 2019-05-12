@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -7,7 +6,6 @@ using UnityEngine.Networking;
 public abstract class Selectable : NetworkBehaviour {
 
     public abstract string Name { get; }
-    public Texture2D Image;
 
     [SyncVar]
     public NetworkInstanceId playerID;
@@ -89,12 +87,12 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected virtual void ShowAllButtons()
     {
-        UIManager.Instance.ShowButtons(Purchases);
+        UIManager.Instance.ShowPurchaseButtons(Purchases);
     }
 
     protected virtual void HideAllButtons()
     {
-        UIManager.Instance.HideButtons();
+        UIManager.Instance.HidePurchaseButtons();
     }
 
     public virtual string GetObjectDescription()

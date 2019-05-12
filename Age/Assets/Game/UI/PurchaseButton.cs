@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -7,7 +6,7 @@ public class PurchaseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private Purchase purchase;
     [SerializeField]
-    private Text text;
+    private RawImage image;
 
     private void Awake()
     {
@@ -32,6 +31,6 @@ public class PurchaseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void SetPurchase(Purchase purchase)
     {
         this.purchase = purchase;
-        text.text = purchase.Name;
+        image.texture = purchase.image;
     }
 }

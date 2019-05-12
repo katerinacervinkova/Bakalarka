@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Text;
+using UnityEngine;
 
 public class Purchase
 {
     public string Name;
+    public Texture2D image;
     public Action<Selectable> action;
 
     protected int food, wood, gold, population;
     protected string description;
 
 
-    public Purchase(string Name, string description, Action<Selectable> action, int food, int wood, int gold, int population = 0)
+    public Purchase(string Name, Texture2D image, string description, Action<Selectable> action, int food, int wood, int gold, int population = 0)
     {
         this.Name = Name;
         this.food = food;
@@ -19,6 +21,7 @@ public class Purchase
         this.population = population;
         this.description = description;
         this.action = action;
+        this.image = image;
     }
 
 

@@ -32,7 +32,7 @@ public class Regiment : Commandable {
 
     protected override void ShowAllButtons()
     {
-        UIManager.Instance.ShowButtons(units[0].Purchases);
+        UIManager.Instance.ShowPurchaseButtons(units[0].Purchases);
     }
 
     protected override void HideAllButtons()

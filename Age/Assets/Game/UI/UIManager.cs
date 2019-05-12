@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour {
 
     public Building BuildingWindowShown { get; private set; }
 
-    public void ShowButtons(List<Purchase> transactions)
+    public void ShowPurchaseButtons(List<Purchase> transactions)
     {
         for (int i = 0; i < schedulers.Count; i++)
         {
@@ -57,7 +57,7 @@ public class UIManager : MonoBehaviour {
         }
     }
 
-    public void HideButtons()
+    public void HidePurchaseButtons()
     {
         buttons.ForEach(b => { if (b != null) b.gameObject.SetActive(false); });
     }
@@ -96,7 +96,8 @@ public class UIManager : MonoBehaviour {
 
     public void HideBuildingWindowButton()
     {
-        unitsButton.gameObject.SetActive(false);
+        if (unitsButton != null)
+            unitsButton.gameObject.SetActive(false);
     }
     public void ShowDestroyButton()
     {

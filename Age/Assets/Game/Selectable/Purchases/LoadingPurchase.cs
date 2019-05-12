@@ -1,11 +1,12 @@
 ﻿using System;
+using UnityEngine;
 
 public class LoadingPurchase : Purchase {
 
     private readonly float Speed;
 
-	public LoadingPurchase(float Speed, string Name, string description, Action<Selectable> action, int food, int wood, int gold, int population = 0)
-        : base(Name, description, action, food, wood, gold, population)
+	public LoadingPurchase(float Speed, string Name, Texture2D image, string description, Action<Selectable> action, int food, int wood, int gold, int population = 0)
+        : base(Name, image, description, action, food, wood, gold, population)
     {
         this.Speed = Speed;
     }
