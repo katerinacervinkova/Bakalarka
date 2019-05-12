@@ -153,11 +153,11 @@ public class PlayerState : MonoBehaviour {
 
     public void MoveBuildingToBuild(Vector3 hitPoint)
     {
-        // pokud je to misto zabrane, nepohne se
-        // TODO
-        /*BuildingToBuild.transform.position = GameState.Instance.GetClosestDestination(hitPoint);
-        if (GameState.Instance.IsOccupied(BuildingToBuild))
-            return;*/
+        var bounds = BuildingToBuild.bounds;
+        bounds.center = hitPoint;
+        foreach (var node in AstarPath.active.data.gridGraph.GetNodesInRegion(bounds))
+            if (!node.Walkable)
+                return;
         BuildingToBuild.transform.position = hitPoint;
     }
 

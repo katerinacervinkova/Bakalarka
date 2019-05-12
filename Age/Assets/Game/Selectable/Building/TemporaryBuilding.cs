@@ -12,10 +12,11 @@ public class TemporaryBuilding : Selectable
     private Job buildJob = null;
     [SyncVar(hook = "OnProgressChange")]
     private float progress = 0;
-
+    private Collider coll;
 
     public override string Name => buildingType.ToString();
     public override float HealthValue => progress / maxProgress;
+    public Bounds bounds => coll.bounds;
 
     public override void OnStartAuthority()
     {
@@ -31,6 +32,7 @@ public class TemporaryBuilding : Selectable
         minimapIcon.color = minimapColor;
         GameState.Instance.TemporaryBuildings.Add(this);
         ChangeColor();
+        coll = GetComponent<Collider>();
     }
 
     private void ChangeColor()
