@@ -57,12 +57,9 @@ public class GameState : NetworkBehaviour {
     [ClientRpc]
     public void RpcPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)
     {
-        GameObject temporaryBuilding = ClientScene.objects[tempBuildingId].gameObject;
-        temporaryBuilding.transform.position = position;
-        temporaryBuilding.SetActive(true);
-        Collider collider = temporaryBuilding.GetComponent<Collider>();
-        collider.enabled = true;
-        var guo = new GraphUpdateObject(collider.bounds)
+        var temporaryBuilding = ClientScene.objects[tempBuildingId].GetComponent<TemporaryBuilding>();
+        temporaryBuilding.OnPlaced(position);
+        var guo = new GraphUpdateObject(temporaryBuilding.GetComponent<Collider>().bounds)
         {
             modifyWalkability = true,
             updatePhysics = true,

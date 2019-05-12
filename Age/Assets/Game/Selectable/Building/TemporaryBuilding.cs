@@ -44,6 +44,16 @@ public class TemporaryBuilding : Selectable
             healthBar.HideAfter();
     }
 
+    public void OnPlaced(Vector3 position)
+    {
+        transform.position = position;
+        GetComponent<Collider>().enabled = true;
+        transform.Find("Building").gameObject.SetActive(false);
+        transform.Find("Fence").gameObject.SetActive(true);
+        transform.Find("Image").gameObject.SetActive(true);
+        gameObject.SetActive(true);
+    }
+
     [ClientRpc]
     public void RpcOnCreate()
     {
