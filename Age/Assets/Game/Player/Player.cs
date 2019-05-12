@@ -1,5 +1,4 @@
 ﻿using Pathfinding;
-using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -64,8 +63,7 @@ public class Player : NetworkBehaviour
 
     public void PlaceBuilding(TemporaryBuilding temporaryBuilding)
     {
-        var position = temporaryBuilding.transform.position;
-        CmdPlaceBuilding(new Vector3((float)Math.Round(position.x), position.y, (float)Math.Round(position.z)), temporaryBuilding.netId);
+        CmdPlaceBuilding(temporaryBuilding.transform.position, temporaryBuilding.netId);
     }
 
     public void ChangeHealth(Selectable selectable, float value)
