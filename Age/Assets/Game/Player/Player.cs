@@ -15,6 +15,11 @@ public class Player : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         Camera.main.transform.parent.position = transform.position;
+        if (PlayerState.Instance != null)
+        {
+            PlayerState.Instance.player = this;
+            PlayerState.Instance.OnPlayerStateChange();
+        }
     }
 
     public void ExitBuilding(Unit unit, Building building)
@@ -25,15 +30,17 @@ public class Player : NetworkBehaviour
 
     public bool Init()
     {
+
+        if (!hasAuthority)
+            return false;
         if (connectionToClient == null || connectionToClient.isReady)
         {
-            factory.CreatePlayerState();
             CmdCreateUnit(transform.position, transform.position);
             PlayerState.Instance.Population = 1;
-            PlayerState.Instance.playerPurchases = factory.CreatePlayerPurchases();
             return true;
         }
         return false;
+
     }
 
     public void EnterBuilding(Unit unit, Building building)

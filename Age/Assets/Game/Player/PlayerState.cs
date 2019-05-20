@@ -78,6 +78,13 @@ public class PlayerState : MonoBehaviour {
         }
     }
 
+    public void Start()
+    {
+        foreach (var player in FindObjectsOfType<Player>())
+            if (player.hasAuthority)
+                this.player = player;
+    }
+
     public Selectable SelectedObject { get; set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
 

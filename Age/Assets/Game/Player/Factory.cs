@@ -10,8 +10,6 @@ public class Factory : MonoBehaviour
 
     public Player player;
     [SerializeField]
-    private PlayerState playerStatePrefab;
-    [SerializeField]
     private PlayerPurchases playerPurchasesPrefab;
     [SerializeField]
     private TemporaryBuilding mainBuildingPrefab;
@@ -37,13 +35,6 @@ public class Factory : MonoBehaviour
         regiment.SetUnits(units);
         regiment.gameObject.SetActive(true);
         return regiment;
-    }
-
-    public void CreatePlayerState()
-    {
-        PlayerState playerState = Instantiate(playerStatePrefab);
-        playerState.player = player;
-        playerState.OnPlayerStateChange();
     }
 
     public Unit CreateUnit(Vector3 spawnPoint, NetworkInstanceId playerId)

@@ -28,7 +28,6 @@ public abstract class Selectable : NetworkBehaviour {
     [SerializeField]
     public float healthBarOffset;
     protected HealthBar healthBar;
-
     protected bool initialized = false;
 
     public Vector3 FrontPosition { get { var pos = transform.position; pos.x -= size.x / 2; pos.z -= size.z / 2; return pos; } }
@@ -119,9 +118,9 @@ public abstract class Selectable : NetworkBehaviour {
         Health = value;
         if (PlayerState.Instance != null)
         {
-            PlayerState.Instance.OnStateChange(this);
             if (initialized && PlayerState.Instance.SelectedObject != this)
                 healthBar.HideAfter();
+            PlayerState.Instance.OnStateChange(this);
         }
     }
     protected virtual void OnDestroy()

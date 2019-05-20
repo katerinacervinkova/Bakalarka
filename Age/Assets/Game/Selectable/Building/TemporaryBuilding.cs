@@ -39,8 +39,8 @@ public class TemporaryBuilding : Selectable
     private void OnProgressChange(float newProgress)
     {
         progress = newProgress;
-        PlayerState.Instance.OnStateChange(this);
-        if (initialized && PlayerState.Instance.SelectedObject != this)
+        PlayerState.Instance?.OnStateChange(this);
+        if (initialized && PlayerState.Instance?.SelectedObject != this)
             healthBar.HideAfter();
     }
 

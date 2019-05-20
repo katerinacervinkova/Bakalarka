@@ -102,7 +102,7 @@ public class Attributes : NetworkBehaviour {
 
     private void OnChange()
     {
-        if (PlayerState.Instance.SelectedObject == unit)
+        if (PlayerState.Instance != null && PlayerState.Instance.SelectedObject == unit)
             UIManager.Instance.ShowObjectText(unit.Name, unit.GetObjectDescription());
     }
 
