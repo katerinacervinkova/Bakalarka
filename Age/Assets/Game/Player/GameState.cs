@@ -22,6 +22,9 @@ public class GameState : NetworkBehaviour {
     public List<Resource> Resources { get; private set; }
     public List<TemporaryBuilding> TemporaryBuildings { get; private set; }
 
+    [SerializeField]
+    private VisibilitySquares visibilitySquares;
+
     public override void OnStartClient()
     {
         Units = new List<Unit>();
@@ -52,6 +55,38 @@ public class GameState : NetworkBehaviour {
     {
         return ((IEnumerable<Selectable>)Units).Concat(Buildings).Where(s => s != null && !s.hasAuthority && Vector3.Distance(position, s.transform.position) < maxDistance).
             OrderBy(s => Vector3.Distance(position, s.transform.position)).FirstOrDefault();
+    }
+
+    private List<Vector2> AdjoiningSquares(Vector2 square)
+    {
+        return new List<Vector2>()
+        {
+            new Vector2(square.x - 1, square.y + 1),
+            new Vector2(square.x - 1, square.y - 1),
+            new Vector2(square.x - 1, square.y),
+            new Vector2(square.x + 1, square.y + 1),
+            new Vector2(square.x + 1, square.y - 1),
+            new Vector2(square.x + 1, square.y),
+            new Vector2(square.x, square.y + 1),
+            new Vector2(square.x, square.y -1),
+            square
+        };
+    }
+
+    public void RemoveFromSquare(Vector2 square, Selectable selectable) => visibilitySquares.RemoveFromSquare(square, selectable);
+
+    [ClientRpc]
+    public void RpcPositionChange(NetworkInstanceId selectableId)
+    {
+        Selectable selectable = ClientScene.objects[selectableId].GetComponent<Selectable>();
+        var squarePosition = visibilitySquares.GetSquare(selectable.transform.position);
+
+        if (squarePosition != selectable.SquareID)
+        {
+            RemoveFromSquare(selectable.SquareID, selectable);
+            visibilitySquares.AddToSquare(squarePosition, selectable);
+            selectable.SquareID = squarePosition;
+        }
     }
      
     [ClientRpc]
@@ -131,8 +166,10 @@ public class GameState : NetworkBehaviour {
         Destroy(tempBuilding);
     }
 
-    public void RpcDestroyObject(Bounds bounds)
+    [ClientRpc]
+    public void RpcDestroyObject(Vector3 center, Vector3 size)
     {
+        var bounds = new Bounds(center, size);
         var guo = new GraphUpdateObject(bounds)
         {
             modifyWalkability = true,

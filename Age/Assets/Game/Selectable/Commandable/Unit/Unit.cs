@@ -45,7 +45,8 @@ public class Unit : Commandable
     protected virtual void Update()
     {
         JobUpdate();
-        //VisibilityUpdate();
+        owner.PositionChange(this);
+        // VisibilityUpdate();
     }
 
     private void OnDisable()
@@ -153,6 +154,7 @@ public class Unit : Commandable
     {
         base.OnDestroy();
         Reg?.Remove(this);
+        GameState.Instance?.RemoveFromSquare(SquareID, this);
         if (hasAuthority && PlayerState.Instance != null)
         {
             PlayerState.Instance.units.Remove(this);

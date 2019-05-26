@@ -30,13 +30,13 @@ public abstract class Selectable : NetworkBehaviour {
     protected HealthBar healthBar;
     protected bool initialized = false;
 
+    public Vector2 SquareID { get; set; } = Vector2.positiveInfinity;
     public Vector3 FrontPosition { get { var pos = transform.position; pos.x -= size.x / 2; pos.z -= size.z / 2; return pos; } }
     public virtual float HealthValue => Health / MaxHealth;
     public List<Purchase> Purchases { get; private set; } = new List<Purchase>();
 
     public abstract Job GetOwnJob(Commandable worker = null);
     public virtual Job GetEnemyJob(Commandable worker = null) => new AttackJob(this);
-    protected abstract void InitPurchases();
 
     public override void OnStartClient()
     {
@@ -58,6 +58,8 @@ public abstract class Selectable : NetworkBehaviour {
     {
         InitPurchases();
     }
+
+    protected virtual void InitPurchases() { }
 
     public virtual void SetSelection(bool selected)
     {
@@ -123,6 +125,7 @@ public abstract class Selectable : NetworkBehaviour {
             PlayerState.Instance.OnStateChange(this);
         }
     }
+
     protected virtual void OnDestroy()
     {
         if (healthBar != null)

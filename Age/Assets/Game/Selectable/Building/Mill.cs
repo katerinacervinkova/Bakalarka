@@ -15,8 +15,6 @@ public class Mill : Building
         transform.Find("Building/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
-    protected override void InitPurchases() { }
-
     protected override void UpdateUnit(Unit unit)
     {
         PlayerState.Instance.Food += unit.Gathering / 2;

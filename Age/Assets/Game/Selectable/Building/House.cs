@@ -14,7 +14,5 @@ public class House : Building
         transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
-    protected override void InitPurchases() { }
-
     protected override void UpdateUnit(Unit unit) { }
 }

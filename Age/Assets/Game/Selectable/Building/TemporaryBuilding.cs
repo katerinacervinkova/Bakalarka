@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class TemporaryBuilding : Selectable
 {
@@ -17,7 +16,7 @@ public class TemporaryBuilding : Selectable
 
     public override string Name => buildingType.ToString();
     public override float HealthValue => progress / maxProgress;
-    public Bounds bounds => coll.bounds;
+    public Bounds Bounds => coll.bounds;
 
     public override void OnStartAuthority()
     {
@@ -48,6 +47,7 @@ public class TemporaryBuilding : Selectable
     {
         transform.position = position;
         GetComponent<Collider>().enabled = true;
+        owner.PositionChange(this);
         transform.Find("Building").gameObject.SetActive(false);
         transform.Find("Fence").gameObject.SetActive(true);
         transform.Find("Image").gameObject.SetActive(true);
@@ -107,14 +107,11 @@ public class TemporaryBuilding : Selectable
         UIManager.Instance.HideDestroyButton();
     }
 
-    protected override void InitPurchases()
-    {
-    }
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
         PlayerState.Instance?.temporaryBuildings.Remove(this);
+        GameState.Instance?.RemoveFromSquare(SquareID, this);
         GameState.Instance?.TemporaryBuildings.Remove(this);
     }
 }

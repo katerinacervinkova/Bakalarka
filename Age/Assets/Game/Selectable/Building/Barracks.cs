@@ -15,8 +15,6 @@ public class Barracks : Building
         transform.Find("Building/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
-    protected override void InitPurchases() { }
-
     protected override void UpdateUnit(Unit unit)
     {
         owner.ChangeAttribute(unit, AttEnum.Swordsmanship, unit.Swordsmanship + 0.1f);

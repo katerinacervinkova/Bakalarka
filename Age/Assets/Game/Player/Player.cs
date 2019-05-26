@@ -83,6 +83,11 @@ public class Player : NetworkBehaviour
         CmdDestroy(selectedObject.netId);
     }
 
+    public void PositionChange(Selectable selectable)
+    {
+        CmdPositionChange(selectable.netId);
+    }
+
     private Vector3 NearestWalkable(Vector3 position)
     {
         NNConstraint nodeConstraint = new NNConstraint
@@ -91,6 +96,12 @@ public class Player : NetworkBehaviour
             walkable = true
         };
         return AstarPath.active.GetNearest(position, nodeConstraint).position;
+    }
+
+    [Command]
+    private void CmdPositionChange(NetworkInstanceId selectableId)
+    {
+        GameState.Instance.RpcPositionChange(selectableId);
     }
 
     [Command]
@@ -171,7 +182,8 @@ public class Player : NetworkBehaviour
     public void CmdDestroy(NetworkInstanceId selectableId)
     {
         GameObject selectable = NetworkServer.objects[selectableId].gameObject;
-        GameState.Instance.RpcDestroyObject(selectable.GetComponent<Collider>().bounds);
+        var bounds = selectable.GetComponent<Collider>().bounds;
+        GameState.Instance.RpcDestroyObject(bounds.center, bounds.size);
         NetworkServer.Destroy(selectable);
     }
 }

@@ -137,7 +137,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1552674786467166}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 180.28334, y: 0, z: 27.91278}
+  m_LocalPosition: {x: 22, y: -0.1, z: 177}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4332082671171030}
@@ -167,7 +167,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1053844109064984}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 50, y: 50.00005, z: 2.000001}
   m_Children: []
   m_Father: {fileID: 4060758661814178}
@@ -238,13 +238,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c484cfaef197a458ea8ccfde8d4c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Image: {fileID: 0}
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
   size: {x: 2, y: 0, z: 2}
   healthBarOffset: 1
-  size: 5
   capacity: 0
 --- !u!114 &114122787365862886
 MonoBehaviour:

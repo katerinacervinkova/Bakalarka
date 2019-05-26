@@ -24,11 +24,7 @@ public abstract class Building : Selectable {
 
     public abstract Func<Unit, string> UnitTextFunc { get; }
 
-    public override void OnStartClient()
-    {
-        GameState.Instance.Buildings.Add(this);
-        GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
-    }
+    public override void OnStartClient() { }
 
     public void OnUnitsChange()
     {
@@ -52,10 +48,12 @@ public abstract class Building : Selectable {
     public override void Init()
     {
         base.Init();
+        GameState.Instance.Buildings.Add(this);
+        GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
+        owner.PositionChange(this);
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
         DefaultDestination = FrontPosition;
-        GameState.Instance.Buildings.Add(this);
         if (hasAuthority)
         {
             PlayerState.Instance.buildings.Add(this);
@@ -195,6 +193,7 @@ public abstract class Building : Selectable {
             }
             unitsInside.ForEach(u => owner.ExitBuilding(u, this));
         }
+        GameState.Instance?.RemoveFromSquare(SquareID, this);
         GameState.Instance?.Buildings.Remove(this);
     }
 }

@@ -47,8 +47,6 @@ public abstract class Resource : Selectable {
         return $"Capacity: {(int)capacity}/{(int)MaxCapacity}";
     }
 
-    protected override void InitPurchases() { }
-
     protected override void OnDestroy()
     {
         base.OnDestroy();

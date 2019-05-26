@@ -160,7 +160,7 @@ public class PlayerState : MonoBehaviour {
 
     public void MoveBuildingToBuild(Vector3 hitPoint)
     {
-        var bounds = BuildingToBuild.bounds;
+        var bounds = BuildingToBuild.Bounds;
         bounds.center = hitPoint;
         foreach (var node in AstarPath.active.data.gridGraph.GetNodesInRegion(bounds))
             if (!node.Walkable)

@@ -9,9 +9,11 @@ namespace Prototype.NetworkLobby
     {
         public LobbyManager lobbyManager;
 
+        public RectTransform lobbyServerList;
         public RectTransform lobbyPanel;
 
         public InputField ipInput;
+        public InputField matchNameInput;
 
         public void OnEnable()
         {
@@ -19,6 +21,9 @@ namespace Prototype.NetworkLobby
 
             ipInput.onEndEdit.RemoveAllListeners();
             ipInput.onEndEdit.AddListener(onEndEditIP);
+
+            matchNameInput.onEndEdit.RemoveAllListeners();
+            matchNameInput.onEndEdit.AddListener(onEndEditGameName);
         }
 
         public void OnClickHost()
@@ -49,6 +54,30 @@ namespace Prototype.NetworkLobby
             lobbyManager.SetServerInfo("Dedicated Server", lobbyManager.networkAddress);
         }
 
+        public void OnClickCreateMatchmakingGame()
+        {
+            lobbyManager.StartMatchMaker();
+            lobbyManager.matchMaker.CreateMatch(
+                matchNameInput.text,
+                (uint)lobbyManager.maxPlayers,
+                true,
+				"", "", "", 0, 0,
+				lobbyManager.OnMatchCreate);
+
+            lobbyManager.backDelegate = lobbyManager.StopHost;
+            lobbyManager._isMatchmaking = true;
+            lobbyManager.DisplayIsConnecting();
+
+            lobbyManager.SetServerInfo("Matchmaker Host", lobbyManager.matchHost);
+        }
+
+        public void OnClickOpenServerList()
+        {
+            lobbyManager.StartMatchMaker();
+            lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+            lobbyManager.ChangeTo(lobbyServerList);
+        }
+
         void onEndEditIP(string text)
         {
             if (Input.GetKeyDown(KeyCode.Return))
@@ -56,5 +85,14 @@ namespace Prototype.NetworkLobby
                 OnClickJoin();
             }
         }
+
+        void onEndEditGameName(string text)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                OnClickCreateMatchmakingGame();
+            }
+        }
+
     }
 }

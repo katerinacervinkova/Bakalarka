@@ -90,6 +90,4 @@ public class Regiment : Commandable {
     {
         units.ForEach(u => u.SetGoal(goal));
     }
-
-    protected override void InitPurchases() { }
 }

@@ -14,8 +14,6 @@ public class Library : Building {
         transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
-    protected override void InitPurchases() { }
-
     protected override void UpdateUnit(Unit unit)
     {
         owner.ChangeAttribute(unit, AttEnum.Intelligence, unit.Intelligence + 0.1f);
