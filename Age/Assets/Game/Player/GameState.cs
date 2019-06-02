@@ -1,4 +1,5 @@
 ﻿using Pathfinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,6 +26,8 @@ public class GameState : NetworkBehaviour {
     [SerializeField]
     private VisibilitySquares visibilitySquares;
 
+    public VisibilitySquares VisibilitySquares => visibilitySquares;
+
     public override void OnStartClient()
     {
         Units = new List<Unit>();
@@ -45,10 +48,9 @@ public class GameState : NetworkBehaviour {
         AstarPath.active?.UpdateGraphs(guo);
     }
 
-    public T GetNearestResource<T>(T resource, Vector3 position, int maxDistance) where T : Resource
+    public T GetNearestResource<T>(T resource, Vector2 squareID) where T : Resource
     {
-        return (T)Resources.Where(r => r is T && r != resource && Vector3.Distance(position, r.transform.position) < maxDistance).
-            OrderBy(r => Vector3.Distance(position, r.transform.position)).FirstOrDefault();
+        return VisibilitySquares.NearestResource(resource, squareID);
     }
 
     public Selectable GetNearestTarget(Vector3 position, int maxDistance)
@@ -73,27 +75,28 @@ public class GameState : NetworkBehaviour {
         };
     }
 
-    public void RemoveFromSquare(Vector2 square, Selectable selectable) => visibilitySquares.RemoveFromSquare(square, selectable);
-
-    [ClientRpc]
-    public void RpcPositionChange(NetworkInstanceId selectableId)
+    public void PositionChange(Unit unit)
     {
-        Selectable selectable = ClientScene.objects[selectableId].GetComponent<Selectable>();
-        var squarePosition = visibilitySquares.GetSquare(selectable.transform.position);
+        var squarePosition = visibilitySquares.GetSquare(unit.transform.position);
 
-        if (squarePosition != selectable.SquareID)
+        if (squarePosition != unit.SquareID)
         {
-            RemoveFromSquare(selectable.SquareID, selectable);
-            visibilitySquares.AddToSquare(squarePosition, selectable);
-            selectable.SquareID = squarePosition;
+            visibilitySquares.RemoveFromSquare(unit.SquareID, unit);
+            visibilitySquares.AddToSquare(squarePosition, unit);
+            unit.SquareID = squarePosition;
         }
     }
-     
+
     [ClientRpc]
     public void RpcPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)
     {
         var temporaryBuilding = ClientScene.objects[tempBuildingId].GetComponent<TemporaryBuilding>();
         temporaryBuilding.OnPlaced(position);
+
+        var squarePosition = visibilitySquares.GetSquare(temporaryBuilding.transform.position);
+        visibilitySquares.AddToSquare(squarePosition, temporaryBuilding);
+        temporaryBuilding.SquareID = squarePosition;
+
         var guo = new GraphUpdateObject(temporaryBuilding.GetComponent<Collider>().bounds)
         {
             modifyWalkability = true,
@@ -112,20 +115,25 @@ public class GameState : NetworkBehaviour {
     [ClientRpc]
     public void RpcExitBuildingDestination(NetworkInstanceId unitId, Vector3 position, Vector3 destination)
     {
-        Unit unit = ClientScene.objects[unitId].GetComponent<Unit>();
-        unit.transform.position = position;
+        Unit unit = ExitBuilding(unitId, position);
         if (unit.hasAuthority)
             unit.SetJob(new JobGo(destination));
-        unit.gameObject.SetActive(true);
     }
 
     [ClientRpc]
     public void RpcExitBuilding(NetworkInstanceId unitId, Vector3 position)
     {
+        Unit unit = ExitBuilding(unitId, position);
+        unit.ResetJob();
+    }
+
+    private static Unit ExitBuilding(NetworkInstanceId unitId, Vector3 position)
+    {
         Unit unit = ClientScene.objects[unitId].GetComponent<Unit>();
         unit.transform.position = position;
-        unit.ResetJob();
+        unit.SetVisibility(true);
         unit.gameObject.SetActive(true);
+        return unit;
     }
 
     [ClientRpc]
@@ -160,7 +168,14 @@ public class GameState : NetworkBehaviour {
         building.healthBarOffset = tempBuilding.healthBarOffset;
         building.owner = tempBuilding.owner;
         building.size = tempBuilding.size;
+        building.SetHealthBar(tempBuilding.TransferHealthBar(building));
         building.Init();
+
+        var squarePosition = visibilitySquares.GetSquare(tempBuilding.transform.position);
+        visibilitySquares.AddToSquare(squarePosition, building);
+        visibilitySquares.RemoveFromSquare(squarePosition, tempBuilding);
+        building.SquareID = squarePosition;
+
         if (PlayerState.Instance.SelectedObject == tempBuilding)
             PlayerState.Instance.Select(building);
         Destroy(tempBuilding);

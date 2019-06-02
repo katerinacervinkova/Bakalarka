@@ -1,10 +1,11 @@
-﻿using Pathfinding;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public abstract class Resource : Selectable {
 
     protected Job miningJob = null;
+
+    private bool started = false;
 
     [SyncVar(hook = "OnCapacityChange")]
     public float capacity = 0;
@@ -12,17 +13,27 @@ public abstract class Resource : Selectable {
     public override float HealthValue => capacity / MaxCapacity;
 
     protected abstract float MaxCapacity { get; }
-    public abstract void Gather(float gathering, Player player);
+    public abstract bool Gather(float gathering, Player player);
 
     protected void Start()
     {
+        visibleObject = transform.Find("Resource").gameObject;
         capacity = MaxCapacity;
+        visibleObject.SetActive(false);
+        SetVisibility(false);
+        started = true;
     }
 
     public override void OnStartClient()
     {
         Init();
         initialized = true;
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
         minimapColor = minimapIcon.color;
     }
 
@@ -47,10 +58,16 @@ public abstract class Resource : Selectable {
         return $"Capacity: {(int)capacity}/{(int)MaxCapacity}";
     }
 
+    private void OnDisable()
+    {
+        if (started)
+            OnDestroy();
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
         GameState.Instance?.Resources.Remove(this);
-        GameState.Instance?.UpdateGraph(GetComponent<Collider>().bounds);
+        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
     }
 }

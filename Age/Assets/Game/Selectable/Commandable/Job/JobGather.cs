@@ -2,7 +2,7 @@
 
 public class JobGather<T> : Job where T : Resource {
 
-    private Vector3 resourcePosition;
+    private Vector2 squareID;
     private T resource;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
@@ -10,7 +10,7 @@ public class JobGather<T> : Job where T : Resource {
     {
         get
         {
-            T res = GameState.Instance.GetNearestResource(resource, resourcePosition, 20);
+            T res = GameState.Instance.GetNearestResource(resource, squareID);
             if (res == null)
                 return null;
             return new JobGo(res.FrontPosition, res.GetOwnJob(null));
@@ -20,12 +20,12 @@ public class JobGather<T> : Job where T : Resource {
     public JobGather(T resource)
     {
         this.resource = resource;
-        resourcePosition = resource.transform.position;
+        squareID = resource.SquareID;
     }
 
     public override void Do(Unit worker)
     {
-        if (!resource || Vector3.Distance(resourcePosition, worker.transform.position) > resource.size.x + 3)
+        if (resource == null || Vector3.Distance(resource.FrontPosition, worker.transform.position) > resource.size.x + 3)
         {
             worker.SetNextJob();
             return;
@@ -33,7 +33,8 @@ public class JobGather<T> : Job where T : Resource {
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            resource.Gather(worker.Gathering, worker.owner);
+            if (resource.Gather(worker.Gathering, worker.owner))
+                Completed = true;
             worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + 0.1f);
             timeElapsed -= minTime;
         }

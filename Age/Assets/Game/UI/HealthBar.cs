@@ -39,6 +39,8 @@ public class HealthBar : MonoBehaviour {
 
     public void HideAfter(float duration = 1)
     {
+        if (gameObject == null)
+            return;
         gameObject.SetActive(true);
         remainingSeconds = duration;
         temporary = true;

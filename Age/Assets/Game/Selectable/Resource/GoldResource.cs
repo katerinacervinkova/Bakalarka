@@ -8,11 +8,13 @@ public class GoldResource : Resource
 
     protected override float MaxCapacity => maxCapacity;
 
-    public override void Gather(float gathering, Player player)
+    public override bool Gather(float gathering, Player player)
     {
+        bool completed = capacity - gathering <= 0;
         float amount = Math.Min(gathering, capacity);
         player.Gather(amount, this);
         PlayerState.Instance.Gold += amount;
+        return completed;
     }
 
     public override Job GetEnemyJob(Commandable worker)

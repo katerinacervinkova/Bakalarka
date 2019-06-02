@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 public class Unit : Commandable
 {
@@ -18,13 +19,14 @@ public class Unit : Commandable
     public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
     public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
 
-    private Job job { get; set; }
+    private Job Job { get; set; }
 
     protected void Awake()
     {
         atts = GetComponent<Attributes>();
         aiUnetPath = GetComponent<AIUnetPath>();
         movementController = GetComponent<MovementController>();
+        visibleObject = transform.Find("Unit").gameObject;
     }
 
     public override void Init()
@@ -34,19 +36,21 @@ public class Unit : Commandable
         minimapIcon.color = minimapColor;
         GameState.Instance.Units.Add(this);
         transform.Find("Unit/Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
+        healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
+        SetVisibility(false);
     }
 
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
         PlayerState.Instance.units.Add(this);
+        SetVisibility(true);
     }
 
     protected virtual void Update()
     {
         JobUpdate();
-        owner.PositionChange(this);
-        // VisibilityUpdate();
+        GameState.Instance.PositionChange(this);
     }
 
     private void OnDisable()
@@ -55,13 +59,13 @@ public class Unit : Commandable
             healthBar.gameObject.SetActive(false);
     }
 
-    private void VisibilityUpdate()
+    protected override void Cover()
     {
-        if (hasAuthority)
-            return;
-        if (gameObject.activeInHierarchy != !PlayerState.Instance.IsWithinSight(transform.position))
-            gameObject.SetActive(!gameObject.activeInHierarchy);
+        base.Cover();
+        visibleObject.SetActive(false);
     }
+
+
 
     public override void SetSelection(bool selected)
     {
@@ -93,9 +97,9 @@ public class Unit : Commandable
     {
         if (!hasAuthority)
             return;
-        if (job != null && job.Completed)
-            SetJob(job.Following);
-        job?.Do(this);
+        if (Job != null && Job.Completed)
+            SetJob(Job.Following);
+        Job?.Do(this);
     }
 
     
@@ -121,17 +125,19 @@ public class Unit : Commandable
     {
         HideTarget();
         destination = Vector3.positiveInfinity;
-        this.job = job;
+        Job = job;
     }
 
     public void SetNextJob()
     {
-        SetJob(job.Following);
+        SetJob(Job.Following);
     }
+
     public void ResetJob()
     {
         SetJob(null);
     }
+
     public void Go(Vector3 destination)
     {
         this.destination = destination;
@@ -154,7 +160,6 @@ public class Unit : Commandable
     {
         base.OnDestroy();
         Reg?.Remove(this);
-        GameState.Instance?.RemoveFromSquare(SquareID, this);
         if (hasAuthority && PlayerState.Instance != null)
         {
             PlayerState.Instance.units.Remove(this);
@@ -166,7 +171,7 @@ public class Unit : Commandable
     {
         destination = Vector3.positiveInfinity;
         Reg?.MovementCompleted(this);
-        if (job is JobGo)
-            job.Completed = true;
+        if (Job is JobGo)
+            Job.Completed = true;
     }
 }

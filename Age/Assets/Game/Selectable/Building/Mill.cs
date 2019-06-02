@@ -11,8 +11,8 @@ public class Mill : Building
 
     protected override void ChangeColor()
     {
-        transform.Find("Building/Small roof").GetComponent<MeshRenderer>().material.color = owner.color;
-        transform.Find("Building/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Building/Small roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Building/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
     protected override void UpdateUnit(Unit unit)

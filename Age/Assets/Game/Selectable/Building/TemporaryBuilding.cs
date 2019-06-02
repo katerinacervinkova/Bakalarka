@@ -21,6 +21,8 @@ public class TemporaryBuilding : Selectable
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
+        gameObject.SetActive(true);
+        SetVisibility(true);
         PlayerState.Instance.SetTempBuilding(this);
         PlayerState.Instance.temporaryBuildings.Add(this);
     }
@@ -28,18 +30,23 @@ public class TemporaryBuilding : Selectable
     public override void Init()
     {
         base.Init();
+        visibleObject = transform.Find("Building").gameObject;
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
         GameState.Instance.TemporaryBuildings.Add(this);
-        transform.Find("Image").GetComponent<SpriteRenderer>().color = owner.color;
+        transform.Find("Building/Image").GetComponent<SpriteRenderer>().color = owner.color;
         coll = GetComponent<Collider>();
+        healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
+        gameObject.SetActive(false);
+        visibleObject.SetActive(false);
+        SetVisibility(false);
     }
 
     private void OnProgressChange(float newProgress)
     {
         progress = newProgress;
         PlayerState.Instance?.OnStateChange(this);
-        if (initialized && PlayerState.Instance?.SelectedObject != this)
+        if (initialized && PlayerState.Instance?.SelectedObject != this && healthBar != null)
             healthBar.HideAfter();
     }
 
@@ -47,20 +54,10 @@ public class TemporaryBuilding : Selectable
     {
         transform.position = position;
         GetComponent<Collider>().enabled = true;
-        owner.PositionChange(this);
-        transform.Find("Building").gameObject.SetActive(false);
-        transform.Find("Fence").gameObject.SetActive(true);
-        transform.Find("Image").gameObject.SetActive(true);
+        transform.Find("Building/Building").gameObject.SetActive(false);
+        transform.Find("Building/Fence").gameObject.SetActive(true);
+        transform.Find("Building/Image").gameObject.SetActive(true);
         gameObject.SetActive(true);
-    }
-
-    [ClientRpc]
-    public void RpcOnCreate()
-    {
-        if (hasAuthority)
-            gameObject.SetActive(true);
-        else
-            gameObject.SetActive(false);
     }
 
     [Command]
@@ -81,6 +78,12 @@ public class TemporaryBuilding : Selectable
         buildJob.Completed = progress >= maxProgress;
         if (buildJob.Completed)
             owner.CmdCreateBuilding(netId, buildingType);
+    }
+
+    public HealthBar TransferHealthBar(Building building)
+    {
+        healthBar.selectable = building;
+        return healthBar;
     }
 
     public override string GetObjectDescription()
@@ -107,11 +110,13 @@ public class TemporaryBuilding : Selectable
         UIManager.Instance.HideDestroyButton();
     }
 
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
         PlayerState.Instance?.temporaryBuildings.Remove(this);
-        GameState.Instance?.RemoveFromSquare(SquareID, this);
+        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
         GameState.Instance?.TemporaryBuildings.Remove(this);
+        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
     }
 }

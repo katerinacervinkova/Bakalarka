@@ -18,6 +18,7 @@ public abstract class Selectable : NetworkBehaviour {
     [SyncVar]
     protected float lineOfSight = 10;
 
+    protected GameObject visibleObject;
     protected GameObject selector;
     protected SpriteRenderer minimapIcon;
     protected Color minimapColor;
@@ -51,7 +52,6 @@ public abstract class Selectable : NetworkBehaviour {
         selector = transform.Find("SelectionProjector").gameObject;
         selector.SetActive(false);
         Health = MaxHealth;
-        healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
     }
 
     public override void OnStartAuthority()
@@ -84,6 +84,27 @@ public abstract class Selectable : NetworkBehaviour {
             else
                 healthBar.Hide();
         }
+    }
+
+    public void SetVisibility(bool visible)
+    {
+        if (visible)
+            Uncover();
+        else
+            Cover();
+    }
+
+    protected virtual void Cover()
+    {
+        if (healthBar != null)
+            healthBar.transform.localScale = new Vector3();
+    }
+
+    protected virtual void Uncover()
+    {
+        visibleObject.SetActive(true);
+        if (healthBar != null)
+            healthBar.transform.localScale = new Vector3(2, 2, 2);
     }
 
     protected virtual void ShowAllButtons()

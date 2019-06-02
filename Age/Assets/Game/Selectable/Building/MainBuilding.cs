@@ -11,9 +11,9 @@ public class MainBuilding : Building {
 
     protected override void ChangeColor()
     {
-        transform.Find("Building/Main Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-        transform.Find("Building/Roof 1").GetComponent<MeshRenderer>().material.color = owner.color;
-        transform.Find("Building/Roof 2").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Building/Main Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Building/Roof 1").GetComponent<MeshRenderer>().material.color = owner.color;
+        transform.Find("Building/Building/Roof 2").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
     protected override void InitPurchases()

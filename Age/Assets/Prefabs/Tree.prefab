@@ -53,7 +53,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4194971180854484}
   m_Layer: 11
-  m_Name: Tree
+  m_Name: Resource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -606,13 +606,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b712ae07d2ee30d409af3f424b1d582d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Image: {fileID: 0}
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
   size: {x: 1, y: 0, z: 1}
   healthBarOffset: 6
-  size: 1
   capacity: 0
 --- !u!119 &119588751922476216
 Projector:

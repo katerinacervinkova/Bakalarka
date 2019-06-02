@@ -50,20 +50,22 @@ public abstract class Building : Selectable {
         base.Init();
         GameState.Instance.Buildings.Add(this);
         GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
-        owner.PositionChange(this);
+        visibleObject = transform.Find("Building").gameObject;
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
         DefaultDestination = FrontPosition;
+        visibleObject.SetActive(false);
         if (hasAuthority)
         {
+            SetVisibility(true);
             PlayerState.Instance.buildings.Add(this);
             PlayerState.Instance.MaxPopulation += MaxPopulationIncrease;
             InitPurchases();
         }
         ChangeColor();
-        transform.Find("Building").gameObject.SetActive(true);
-        Destroy(transform.Find("Fence").gameObject);
-        Destroy(transform.Find("Image").gameObject);
+        transform.Find("Building/Building").gameObject.SetActive(true);
+        Destroy(transform.Find("Building/Fence").gameObject);
+        Destroy(transform.Find("Building/Image").gameObject);
         initialized = true;
     }
 
@@ -181,6 +183,11 @@ public abstract class Building : Selectable {
         return new JobEnter(this);
     }
 
+    public void SetHealthBar(HealthBar healthBar)
+    {
+        this.healthBar = healthBar;
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -193,7 +200,8 @@ public abstract class Building : Selectable {
             }
             unitsInside.ForEach(u => owner.ExitBuilding(u, this));
         }
-        GameState.Instance?.RemoveFromSquare(SquareID, this);
+        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
         GameState.Instance?.Buildings.Remove(this);
+        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
     }
 }

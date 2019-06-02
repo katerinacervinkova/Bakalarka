@@ -11,7 +11,6 @@ public class Player : NetworkBehaviour
 
     public Factory factory;
 
-
     public override void OnStartLocalPlayer()
     {
         Camera.main.transform.parent.position = transform.position;
@@ -30,7 +29,6 @@ public class Player : NetworkBehaviour
 
     public bool Init()
     {
-
         if (!hasAuthority)
             return false;
         if (connectionToClient == null || connectionToClient.isReady)
@@ -40,7 +38,6 @@ public class Player : NetworkBehaviour
             return true;
         }
         return false;
-
     }
 
     public void EnterBuilding(Unit unit, Building building)
@@ -83,11 +80,6 @@ public class Player : NetworkBehaviour
         CmdDestroy(selectedObject.netId);
     }
 
-    public void PositionChange(Selectable selectable)
-    {
-        CmdPositionChange(selectable.netId);
-    }
-
     private Vector3 NearestWalkable(Vector3 position)
     {
         NNConstraint nodeConstraint = new NNConstraint
@@ -99,18 +91,15 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    private void CmdPositionChange(NetworkInstanceId selectableId)
-    {
-        GameState.Instance.RpcPositionChange(selectableId);
-    }
-
-    [Command]
     private void CmdChangeHealth(NetworkInstanceId selectableId, float value)
     {
-        Selectable selectable = NetworkServer.objects[selectableId].GetComponent<Selectable>();
-        selectable.Health = Mathf.Clamp(value, 0, selectable.MaxHealth);
-        if (selectable.Health == 0)
-            CmdDestroy(selectableId);
+        if (NetworkServer.objects.ContainsKey(selectableId))
+        {
+            Selectable selectable = NetworkServer.objects[selectableId].GetComponent<Selectable>();
+            selectable.Health = Mathf.Clamp(value, 0, selectable.MaxHealth);
+            if (selectable.Health == 0)
+                CmdDestroy(selectableId);
+        }
     }
 
     [Command]
@@ -118,7 +107,7 @@ public class Player : NetworkBehaviour
     {
         GameState.Instance.RpcEnterBuilding(unitId);
     }
-    
+
     [Command]
     private void CmdExitBuilding(NetworkInstanceId unitId, Vector3 position, Vector3 destination)
     {
@@ -143,13 +132,13 @@ public class Player : NetworkBehaviour
     {
         var tempBuilding = factory.CreateTemporaryMainBuilding(netId, buildingType);
         NetworkServer.SpawnWithClientAuthority(tempBuilding.gameObject, gameObject);
-        tempBuilding.RpcOnCreate();
     }
 
     [Command]
     private void CmdChangeAttribute(NetworkInstanceId unitId, AttEnum attEnum, float value)
     {
-        NetworkServer.objects[unitId].GetComponent<Unit>().SetAttribute(attEnum, value);
+        if (NetworkServer.objects.ContainsKey(unitId))
+            NetworkServer.objects[unitId].GetComponent<Unit>().SetAttribute(attEnum, value);
     }
 
     [Command]
@@ -161,13 +150,14 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdGather(float amount, NetworkInstanceId resourceId)
     {
-        if (!NetworkServer.objects.ContainsKey(resourceId))
-            return;
-        Resource resource = NetworkServer.objects[resourceId].GetComponent<Resource>();
-        resource.capacity -= amount;
-        if (resource.capacity <= 0)
-            CmdDestroy(resourceId);
-    }
+        if (NetworkServer.objects.ContainsKey(resourceId))
+        {
+            Resource resource = NetworkServer.objects[resourceId].GetComponent<Resource>();
+            resource.capacity -= amount;
+            if (resource.capacity <= 0)
+                CmdDestroy(resourceId);
+        }
+    } 
 
     [Command]
     public void CmdPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)

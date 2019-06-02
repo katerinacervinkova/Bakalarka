@@ -125,7 +125,7 @@ Transform:
   m_GameObject: {fileID: 1908526689736904}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -16.38, y: 1, z: -0.23}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children:
   - {fileID: 4949650468161396}
   - {fileID: 4877883636135706}
@@ -171,10 +171,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c56faec95e1f7804dbfc0556a3c0d6ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activated: 0
+  wasActive: 0
   transparent: {fileID: 1678638792829380}
   nontransparent: {fileID: 1149832024797878}
   transparentMinimap: {fileID: 1218809643422562}
   nontransparentMinimap: {fileID: 1790549251380532}
+  AdjoiningSquares: []
 --- !u!212 &212343575244289502
 SpriteRenderer:
   m_ObjectHideFlags: 1
