@@ -48,8 +48,9 @@ public abstract class Selectable : NetworkBehaviour {
 
     public virtual void Init()
     {
-        minimapIcon = transform.Find("MinimapIcon").GetComponent<SpriteRenderer>();
-        selector = transform.Find("SelectionProjector").gameObject;
+        visibleObject = transform.Find("Visible").gameObject;
+        minimapIcon = visibleObject.transform.Find("MinimapIcon").GetComponent<SpriteRenderer>();
+        selector = visibleObject.transform.Find("SelectionProjector").gameObject;
         selector.SetActive(false);
         Health = MaxHealth;
     }

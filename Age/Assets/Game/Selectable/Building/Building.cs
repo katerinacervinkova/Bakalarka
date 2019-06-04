@@ -50,7 +50,6 @@ public abstract class Building : Selectable {
         base.Init();
         GameState.Instance.Buildings.Add(this);
         GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
-        visibleObject = transform.Find("Building").gameObject;
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
         DefaultDestination = FrontPosition;
@@ -63,9 +62,9 @@ public abstract class Building : Selectable {
             InitPurchases();
         }
         ChangeColor();
-        transform.Find("Building/Building").gameObject.SetActive(true);
-        Destroy(transform.Find("Building/Fence").gameObject);
-        Destroy(transform.Find("Building/Image").gameObject);
+        visibleObject.transform.Find("Building").gameObject.SetActive(true);
+        Destroy(visibleObject.transform.Find("Fence").gameObject);
+        Destroy(visibleObject.transform.Find("Image").gameObject);
         initialized = true;
     }
 

@@ -11,8 +11,8 @@ public class Barracks : Building
 
     protected override void ChangeColor()
     {
-        transform.Find("Building/Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
-        transform.Find("Building/Building/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
+        visibleObject.transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        visibleObject.transform.Find("Building/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
     protected override void UpdateUnit(Unit unit)

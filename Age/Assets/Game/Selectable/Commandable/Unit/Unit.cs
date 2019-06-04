@@ -26,7 +26,6 @@ public class Unit : Commandable
         atts = GetComponent<Attributes>();
         aiUnetPath = GetComponent<AIUnetPath>();
         movementController = GetComponent<MovementController>();
-        visibleObject = transform.Find("Unit").gameObject;
     }
 
     public override void Init()
@@ -35,7 +34,7 @@ public class Unit : Commandable
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
         GameState.Instance.Units.Add(this);
-        transform.Find("Unit/Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
+        visibleObject.transform.Find("Capsule").GetComponent<MeshRenderer>().material.color = owner.color;
         healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
         SetVisibility(false);
     }

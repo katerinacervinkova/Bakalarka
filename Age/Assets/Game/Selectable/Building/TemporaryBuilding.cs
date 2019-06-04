@@ -30,11 +30,10 @@ public class TemporaryBuilding : Selectable
     public override void Init()
     {
         base.Init();
-        visibleObject = transform.Find("Building").gameObject;
         minimapColor = owner.color;
         minimapIcon.color = minimapColor;
         GameState.Instance.TemporaryBuildings.Add(this);
-        transform.Find("Building/Image").GetComponent<SpriteRenderer>().color = owner.color;
+        visibleObject.transform.Find("Image").GetComponent<SpriteRenderer>().color = owner.color;
         coll = GetComponent<Collider>();
         healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
         gameObject.SetActive(false);
@@ -54,9 +53,9 @@ public class TemporaryBuilding : Selectable
     {
         transform.position = position;
         GetComponent<Collider>().enabled = true;
-        transform.Find("Building/Building").gameObject.SetActive(false);
-        transform.Find("Building/Fence").gameObject.SetActive(true);
-        transform.Find("Building/Image").gameObject.SetActive(true);
+        visibleObject.transform.Find("Building").gameObject.SetActive(false);
+        visibleObject.transform.Find("Fence").gameObject.SetActive(true);
+        visibleObject.transform.Find("Image").gameObject.SetActive(true);
         gameObject.SetActive(true);
     }
 

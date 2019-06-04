@@ -15,15 +15,6 @@ public abstract class Resource : Selectable {
     protected abstract float MaxCapacity { get; }
     public abstract bool Gather(float gathering, Player player);
 
-    protected void Start()
-    {
-        visibleObject = transform.Find("Resource").gameObject;
-        capacity = MaxCapacity;
-        visibleObject.SetActive(false);
-        SetVisibility(false);
-        started = true;
-    }
-
     public override void OnStartClient()
     {
         Init();
@@ -33,6 +24,10 @@ public abstract class Resource : Selectable {
     public override void Init()
     {
         base.Init();
+        capacity = MaxCapacity;
+        visibleObject.SetActive(false);
+        SetVisibility(false);
+        started = true;
         healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
         minimapColor = minimapIcon.color;
     }

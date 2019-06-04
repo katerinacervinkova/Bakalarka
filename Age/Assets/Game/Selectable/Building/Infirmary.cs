@@ -11,9 +11,8 @@ public class Infirmary : Building
 
     protected override void ChangeColor()
     {
-        transform.Find("Building/Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
+        visibleObject.transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
-
     protected override void UpdateUnit(Unit unit)
     {
         owner.ChangeHealth(unit, unit.Health + 0.1f);
