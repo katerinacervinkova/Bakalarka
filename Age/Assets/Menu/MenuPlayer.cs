@@ -10,9 +10,12 @@ public class MenuPlayer : NetworkBehaviour {
     private Color color;
     private int colorIndex;
 
-    PlayerRow playerRow;
-    MenuPlayerList playerList;
+    private PlayerRow playerRow;
+    private MenuPlayerList playerList;
+    private CustomLobbyManager lobbyManager;
 
+    [SerializeField]
+    private bool isHuman;
     [SerializeField]
     private PlayerRow playerRowPrefab;
     [SerializeField]
@@ -22,17 +25,21 @@ public class MenuPlayer : NetworkBehaviour {
     {
         base.OnStartClient();
         DontDestroyOnLoad(gameObject);
-        playerList = GameObject.Find("Canvas/MenuWindow/PlayersList/PlayersArea").GetComponent<MenuPlayerList>();
+        lobbyManager = FindObjectOfType<CustomLobbyManager>();
+        playerList = FindObjectOfType<MenuPlayerList>();
+        SceneManager.activeSceneChanged += SceneChanged;
         playerRow = Instantiate(playerRowPrefab, playerList.transform);
         playerRow.player = this;
-        SceneManager.activeSceneChanged += SceneChanged;
     }
 
     public override void OnStartAuthority()
     {
         playerRow.SetInteractivity();
+        var manager = FindObjectOfType<MenuManager>();
+        if (isHuman)
+            manager.player = this;
         if (isServer)
-            FindObjectOfType<MenuManager>().SetInteractivity();
+            manager.SetInteractivity();
         CmdSetColor();
     }
 
@@ -52,6 +59,16 @@ public class MenuPlayer : NetworkBehaviour {
         NetworkServer.Destroy(gameObject);
     }
 
+    public void AddPlayer(out bool maxPlayers)
+    {
+        ClientScene.AddPlayer((short)connectionToServer.playerControllers.Count);
+        maxPlayers = lobbyManager.maxPlayers <= lobbyManager.playerCount;
+    }
+
+    public void RemovePlayer()
+    {
+        ClientScene.RemovePlayer(playerControllerId);
+    }
 
     public void ChangeColor()
     {
@@ -98,5 +115,9 @@ public class MenuPlayer : NetworkBehaviour {
     private void OnDestroy()
     {
         SceneManager.activeSceneChanged -= SceneChanged;
+        if (playerRow != null)
+            Destroy(playerRow.gameObject);
+        if (playerList != null)
+            playerList.RemoveColor(color);
     }
 }

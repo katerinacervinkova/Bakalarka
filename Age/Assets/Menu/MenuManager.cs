@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class MenuManager : NetworkBehaviour {
+public class MenuManager : MonoBehaviour {
+
+    public MenuPlayer player;
 
     public void SetInteractivity()
     {
@@ -15,5 +15,13 @@ public class MenuManager : NetworkBehaviour {
     public void OnClickPlay()
     {
         GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>().ServerChangeScene("Game");
+    }
+
+    public void OnClickAddPlayer()
+    {
+        bool maxPlayers;
+        player.AddPlayer(out maxPlayers);
+        if (maxPlayers)
+            transform.Find("AddPlayerButton").GetComponent<Button>().interactable = false;
     }
 }

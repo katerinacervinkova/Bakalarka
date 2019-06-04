@@ -9,6 +9,8 @@ public class PlayerRow : MonoBehaviour {
     private Image colorImage;
     [SerializeField]
     private InputField playerName;
+    [SerializeField]
+    private Button removeButton;
 
 
     public void SetColor(Color color)
@@ -31,9 +33,16 @@ public class PlayerRow : MonoBehaviour {
         player.ChangeName(playerName.text);
     }
 
+    public void OnRemoveButtonClick()
+    {
+        player.RemovePlayer();
+    }
+
     public void SetInteractivity()
     {
         playerName.readOnly = false;
         colorImage.GetComponent<Button>().interactable = true;
+        if (removeButton != null)
+            removeButton.interactable = true;
     }
 }

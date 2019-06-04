@@ -451,6 +451,9 @@ MonoBehaviour:
   - {fileID: 1631603489596718, guid: a1dbc13f32efbd84095ac2f2388caaa7, type: 2}
   - {fileID: 1426281011015948, guid: 1220e6964f01af646b3ab36acdf54e52, type: 2}
   - {fileID: 1771390634385888, guid: 26f0fabd8587b24429bf97812e11530b, type: 2}
+  - {fileID: 1911189681265574, guid: b246fdde154633043933b1a74a8b1b14, type: 2}
+  - {fileID: 1093172153997856, guid: 334456ac0e70088439c6338742cfa612, type: 2}
+  - {fileID: 1848175461473890, guid: 9e5c6bc1ec544db41b8e5dc5007ba13b, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -507,7 +510,7 @@ MonoBehaviour:
   isNetworkActive: 0
   matchMaker: {fileID: 0}
   m_ShowLobbyGUI: 0
-  m_MaxPlayers: 4
+  m_MaxPlayers: 6
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 1
   m_LobbyPlayerPrefab: {fileID: 11487034, guid: ad727d7e1462ecc4f83c898ecc501997,
@@ -530,6 +533,16 @@ MonoBehaviour:
   _playerNumber: 0
   _isMatchmaking: 0
   nextButton: {fileID: 1094683778}
+  AIplayerPrefab: {fileID: 1911189681265574, guid: b246fdde154633043933b1a74a8b1b14,
+    type: 2}
+  playerPositions:
+  - {x: 120, y: 0.1, z: -120}
+  - {x: -120, y: 0.1, z: 120}
+  - {x: 160, y: 0.1, z: 30}
+  - {x: -160, y: 0.1, z: -30}
+  - {x: 30, y: 0.1, z: 160}
+  - {x: -30, y: 0.1, z: -160}
+  playerCount: 0
 --- !u!1 &381749672
 GameObject:
   m_ObjectHideFlags: 0

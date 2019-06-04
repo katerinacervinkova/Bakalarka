@@ -4,6 +4,9 @@ using UnityEngine.Networking;
 
 public class Player : NetworkBehaviour
 {
+    [SerializeField]
+    public bool isHuman;
+
     [SyncVar]
     public string Name;
     [SyncVar]
@@ -13,7 +16,8 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        Camera.main.transform.parent.position = transform.position;
+        if (isHuman)
+            Camera.main.transform.parent.position = transform.position;
         if (PlayerState.Instance != null)
         {
             PlayerState.Instance.player = this;

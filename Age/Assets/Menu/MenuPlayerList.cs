@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuPlayerList : MonoBehaviour {
 
     private Dictionary <Color, bool> ColorsAvailable = new Dictionary<Color, bool>();
-    private Color[] Colors = new Color[] { Color.red, Color.yellow, Color.green, Color.blue, Color.cyan, Color.magenta};
+    private Color[] Colors = new Color[] { Color.red, Color.yellow, Color.green, Color.blue, Color.cyan, Color.magenta, Color.black};
 
     public Color GetColor(out int index)
     {
@@ -34,5 +35,10 @@ public class MenuPlayerList : MonoBehaviour {
         }
         ColorsAvailable[Colors[index]] = false;
         return Colors[index];
+    }
+
+    public void RemoveColor(Color color)
+    {
+        ColorsAvailable[color] = true;
     }
 }
