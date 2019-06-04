@@ -26,6 +26,11 @@ public class PlayerRow : MonoBehaviour {
         player.ChangeColor();
     }
 
+    public void OnNameChange(string Name)
+    {
+        player.ChangeName(playerName.text);
+    }
+
     public void SetInteractivity()
     {
         playerName.readOnly = false;

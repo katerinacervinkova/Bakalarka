@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
@@ -60,6 +59,12 @@ public class MenuPlayer : NetworkBehaviour {
             CmdChangeColor();
     }
 
+    public void ChangeName(string Name)
+    {
+        if (hasAuthority)
+            CmdChangeName(Name);
+    }
+
     private void OnColorChange(Color newColor)
     {
         color = newColor;
@@ -69,7 +74,7 @@ public class MenuPlayer : NetworkBehaviour {
     private void OnNameChange(string newName)
     {
         Name = newName;
-        playerRow?.SetName(name);
+        playerRow?.SetName(Name);
     }
 
     [Command]
@@ -82,6 +87,12 @@ public class MenuPlayer : NetworkBehaviour {
     private void CmdChangeColor()
     {
         color = playerList.GetNextColor(ref colorIndex);
+    }
+
+    [Command]
+    private void CmdChangeName(string Name)
+    {
+        this.Name = Name;
     }
 
     private void OnDestroy()
