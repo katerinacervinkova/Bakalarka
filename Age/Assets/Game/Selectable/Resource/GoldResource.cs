@@ -13,7 +13,7 @@ public class GoldResource : Resource
         bool completed = capacity - gathering <= 0;
         float amount = Math.Min(gathering, capacity);
         player.Gather(amount, this);
-        PlayerState.Instance.Gold += amount;
+        PlayerState.Get(playerId).Gold += amount;
         return completed;
     }
 

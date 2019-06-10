@@ -35,10 +35,10 @@ public abstract class Resource : Selectable {
     private void OnCapacityChange(float newCapacity)
     {
         capacity = newCapacity;
-        if (PlayerState.Instance != null)
+        if (PlayerState.Get() != null)
         {
-            PlayerState.Instance?.OnStateChange(this);
-            if (initialized && PlayerState.Instance?.SelectedObject != this)
+            PlayerState.Get()?.OnStateChange(this);
+            if (initialized && PlayerState.Get()?.SelectedObject != this)
                 healthBar.HideAfter();
         }
     }
@@ -63,6 +63,6 @@ public abstract class Resource : Selectable {
     {
         base.OnDestroy();
         GameState.Instance?.Resources.Remove(this);
-        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
+        GameState.Instance?.RemoveFromSquare(SquareID, this);
     }
 }

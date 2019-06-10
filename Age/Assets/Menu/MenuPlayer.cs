@@ -49,16 +49,6 @@ public class MenuPlayer : NetworkBehaviour {
             CmdOnSceneChanged();
     }
 
-    [Command]
-    private void CmdOnSceneChanged()
-    {
-        Player player = Instantiate(playerPrefab, transform.position, transform.rotation);
-        player.Name = Name;
-        player.color = color;
-        NetworkServer.ReplacePlayerForConnection(connectionToClient, player.gameObject, 0);
-        NetworkServer.Destroy(gameObject);
-    }
-
     public void AddPlayer(out bool maxPlayers)
     {
         ClientScene.AddPlayer((short)connectionToServer.playerControllers.Count);
@@ -98,6 +88,17 @@ public class MenuPlayer : NetworkBehaviour {
     private void CmdSetColor()
     {
         color = playerList.GetColor(out colorIndex);
+    }
+
+    [Command]
+    private void CmdOnSceneChanged()
+    {
+        Player player = Instantiate(playerPrefab, transform.position, transform.rotation);
+        player.IsHuman = isHuman;
+        player.Name = Name;
+        player.color = color;
+        NetworkServer.ReplacePlayerForConnection(connectionToClient, player.gameObject, playerControllerId);
+        NetworkServer.Destroy(gameObject);
     }
 
     [Command]

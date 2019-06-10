@@ -2,12 +2,13 @@
 
 public class JobBuild : Job {
 
+    private readonly int playerId;
     private readonly TemporaryBuilding building;
     private readonly Vector3 buildingPos;
     private readonly Collider buildingCollider;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
-    public JobBuild(TemporaryBuilding building)
+    public JobBuild(TemporaryBuilding building, int playerId)
     {
         this.building = building;
         buildingPos = building.transform.position;
@@ -18,7 +19,7 @@ public class JobBuild : Job {
     {
         get
         {
-            TemporaryBuilding tempBuilding = PlayerState.Instance.GetNearestTempBuilding(building, buildingPos, 20);
+            TemporaryBuilding tempBuilding = PlayerState.Get(playerId).GetNearestTempBuilding(building, buildingPos, 20);
             if (tempBuilding == null)
                 return null;
             return new JobGo(tempBuilding.FrontPosition, tempBuilding.GetOwnJob(null));

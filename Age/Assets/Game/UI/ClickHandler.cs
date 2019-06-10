@@ -8,8 +8,6 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private CameraMovement cameraMovement;
     [SerializeField]
-    private PlayerState playerState;
-    [SerializeField]
     private Camera minimapCamera;
     [SerializeField]
     private RectTransform minimapButton;
@@ -29,7 +27,7 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
         Vector3 position = mapRatio * (rotationMatrix * translatedPosition);
         position = new Vector3(position.x, 0, position.y);
         if (eventData.button == PointerEventData.InputButton.Right)
-            playerState.MinimapMove(position);
+            PlayerState.Get().MinimapMove(position);
         else if (eventData.button == PointerEventData.InputButton.Left)
             cameraMovement.MinimapMove(position);
     }

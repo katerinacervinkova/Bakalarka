@@ -23,8 +23,8 @@ public class TemporaryBuilding : Selectable
         base.OnStartAuthority();
         gameObject.SetActive(true);
         SetVisibility(true);
-        PlayerState.Instance.SetTempBuilding(this);
-        PlayerState.Instance.temporaryBuildings.Add(this);
+        PlayerState.Get(playerId).SetTempBuilding(this);
+        PlayerState.Get(playerId).temporaryBuildings.Add(this);
     }
 
     public override void Init()
@@ -43,9 +43,11 @@ public class TemporaryBuilding : Selectable
 
     private void OnProgressChange(float newProgress)
     {
+        if (!owner.IsHuman)
+            return;
         progress = newProgress;
-        PlayerState.Instance?.OnStateChange(this);
-        if (initialized && PlayerState.Instance?.SelectedObject != this && healthBar != null)
+        PlayerState.Get(playerId)?.OnStateChange(this);
+        if (initialized && PlayerState.Get(playerId)?.SelectedObject != this && healthBar != null)
             healthBar.HideAfter();
     }
 
@@ -93,7 +95,7 @@ public class TemporaryBuilding : Selectable
     public override Job GetOwnJob(Commandable worker)
     {
         if (buildJob == null)
-            buildJob = new JobBuild(this);
+            buildJob = new JobBuild(this, playerId);
         return buildJob;
     }
 
@@ -113,9 +115,8 @@ public class TemporaryBuilding : Selectable
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        PlayerState.Instance?.temporaryBuildings.Remove(this);
-        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
+        PlayerState.Get(playerId)?.temporaryBuildings.Remove(this);
+        GameState.Instance?.RemoveFromSquare(SquareID, this);
         GameState.Instance?.TemporaryBuildings.Remove(this);
-        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
     }
 }

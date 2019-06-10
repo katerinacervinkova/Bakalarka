@@ -25,7 +25,7 @@ public class PurchaseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnClick()
     {
-        purchase.Do(PlayerState.Instance.SelectedObject);
+        purchase.Do(PlayerState.Get().SelectedObject);
     }
 
     public void SetPurchase(Purchase purchase)

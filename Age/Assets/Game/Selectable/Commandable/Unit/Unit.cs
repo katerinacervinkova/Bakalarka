@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 
 public class Unit : Commandable
 {
@@ -12,6 +11,9 @@ public class Unit : Commandable
     public Regiment Reg { get; set; }
     private Attributes atts;
 
+    public float GetAttribute(AttEnum attEnum) => atts.Get(attEnum);
+    public void SetAttribute(AttEnum attEnum, float value) => atts.Set(attEnum, value);
+
     public float Gathering { get { return atts.Get(AttEnum.Gathering); } set { atts.Set(AttEnum.Gathering, value); } }
     public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
     public float Swordsmanship { get { return atts.Get(AttEnum.Swordsmanship); } set { atts.Set(AttEnum.Swordsmanship, value); } }
@@ -21,6 +23,7 @@ public class Unit : Commandable
 
     private Job Job { get; set; }
 
+    public bool HasJob => Job != null;
     protected void Awake()
     {
         atts = GetComponent<Attributes>();
@@ -42,7 +45,7 @@ public class Unit : Commandable
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        PlayerState.Instance.units.Add(this);
+        PlayerState.Get(playerId).units.Add(this);
         SetVisibility(true);
     }
 
@@ -75,6 +78,14 @@ public class Unit : Commandable
             HideTarget();
     }
 
+    public void ExitBuilding(Vector3 position)
+    {
+        transform.position = position;
+        SetVisibility(true);
+        gameObject.SetActive(true);
+    }
+
+
     protected override void ShowAllButtons()
     {
         base.ShowAllButtons();
@@ -85,11 +96,6 @@ public class Unit : Commandable
     {
         base.HideAllButtons();
         UIManager.Instance.HideDestroyButton();
-    }
-
-    public void SetAttribute(AttEnum attEnum, float value)
-    {
-        atts.Set(attEnum, value);
     }
 
     protected virtual void JobUpdate()
@@ -104,7 +110,7 @@ public class Unit : Commandable
     
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
-        if (!hasAuthority)
+        if (!hasAuthority || !owner.IsHuman)
             return;
         SetJob(new JobGo(hitPoint));
     }
@@ -116,8 +122,11 @@ public class Unit : Commandable
 
     public override void SetGoal(Selectable goal)
     {
-        Job following = goal.CreateJob(this);
-        SetJob(new JobGo(goal.FrontPosition, following));
+        if (hasAuthority && owner.IsHuman)
+        {
+            Job following = goal.CreateJob(this);
+            SetJob(new JobGo(goal.FrontPosition, following));
+        }
     }
 
     public void SetJob(Job job)
@@ -147,22 +156,22 @@ public class Unit : Commandable
 
     protected override void InitPurchases()
     {
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.House));
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Barracks));
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Mill));
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.MainBuilding));
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Infirmary));
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Library));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.House));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Barracks));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Mill));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.MainBuilding));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Infirmary));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Library));
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         Reg?.Remove(this);
-        if (hasAuthority && PlayerState.Instance != null)
+        if (hasAuthority && PlayerState.Get(playerId) != null)
         {
-            PlayerState.Instance.units.Remove(this);
-            PlayerState.Instance.Population--;
+            PlayerState.Get(playerId).units.Remove(this);
+            PlayerState.Get(playerId).Population--;
         }
     }
 

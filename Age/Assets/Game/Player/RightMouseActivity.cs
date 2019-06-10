@@ -4,7 +4,7 @@ public class RightMouseActivity : MouseActivity {
 	
 	void Update ()
     {
-        if (PlayerState.Instance == null || BuildingWindowShown)
+        if (PlayerState.Get() == null || BuildingWindowShown)
             return;
         if (Input.GetMouseButtonDown(1))
             RightMouseClick();
@@ -16,12 +16,12 @@ public class RightMouseActivity : MouseActivity {
             return;
         GameObject hitObject = FindHitObject();
         Vector3 hitPoint = FindHitPoint();
-        if (!hitObject || !PlayerState.Instance.SelectedObject)
+        if (!hitObject || !PlayerState.Get().SelectedObject)
             return;
         Selectable objectOfInterest = hitObject.GetComponent<Selectable>();
         if (hitObject.name == "Map")
-            PlayerState.Instance.SelectedObject.RightMouseClickGround(hitPoint);
+            PlayerState.Get().SelectedObject.RightMouseClickGround(hitPoint);
         else if (objectOfInterest != null)
-            PlayerState.Instance.SelectedObject.RightMouseClickObject(hitObject.GetComponent<Selectable>());
+            PlayerState.Get().SelectedObject.RightMouseClickObject(hitObject.GetComponent<Selectable>());
     }
 }

@@ -13,7 +13,7 @@ public class FoodResource : Resource
         bool completed = capacity - gathering <= 0;
         float amount = Math.Min(gathering, capacity);
         player.Gather(amount, this);
-        PlayerState.Instance.Food += amount;
+        PlayerState.Get(player.playerControllerId).Food += amount;
         return completed;
     }
 

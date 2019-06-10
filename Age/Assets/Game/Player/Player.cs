@@ -4,8 +4,8 @@ using UnityEngine.Networking;
 
 public class Player : NetworkBehaviour
 {
-    [SerializeField]
-    public bool isHuman;
+    [SyncVar]
+    public bool IsHuman = true;
 
     [SyncVar]
     public string Name;
@@ -13,16 +13,40 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public Factory factory;
+    public VictoryCondition victoryCondition;
+
+    public GameObject winningText;
+    public GameObject losingText;
+
+    private bool initialized = false;
 
     public override void OnStartLocalPlayer()
     {
-        if (isHuman)
+        if (IsHuman)
             Camera.main.transform.parent.position = transform.position;
-        if (PlayerState.Instance != null)
-        {
-            PlayerState.Instance.player = this;
-            PlayerState.Instance.OnPlayerStateChange();
-        }
+        PlayerState.Set(playerControllerId, factory.CreatePlayerState());
+        PlayerState.Get(playerControllerId).playerPurchases = factory.CreatePlayerPurchases();
+    }
+
+    private void Update()
+    {
+        if (hasAuthority && initialized && victoryCondition != null)
+            if (victoryCondition.PlayerMeetsLosingConditions(this))
+                Lose();
+    }
+
+    public void Lose()
+    {
+        victoryCondition.CmdRemove(netId);
+        if (IsHuman)
+            losingText.SetActive(true);
+    }
+
+    public void Win()
+    {
+        victoryCondition.CmdRemove(netId);
+        if (IsHuman)
+            winningText.SetActive(true);
     }
 
     public void ExitBuilding(Unit unit, Building building)
@@ -37,8 +61,10 @@ public class Player : NetworkBehaviour
             return false;
         if (connectionToClient == null || connectionToClient.isReady)
         {
+            GameState.Instance.SetVisibilitySquares(playerControllerId, factory.CreateVisibilitySquares());
             CmdCreateUnit(transform.position, transform.position);
-            PlayerState.Instance.Population = 1;
+            PlayerState.Get(playerControllerId).Population = 1;
+            initialized = true;
             return true;
         }
         return false;

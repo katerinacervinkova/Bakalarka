@@ -20,7 +20,7 @@ public abstract class Commandable : Selectable {
 
     protected void ShowTarget()
     {
-        if (PlayerState.Instance.SelectedObject == this)
+        if (owner.IsHuman && PlayerState.Get(playerId).SelectedObject == this)
         {
             UIManager.Instance.ShowTarget(destination);
             causedShowingTarget = true;

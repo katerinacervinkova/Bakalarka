@@ -7,6 +7,10 @@ public class FirstUnitCreator : MonoBehaviour {
 	void Update ()
     {
         if (!player.hasAuthority || player.Init())
+        {
+            if (player.IsHuman)
+                Destroy(GameObject.Find("Loading Screen Canvas"));
             Destroy(this);
+        }
 	}
 }

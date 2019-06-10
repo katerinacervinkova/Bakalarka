@@ -9,6 +9,8 @@ public class Factory : MonoBehaviour
 
     public Player player;
     [SerializeField]
+    private PlayerState playerStatePrefab;
+    [SerializeField]
     private PlayerPurchases playerPurchasesPrefab;
     [SerializeField]
     private TemporaryBuilding mainBuildingPrefab;
@@ -26,7 +28,11 @@ public class Factory : MonoBehaviour
     private Regiment regimentPrefab;
     [SerializeField]
     private Unit unitPrefab;
-   
+    [SerializeField]
+    private VisibilitySquares humanVisibilitySquaresPrefab;
+    [SerializeField]
+    private VisibilitySquares aiVisibilitySquaresPrefab;
+
     public Regiment CreateRegiment(Player owner, List<Unit> units)
     {
         Regiment regiment = Instantiate(regimentPrefab);
@@ -39,10 +45,19 @@ public class Factory : MonoBehaviour
     public Unit CreateUnit(Vector3 spawnPoint, NetworkInstanceId playerId)
     {
         Unit unit = Instantiate(unitPrefab, spawnPoint, Quaternion.identity);
-        unit.playerID = playerId;
+        unit.playerNetId = playerId;
         SetRandomParameters(unit);
         unit.gameObject.SetActive(true);
         return unit;
+    }
+
+    public PlayerState CreatePlayerState()
+    {
+        var playerState = Instantiate(playerStatePrefab);
+        playerState.player = player;
+        playerState.OnPlayerStateChange();
+        return playerState;
+        
     }
 
     public PlayerPurchases CreatePlayerPurchases()
@@ -50,6 +65,17 @@ public class Factory : MonoBehaviour
         PlayerPurchases playerPurchases = Instantiate(playerPurchasesPrefab);
         playerPurchases.player = player;
         return playerPurchases;
+
+    }
+
+    public VisibilitySquares CreateVisibilitySquares()
+    {
+        VisibilitySquares visibilitySquares;
+        if (player.IsHuman)
+            visibilitySquares = Instantiate(humanVisibilitySquaresPrefab);
+        else
+            visibilitySquares = Instantiate(aiVisibilitySquaresPrefab);
+        return visibilitySquares;
 
     }
 
@@ -80,7 +106,7 @@ public class Factory : MonoBehaviour
                 building = null;
                 break;
         }
-        building.playerID = playerId;
+        building.playerNetId = playerId;
         return building;
     }
 

@@ -18,7 +18,7 @@ public class MainBuilding : Building {
 
     protected override void InitPurchases()
     {
-        Purchases.Add(PlayerState.Instance.playerPurchases.Get(PurchasesEnum.Unit));
+        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Unit));
     }
 
     protected override void UpdateUnit(Unit unit) { }

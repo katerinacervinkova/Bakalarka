@@ -7,8 +7,10 @@ public abstract class Selectable : NetworkBehaviour {
 
     public abstract string Name { get; }
 
+    public int playerId;
+
     [SyncVar]
-    public NetworkInstanceId playerID;
+    public NetworkInstanceId playerNetId;
     public Player owner;
 
     [SyncVar(hook = "OnHealthChange")]
@@ -41,7 +43,8 @@ public abstract class Selectable : NetworkBehaviour {
 
     public override void OnStartClient()
     {
-        owner = ClientScene.objects[playerID].GetComponent<Player>();
+        owner = ClientScene.objects[playerNetId].GetComponent<Player>();
+        playerId = owner.playerControllerId;
         Init();
         initialized = true;
     }
@@ -65,7 +68,7 @@ public abstract class Selectable : NetworkBehaviour {
     public virtual void SetSelection(bool selected)
     {
         SetVisualSelection(selected);
-        if (hasAuthority && UIManager.Instance != null)
+        if ((owner == null || owner.IsHuman) && hasAuthority && UIManager.Instance != null)
         {
             if (selected)
                 ShowAllButtons();
@@ -139,12 +142,14 @@ public abstract class Selectable : NetworkBehaviour {
     
     protected virtual void OnHealthChange(float value)
     {
+        if (owner == null)
+            return;
         Health = value;
-        if (PlayerState.Instance != null)
+        if (PlayerState.Get() != null)
         {
-            if (initialized && PlayerState.Instance.SelectedObject != this)
+            if (initialized && PlayerState.Get().SelectedObject != this)
                 healthBar.HideAfter();
-            PlayerState.Instance.OnStateChange(this);
+            PlayerState.Get().OnStateChange(this);
         }
     }
 
@@ -156,7 +161,7 @@ public abstract class Selectable : NetworkBehaviour {
             GetEnemyJob().Completed = true;
         if (GetOwnJob() != null)
             GetOwnJob().Completed = true;
-        if (PlayerState.Instance != null && PlayerState.Instance.SelectedObject == this)
-            PlayerState.Instance.Deselect();
+        if (PlayerState.Get(playerId) != null && PlayerState.Get(playerId).SelectedObject == this)
+            PlayerState.Get(playerId).Deselect();
     }
 }

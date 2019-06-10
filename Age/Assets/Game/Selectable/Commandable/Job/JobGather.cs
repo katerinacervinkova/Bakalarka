@@ -10,7 +10,7 @@ public class JobGather<T> : Job where T : Resource {
     {
         get
         {
-            T res = GameState.Instance.GetNearestResource(resource, squareID);
+            T res = GameState.Instance.GetClosestResource(squareID, resource);
             if (res == null)
                 return null;
             return new JobGo(res.FrontPosition, res.GetOwnJob(null));

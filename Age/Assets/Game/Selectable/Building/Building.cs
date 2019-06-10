@@ -57,8 +57,8 @@ public abstract class Building : Selectable {
         if (hasAuthority)
         {
             SetVisibility(true);
-            PlayerState.Instance.buildings.Add(this);
-            PlayerState.Instance.MaxPopulation += MaxPopulationIncrease;
+            PlayerState.Get(playerId).buildings.Add(this);
+            PlayerState.Get(playerId).MaxPopulation += MaxPopulationIncrease;
             InitPurchases();
         }
         ChangeColor();
@@ -98,14 +98,14 @@ public abstract class Building : Selectable {
     {
         if (unitsInside.Remove(unit))
             owner.ExitBuilding(unit, this);
-        PlayerState.Instance.OnStateChange(this);
+        PlayerState.Get(playerId).OnStateChange(this);
     }
 
     public void Exit()
     {
         unitsInside.ForEach(u => owner.ExitBuilding(u, this));
         unitsInside.Clear();
-        PlayerState.Instance.OnStateChange(this);
+        PlayerState.Get(playerId).OnStateChange(this);
     }
 
     public virtual void ShowUnitsWindow()
@@ -135,7 +135,7 @@ public abstract class Building : Selectable {
             FinishTransaction();
         else
             transactions.RemoveAt(index);
-        PlayerState.Instance.OnTransactionLoading(this);
+        PlayerState.Get(playerId).OnTransactionLoading(this);
     }
 
     private IEnumerator LoadTransaction()
@@ -144,7 +144,7 @@ public abstract class Building : Selectable {
         {
             if (activeTransaction.Load(Time.deltaTime))
                 FinishTransaction();
-            PlayerState.Instance.OnTransactionLoading(this);
+            PlayerState.Get(playerId).OnTransactionLoading(this);
             yield return null;
         }
     }
@@ -168,6 +168,8 @@ public abstract class Building : Selectable {
 
     public override void RightMouseClickGround(Vector3 hitPoint)
     {
+        if (!hasAuthority || !owner.IsHuman)
+            return;
         DefaultDestination = hitPoint;
         UIManager.Instance.ShowTarget(DefaultDestination);
     }
@@ -192,15 +194,14 @@ public abstract class Building : Selectable {
         base.OnDestroy();
         if (hasAuthority)
         {
-            if (PlayerState.Instance != null)
+            if (PlayerState.Get(playerId) != null)
             {
-                PlayerState.Instance.buildings.Remove(this);
-                PlayerState.Instance.MaxPopulation -= MaxPopulationIncrease;
+                PlayerState.Get(playerId).buildings.Remove(this);
+                PlayerState.Get(playerId).MaxPopulation -= MaxPopulationIncrease;
             }
             unitsInside.ForEach(u => owner.ExitBuilding(u, this));
         }
-        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
+        GameState.Instance?.RemoveFromSquare(SquareID, this);
         GameState.Instance?.Buildings.Remove(this);
-        GameState.Instance?.VisibilitySquares.RemoveFromSquare(SquareID, this);
     }
 }

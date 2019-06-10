@@ -14,21 +14,21 @@ public class LeftMouseActivity : MouseActivity {
 
     private void Update ()
     {
-        if (PlayerState.Instance == null || BuildingWindowShown)
+        if (PlayerState.Get() == null || BuildingWindowShown)
         {
             selectionSquare.gameObject.SetActive(false);
             return;
         }
-        if (PlayerState.Instance.BuildingToBuild != null)
+        if (PlayerState.Get().BuildingToBuild != null)
         {
             if (Input.GetKeyDown("r"))
             {
-                PlayerState.Instance.ResetBuildingToBuild();
+                PlayerState.Get().ResetBuildingToBuild();
                 return;
             }
             Vector3 hitPoint = FindHitPoint();
             hitPoint.y = 0;
-            PlayerState.Instance.MoveBuildingToBuild(hitPoint);
+            PlayerState.Get().MoveBuildingToBuild(hitPoint);
         }
 
         if (!isClicking && !MouseInBounds())
@@ -69,23 +69,23 @@ public class LeftMouseActivity : MouseActivity {
     {
         if (inputOptions.MouseOverUI)
             return;
-        if (PlayerState.Instance.SelectedObject && PlayerState.Instance.BuildingToBuild == null)
-            PlayerState.Instance.Deselect();
-        if (PlayerState.Instance.BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
+        if (PlayerState.Get().SelectedObject && PlayerState.Get().BuildingToBuild == null)
+            PlayerState.Get().Deselect();
+        if (PlayerState.Get().BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
         {
-            PlayerState.Instance.PlaceBuilding();
+            PlayerState.Get().PlaceBuilding();
             return;
         }
         if (!hitObject || hitPoint == gameWindow.InvalidPosition)
             return;
         if (hitObject.name == "Map")
-            PlayerState.Instance.SelectedObject = null;
+            PlayerState.Get().Deselect();
         else
         {
             Selectable selectedObject = hitObject.transform.GetComponent<Selectable>();
             if (!selectedObject)
                 return;
-            PlayerState.Instance.Select(selectedObject);
+            PlayerState.Get().Select(selectedObject);
         }
     }
     private void LeftMouseDrag()
@@ -96,7 +96,7 @@ public class LeftMouseActivity : MouseActivity {
         Vector3 topLeft, bottomRight;
         RectangleCoordinates(out topLeft, out bottomRight);
 
-        PlayerState.Instance.Select(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform) && unit.isActiveAndEnabled);
+        PlayerState.Get().Select(unit => IsWithinRectangle(topLeft, bottomRight, unit.transform) && unit.isActiveAndEnabled);
     }
 
     private void DrawRectangle()

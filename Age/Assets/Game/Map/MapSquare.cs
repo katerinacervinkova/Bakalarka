@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MapSquare : MonoBehaviour {
 
+    public int playerId;
+
     public bool activated = false;
     public bool wasActive = false;
 
@@ -32,7 +34,7 @@ public class MapSquare : MonoBehaviour {
 
     public void Add(Unit unit)
     {
-        if (unit.hasAuthority)
+        if (unit.hasAuthority && unit.playerId == playerId)
             FriendlyUnits.Add(unit);
         else
             EnemyUnits.Add(unit);
@@ -40,7 +42,7 @@ public class MapSquare : MonoBehaviour {
 
     public void Add(Building building)
     {
-        if (building.hasAuthority)
+        if (building.hasAuthority && building.playerId == playerId)
             FriendlyBuildings.Add(building);
         else
             EnemyBuildings.Add(building);
@@ -48,7 +50,7 @@ public class MapSquare : MonoBehaviour {
 
     public void Add(TemporaryBuilding building)
     {
-        if (building.hasAuthority)
+        if (building.hasAuthority && building.playerId == playerId)
             FriendlyTemporaryBuildings.Add(building);
         else
             EnemyTemporaryBuildings.Add(building);
@@ -126,7 +128,7 @@ public class MapSquare : MonoBehaviour {
 
     public void Remove(Unit unit)
     {
-        if (unit.hasAuthority)
+        if (unit.hasAuthority && unit.playerId == playerId)
             FriendlyUnits.Remove(unit);
         else
             EnemyUnits.Remove(unit);
@@ -134,7 +136,7 @@ public class MapSquare : MonoBehaviour {
 
     public void Remove(TemporaryBuilding building)
     {
-        if (building.hasAuthority)
+        if (building.hasAuthority && building.playerId == playerId)
             FriendlyTemporaryBuildings.Remove(building);
         else
             EnemyTemporaryBuildings.Remove(building);
@@ -142,7 +144,7 @@ public class MapSquare : MonoBehaviour {
 
     public void Remove(Building building)
     {
-        if (building.hasAuthority)
+        if (building.hasAuthority && building.playerId == playerId)
             FriendlyBuildings.Remove(building);
         else
             EnemyBuildings.Remove(building);

@@ -17,7 +17,7 @@ public class Mill : Building
 
     protected override void UpdateUnit(Unit unit)
     {
-        PlayerState.Instance.Food += unit.Gathering / 2;
+        PlayerState.Get(playerId).Food += unit.Gathering / 2;
         owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + 0.05f);
     }
 }

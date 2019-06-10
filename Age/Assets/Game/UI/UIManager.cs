@@ -112,18 +112,23 @@ public class UIManager : MonoBehaviour {
 
     public void OnClickScheduler(int index)
     {
-        ((Building)PlayerState.Instance.SelectedObject).RemoveTransaction(index);
+        ((Building)PlayerState.Get().SelectedObject).RemoveTransaction(index);
     }
 
     public void OnClickBuildingWindow()
     {
-        ((Building)PlayerState.Instance.SelectedObject).ShowUnitsWindow();
+        ((Building)PlayerState.Get().SelectedObject).ShowUnitsWindow();
     }
 
     public void OnClickDestroyButton()
     {
         HideToolTip();
-        PlayerState.Instance.SelectedObject.owner.DestroySelectedObject(PlayerState.Instance.SelectedObject);
+        PlayerState.Get().SelectedObject.owner.DestroySelectedObject(PlayerState.Get().SelectedObject);
+    }
+
+    public void OnClickIdleButton()
+    {
+        PlayerState.Get().SelectIdle();
     }
 
     public void ChangePlayerStateText(string playerName, string description)

@@ -5,16 +5,12 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour {
 
-    private static PlayerState instance;
-    public static PlayerState Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = FindObjectOfType<PlayerState>();
-            return instance;
-        }
-    }
+    private static readonly PlayerState[] instances = new PlayerState[6];
+
+    public static PlayerState[] GetAll() => instances;
+    public static PlayerState Get(int i) => instances[i];
+    public static PlayerState Get() => Get(0);
+    public static void Set(int i, PlayerState value) => instances[i] = value;
 
     public Player player;
     public PlayerPurchases playerPurchases;
@@ -33,10 +29,8 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-
-
-
-    private int population = 5;
+       
+    private int population = 0;
     public int Population
     {
         get { return population; }
@@ -78,14 +72,7 @@ public class PlayerState : MonoBehaviour {
         }
     }
 
-    public void Start()
-    {
-        foreach (var player in FindObjectsOfType<Player>())
-            if (player.hasAuthority)
-                this.player = player;
-    }
-
-    public Selectable SelectedObject { get; set; }
+    public Selectable SelectedObject { get; private set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
 
     public void Select(Selectable selectable)
@@ -95,8 +82,11 @@ public class PlayerState : MonoBehaviour {
         if (SelectedObject != null)
             Deselect();
         SelectedObject = selectable;
-        selectable.SetSelection(true);
-        UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
+        if (player.IsHuman)
+        {
+            selectable.SetSelection(true);
+            UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
+        }
     }
 
     public void Select(Predicate<Unit> predicate)
@@ -112,29 +102,25 @@ public class PlayerState : MonoBehaviour {
 
     public void Deselect()
     {
-        UIManager.Instance?.HideObjectText();
-        SelectedObject.SetSelection(false);
+        if (player.IsHuman)
+        {
+            UIManager.Instance?.HideObjectText();
+            SelectedObject?.SetSelection(false);
+        }
 
         SelectedObject = null;
     }
 
     public void OnTransactionLoading(Building building)
     {
-        if (building == SelectedObject)
+        if (player.IsHuman && building == SelectedObject)
             UIManager.Instance.ShowTransactions(building.transactions);
     }
 
     public void OnPlayerStateChange()
     {
-        if (UIManager.Instance != null && player != null)
+        if (player != null && player.IsHuman && UIManager.Instance != null)
             UIManager.Instance.ChangePlayerStateText(player.Name, GetResourceText());
-    }
-
-    public bool IsWithinSight(Vector3 position)
-    {
-        return units.Any(u => u.IsWithinSight(position)) ||
-            buildings.Any(u => u.IsWithinSight(position)) ||
-            temporaryBuildings.Any(t => t.IsWithinSight(position));
     }
 
     private string GetResourceText()
@@ -152,9 +138,25 @@ public class PlayerState : MonoBehaviour {
             $"{colorStart}Population: {Population}/{MaxPopulation}{colorEnd}";
     }
 
+    public void SelectIdle()
+    {
+        List<Unit> idleUnits = IdleUnits();
+        var rnd = new System.Random();
+        if (idleUnits.Count > 0)
+            Select(idleUnits[rnd.Next(idleUnits.Count)]);
+    }
+
+    public List<Unit> IdleUnits() => units.Where(u => !u.HasJob).ToList();
+
+    public Unit BestUnit(AttEnum attribute) => units.OrderByDescending(u => u.GetAttribute(attribute)).FirstOrDefault();
+    public Unit BestIdleUnit(AttEnum attribute) => IdleUnits().OrderByDescending(u => u.GetAttribute(attribute)).FirstOrDefault();
+
+    public List<Unit> GoodUnits(AttEnum attribute, float bar) => units.Where(u => u.GetAttribute(attribute) > bar).ToList();
+    public List<Unit> GoodIdleUnits(AttEnum attribute, float bar) => IdleUnits().Where(u => u.GetAttribute(attribute) > bar).ToList();
+
     public void OnStateChange(Selectable selectable)
     {
-        if (SelectedObject == selectable)
+        if (player.IsHuman && SelectedObject == selectable)
             UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
     }
 
@@ -168,10 +170,7 @@ public class PlayerState : MonoBehaviour {
         BuildingToBuild.transform.position = hitPoint;
     }
 
-    public void SetTempBuilding(TemporaryBuilding building)
-    {
-        BuildingToBuild = building;
-    }
+    public void SetTempBuilding(TemporaryBuilding building) => BuildingToBuild = building;
 
     public void ResetBuildingToBuild()
     {
@@ -187,11 +186,10 @@ public class PlayerState : MonoBehaviour {
         BuildingToBuild = null;
     }
 
-    public TemporaryBuilding GetNearestTempBuilding(TemporaryBuilding build, Vector3 position, int maxDistance)
-    {
-        return temporaryBuildings.Where(b => b != build && Vector3.Distance(position, b.transform.position) < maxDistance).
-            OrderBy(b => Vector3.Distance(position, b.transform.position)).FirstOrDefault();
-    }
+    public TemporaryBuilding GetNearestTempBuilding(TemporaryBuilding build, Vector3 position, int maxDistance) => 
+        temporaryBuildings.Where(b => b != build && Vector3.Distance(position, b.transform.position) < maxDistance).
+        OrderBy(b => Vector3.Distance(position, b.transform.position)).FirstOrDefault();
+
     public bool Pay(int food, int wood, int gold, int population)
     {
         if (Food < food || Wood < wood || Gold < gold || Population + population > MaxPopulation)
@@ -206,6 +204,7 @@ public class PlayerState : MonoBehaviour {
 
     public void MinimapMove(Vector3 position)
     {
-        SelectedObject?.RightMouseClickGround(position);
+        if (player.IsHuman)
+            SelectedObject?.RightMouseClickGround(position);
     }
 }

@@ -13,7 +13,7 @@ public class WoodResource : Resource
         bool completed = capacity - gathering <= 0;
         float amount = Math.Min(gathering, capacity);
         player.Gather(amount, this);
-        PlayerState.Instance.Wood += amount;
+        PlayerState.Get(playerId).Wood += amount;
         return completed;
     }
 

@@ -11,7 +11,7 @@ public class Regiment : Commandable {
 
     protected virtual void Update()
     {
-        if (PlayerState.Instance.SelectedObject != this || units.Count == 0)
+        if (PlayerState.Get(playerId).SelectedObject != this || units.Count == 0)
         {
             units.ForEach(u => u.Reg = null);
             Destroy(gameObject);

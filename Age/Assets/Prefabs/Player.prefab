@@ -86,9 +86,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 778eb14ebcabbc04d81fa71def3c2519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHuman: 1
   Name: "\u0158eho\u0159"
   color: {r: 1, g: 0.003, b: 0, a: 0}
   factory: {fileID: 114881949609890668}
+  playerState: {fileID: 0}
 --- !u!114 &114881949609890668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -120,6 +122,10 @@ MonoBehaviour:
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
   unitPrefab: {fileID: 114252306648027516, guid: 306508b1a11cf8d47b055b78b3965e0a,
+    type: 2}
+  humanVisibilitySquaresPrefab: {fileID: 114965113050429430, guid: 62e57861fbe0a5e43bbdc122b6395213,
+    type: 2}
+  aiVisibilitySquaresPrefab: {fileID: 114715266601747674, guid: 6086b57e0ab9c254c866e6449121185a,
     type: 2}
 --- !u!114 &114918450667427504
 MonoBehaviour:

@@ -12,6 +12,10 @@ public class PlayerRow : MonoBehaviour {
     [SerializeField]
     private Button removeButton;
 
+    private void Start()
+    {
+        player.ChangeName(playerName.text);
+    }
 
     public void SetColor(Color color)
     {
@@ -30,7 +34,7 @@ public class PlayerRow : MonoBehaviour {
 
     public void OnNameChange(string Name)
     {
-        player.ChangeName(playerName.text);
+        player.ChangeName(Name);
     }
 
     public void OnRemoveButtonClick()
