@@ -12,7 +12,9 @@
     {
         if (!seeEverything)
         {
-            base.Update();
+            foreach (var square in squares.Values)
+                if (square.ContainsFriend)
+                    square.AdjoiningSquares.ForEach(s => s.activated = true);
             foreach (var square in squares.Values)
                 square.UpdateVisibility();
         }

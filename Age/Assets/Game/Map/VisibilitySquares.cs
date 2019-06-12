@@ -50,7 +50,7 @@ public class VisibilitySquares : MonoBehaviour {
     {
         foreach (var square in squares.Values)
             if (square.ContainsFriend)
-                square.Activate();
+                square.AdjoiningSquares.ForEach(s => { s.activated = true; s.uncovered = true; });
     }
 
     public List<Unit> VisibleEnemyUnits()
