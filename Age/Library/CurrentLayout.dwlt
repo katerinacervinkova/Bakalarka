@@ -67,10 +67,10 @@ MonoBehaviour:
     y: 0
     width: 268
     height: 715
-  m_MinSize: {x: 102, y: 221}
-  m_MaxSize: {x: 4002, y: 8021}
+  m_MinSize: {x: 102, y: 242}
+  m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 77
+  controlID: 75
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -159,7 +159,7 @@ MonoBehaviour:
   m_MinSize: {x: 613, y: 492}
   m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 9
+  controlID: 130
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -538,9 +538,9 @@ MonoBehaviour:
     height: 242
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 3a4f0000
-    m_LastClickedID: 20282
-    m_ExpandedIDs: f671fbfff6f3ffffa6fbffff00000000
+    m_SelectedIDs: 40080000
+    m_LastClickedID: 0
+    m_ExpandedIDs: a6fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -702,18 +702,18 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/Game/Player
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Game/Player
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Dokumenty\GitHub\rocnikac\Age
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 12290000
-    m_LastClickedID: 10514
+    scrollPos: {x: 0, y: 325}
+    m_SelectedIDs: 202b0000
+    m_LastClickedID: 11040
     m_ExpandedIDs: 0000000012290000782b0000ea2b00004c2c0000602c0000ce2c0000822d0000d82d0000383000000445000006450000084500000a45000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
