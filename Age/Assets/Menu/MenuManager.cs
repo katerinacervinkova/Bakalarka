@@ -24,4 +24,9 @@ public class MenuManager : MonoBehaviour {
         if (maxPlayers)
             transform.Find("AddPlayerButton").GetComponent<Button>().interactable = false;
     }
+
+    public void OnClickBack()
+    {
+        GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>().ServerChangeScene("Lobby");
+    }
 }

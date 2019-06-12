@@ -46,7 +46,12 @@ public class MenuPlayer : NetworkBehaviour {
     private void SceneChanged(Scene oldScene, Scene newScene)
     {
         if (hasAuthority)
-            CmdOnSceneChanged();
+        {
+            if (newScene.name == "Game")
+                CmdStartGameScene();
+            else if (newScene.name == "Lobby")
+                RemovePlayer();
+        }
     }
 
     public void AddPlayer(out bool maxPlayers)
@@ -91,7 +96,7 @@ public class MenuPlayer : NetworkBehaviour {
     }
 
     [Command]
-    private void CmdOnSceneChanged()
+    private void CmdStartGameScene()
     {
         Player player = Instantiate(playerPrefab, transform.position, transform.rotation);
         player.IsHuman = isHuman;

@@ -61,11 +61,6 @@ public class MapSquare : MonoBehaviour {
 
     public void Add(Resource resource) => Resources.Add(resource);
 
-    public void Activate()
-    {
-        AdjoiningSquares.ForEach(s => { s.activated = true; s.uncovered = true; });
-    }
-
     public void UpdateVisibility()
     {
         if (activated)
