@@ -50,6 +50,7 @@ public abstract class Building : Selectable {
         base.Init();
         GameState.Instance.Buildings.Add(this);
         GameState.Instance.UpdateGraph(GetComponent<Collider>().bounds);
+        healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
         minimapColor = owner.color;
         minimapIcon.color = minimapColor; 
         DefaultDestination = FrontPosition;

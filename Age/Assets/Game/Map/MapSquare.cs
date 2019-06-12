@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MapSquare : MonoBehaviour {
 
     public int playerId;
+    public Vector2 squareId;
 
     public bool activated = false;
     public bool wasActive = false;
 
-    private bool uncovered = false;
+    public bool uncovered = false;
 
     [SerializeField]
     private GameObject transparent;
@@ -16,6 +18,7 @@ public class MapSquare : MonoBehaviour {
     private GameObject nontransparent;
     [SerializeField]
     private GameObject transparentMinimap;
+
     [SerializeField]
     private GameObject nontransparentMinimap;
 
@@ -56,14 +59,11 @@ public class MapSquare : MonoBehaviour {
             EnemyTemporaryBuildings.Add(building);
     }
 
-    public void Add(Resource resource)
-    {
-        Resources.Add(resource);
-    }
+    public void Add(Resource resource) => Resources.Add(resource);
 
     public void Activate()
     {
-        AdjoiningSquares.ForEach(s => s.activated = true);
+        AdjoiningSquares.ForEach(s => { s.activated = true; s.uncovered = true; });
     }
 
     public void UpdateVisibility()
@@ -150,8 +150,17 @@ public class MapSquare : MonoBehaviour {
             EnemyBuildings.Remove(building);
     }
 
-    public void Remove(Resource resource)
+    public void Remove(Resource resource) => Resources.Remove(resource);
+
+    public void DestroySquare()
     {
-        Resources.Remove(resource);
+        EnemyBuildings.ForEach(s => s?.SetVisibility(true));
+        EnemyTemporaryBuildings.ForEach(s => s?.SetVisibility(true));
+        EnemyUnits.ForEach(s => s?.SetVisibility(true));
+        Resources.ForEach(s => s?.SetVisibility(true));
+        FriendlyBuildings.ForEach(s => s?.SetVisibility(true));
+        FriendlyTemporaryBuildings.ForEach(s => s?.SetVisibility(true));
+        FriendlyUnits.ForEach(s => s?.SetVisibility(true));
+        Destroy(gameObject);
     }
 }

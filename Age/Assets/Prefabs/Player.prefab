@@ -90,7 +90,9 @@ MonoBehaviour:
   Name: "\u0158eho\u0159"
   color: {r: 1, g: 0.003, b: 0, a: 0}
   factory: {fileID: 114881949609890668}
-  playerState: {fileID: 0}
+  victoryCondition: {fileID: 0}
+  winningText: {fileID: 0}
+  losingText: {fileID: 0}
 --- !u!114 &114881949609890668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,6 +128,10 @@ MonoBehaviour:
   humanVisibilitySquaresPrefab: {fileID: 114965113050429430, guid: 62e57861fbe0a5e43bbdc122b6395213,
     type: 2}
   aiVisibilitySquaresPrefab: {fileID: 114715266601747674, guid: 6086b57e0ab9c254c866e6449121185a,
+    type: 2}
+  aiPlayerPrefab: {fileID: 114132550891393624, guid: ead59e7fc6d4a794c8f8ea4eb692662f,
+    type: 2}
+  simpleAIPrefab: {fileID: 114052034137244940, guid: ebfbec5ed48bde74aaf96a58831109f5,
     type: 2}
 --- !u!114 &114918450667427504
 MonoBehaviour:

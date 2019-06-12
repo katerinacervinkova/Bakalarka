@@ -22,10 +22,10 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        if (IsHuman)
-            Camera.main.transform.parent.position = transform.position;
         PlayerState.Set(playerControllerId, factory.CreatePlayerState());
         PlayerState.Get(playerControllerId).playerPurchases = factory.CreatePlayerPurchases();
+        if (IsHuman)
+            Camera.main.transform.parent.position = transform.position;
     }
 
     private void Update()
@@ -37,16 +37,23 @@ public class Player : NetworkBehaviour
 
     public void Lose()
     {
-        victoryCondition.CmdRemove(netId);
         if (IsHuman)
             losingText.SetActive(true);
+        EndGame();
     }
 
     public void Win()
     {
-        victoryCondition.CmdRemove(netId);
         if (IsHuman)
             winningText.SetActive(true);
+        EndGame();
+    }
+
+    public void EndGame()
+    {
+        victoryCondition.CmdRemove(netId);
+        if (IsHuman)
+            ((HumanVisibilitySquares)GameState.Instance.GetSquares(playerControllerId)).SeeEverything();
     }
 
     public void ExitBuilding(Unit unit, Building building)
@@ -64,6 +71,15 @@ public class Player : NetworkBehaviour
             GameState.Instance.SetVisibilitySquares(playerControllerId, factory.CreateVisibilitySquares());
             CmdCreateUnit(transform.position, transform.position);
             PlayerState.Get(playerControllerId).Population = 1;
+            if (!IsHuman)
+            {
+                AIPlayer aiPlayer = factory.CreateAIPlayer();
+                SimpleAI AI = factory.CreateAI();
+                aiPlayer.playerState = PlayerState.Get(playerControllerId);
+                aiPlayer.gameState = GameState.Instance;
+                AI.aiPlayer = aiPlayer;
+
+            }
             initialized = true;
             return true;
         }

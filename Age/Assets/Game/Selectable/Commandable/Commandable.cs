@@ -6,7 +6,6 @@ public abstract class Commandable : Selectable {
     private bool causedShowingTarget = false;
     public bool IsMoving => !float.IsPositiveInfinity(destination.x);
 
-
     public abstract void SetGoal(Selectable goal);
 
     protected void HideTarget()
@@ -29,7 +28,8 @@ public abstract class Commandable : Selectable {
 
     public override void RightMouseClickObject(Selectable hitObject)
     {
-        SetGoal(hitObject);
+        if (owner.IsHuman)
+            SetGoal(hitObject);
     }
     public override Job GetOwnJob(Commandable worker)
     {

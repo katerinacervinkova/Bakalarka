@@ -79,7 +79,8 @@ public abstract class Selectable : NetworkBehaviour {
 
     public virtual void SetVisualSelection(bool selected)
     {
-        selector.SetActive(selected);
+        if (selector != null)
+            selector.SetActive(selected);
         minimapIcon.color = selected ? Color.white : minimapColor;
         if (healthBar != null)
         {
@@ -106,7 +107,8 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected virtual void Uncover()
     {
-        visibleObject.SetActive(true);
+        if (visibleObject != null)
+            visibleObject.SetActive(true);
         if (healthBar != null)
             healthBar.transform.localScale = new Vector3(2, 2, 2);
     }
@@ -142,8 +144,6 @@ public abstract class Selectable : NetworkBehaviour {
     
     protected virtual void OnHealthChange(float value)
     {
-        if (owner == null)
-            return;
         Health = value;
         if (PlayerState.Get() != null)
         {

@@ -28,10 +28,14 @@ public class Purchase
     }
 
 
-    public virtual void Do(Selectable selectable)
+    public virtual bool Do(Selectable selectable)
     {
         if (PlayerState.Get(playerId).Pay(food, wood, gold, population))
+        {
             action.Invoke(selectable);
+            return true;
+        }
+        return false;
     }
 
     public void Reset()

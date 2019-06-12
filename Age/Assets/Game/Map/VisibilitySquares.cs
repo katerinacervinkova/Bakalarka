@@ -12,13 +12,15 @@ public class VisibilitySquares : MonoBehaviour {
 
     protected Dictionary<Vector2, MapSquare> squares = new Dictionary<Vector2, MapSquare>();
 
-    void Start()
+    protected virtual void Start()
     {
         for (int i = -40; i <= 40; i++)
             for (int j = -40; j <= 40; j++)
             {
-                squares[new Vector2(i, j)] = Instantiate(squarePrefab, new Vector3(5 * i, 0, 5 * j), Quaternion.identity, transform);
-                squares[new Vector2(i, j)].playerId = playerId;
+                Vector2 squareId = new Vector2(i, j);
+                squares[squareId] = Instantiate(squarePrefab, GetPosition(squareId), Quaternion.identity, transform);
+                squares[squareId].playerId = playerId;
+                squares[squareId].squareId = squareId;
             }
 
         foreach (var key in squares.Keys)
@@ -64,7 +66,7 @@ public class VisibilitySquares : MonoBehaviour {
     {
         var buildings = new List<Building>();
         foreach (var square in squares.Values)
-            if (square.activated)
+            if (square.uncovered)
                 buildings.AddRange(square.EnemyBuildings);
         return buildings;
     }
@@ -73,7 +75,7 @@ public class VisibilitySquares : MonoBehaviour {
     {
         var buildings = new List<TemporaryBuilding>();
         foreach (var square in squares.Values)
-            if (square.activated)
+            if (square.uncovered)
                 buildings.AddRange(square.EnemyTemporaryBuildings);
         return buildings;
     }
@@ -82,18 +84,29 @@ public class VisibilitySquares : MonoBehaviour {
     {
         var resources = new List<Resource>();
         foreach (var square in squares.Values)
-            if (square.activated)
+            if (square.uncovered)
                 resources.AddRange(square.Resources);
         return resources;
+    }
+
+    public Vector3 GetClosestFreePosition(Vector3 position)
+    {
+        Vector2 square = GetSquare(position);
+        var sq =  squares[square].AdjoiningSquares.
+            Where(s => s.Resources.Count == 0 && s.EnemyBuildings.Count == 0 && s.FriendlyBuildings.Count == 0 && s.EnemyTemporaryBuildings.Count == 0 && s.FriendlyTemporaryBuildings.Count == 0).
+            Select(s => GetPosition(s.squareId));
+        if (sq.Any())
+            return sq.First();
+        return Vector3.positiveInfinity;
     }
 
     public T ClosestResource<T>(T resource, Vector2 squareID) where T : Resource => (T)squares[squareID].AdjoiningSquares.SelectMany(s => s.Resources).
         Where(r => r is T && r != resource).OrderBy(r => Vector2.Distance(squareID, r.SquareID)).FirstOrDefault();
 
-    public T ClosestVisibleResource<T>(Vector2 squareId) where T : Resource => (T)squares[squareId].AdjoiningSquares.Where(s => s.activated).SelectMany(s => s.Resources).
-        Where(r => r is T).OrderBy(r => Vector2.Distance(squareId, r.SquareID)).FirstOrDefault();
+    public T ClosestVisibleResource<T>(Vector2 squareId) where T : Resource => (T)VisibleResources().Where(r => r is T).OrderBy(r => Vector2.Distance(squareId, r.SquareID)).FirstOrDefault();
 
     public Vector2 GetSquare(Vector3 position) => new Vector2((float)Math.Round(position.x / 5), (float)Math.Round(position.z / 5));
+    public Vector3 GetPosition(Vector2 squareId) => new Vector3(5 * squareId.x, 0, 5 * squareId.y);
 
     public void AddToSquare(Vector2 square, Unit unit)
     {

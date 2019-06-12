@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -32,6 +33,10 @@ public class Factory : MonoBehaviour
     private VisibilitySquares humanVisibilitySquaresPrefab;
     [SerializeField]
     private VisibilitySquares aiVisibilitySquaresPrefab;
+    [SerializeField]
+    private AIPlayer aiPlayerPrefab;
+    [SerializeField]
+    private SimpleAI simpleAIPrefab;
 
     public Regiment CreateRegiment(Player owner, List<Unit> units)
     {
@@ -78,6 +83,17 @@ public class Factory : MonoBehaviour
         return visibilitySquares;
 
     }
+
+    public AIPlayer CreateAIPlayer()
+    {
+        var aiPlayer = Instantiate(aiPlayerPrefab);
+        aiPlayer.player = player;
+        aiPlayer.playerId = player.playerControllerId;
+
+        return aiPlayer;
+    }
+
+    public SimpleAI CreateAI() => Instantiate(simpleAIPrefab);
 
     public TemporaryBuilding CreateTemporaryMainBuilding(NetworkInstanceId playerId, BuildingEnum buildingType)
     {

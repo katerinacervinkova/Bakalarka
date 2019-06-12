@@ -11,11 +11,15 @@ public class LoadingPurchase : Purchase {
         this.Speed = Speed;
     }
 
-    public override void Do(Selectable selectable)
+    public override bool Do(Selectable selectable)
     {
         Building building = selectable as Building;
         if (building.CanStartTransaction() && PlayerState.Get(playerId).Pay(food, wood, gold, population))
-                building.AddTransaction(new Transaction(building, this, Speed));
+        {
+            building.AddTransaction(new Transaction(building, this, Speed));
+            return true;
+        }
+        return false;
     }
 
     public void InvokeAction(Selectable selectable)

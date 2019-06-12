@@ -43,11 +43,9 @@ public class TemporaryBuilding : Selectable
 
     private void OnProgressChange(float newProgress)
     {
-        if (!owner.IsHuman)
-            return;
         progress = newProgress;
-        PlayerState.Get(playerId)?.OnStateChange(this);
-        if (initialized && PlayerState.Get(playerId)?.SelectedObject != this && healthBar != null)
+        PlayerState.Get()?.OnStateChange(this);
+        if (initialized && PlayerState.Get()?.SelectedObject != this && healthBar != null)
             healthBar.HideAfter();
     }
 

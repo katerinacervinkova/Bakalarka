@@ -122,7 +122,7 @@ public class Unit : Commandable
 
     public override void SetGoal(Selectable goal)
     {
-        if (hasAuthority && owner.IsHuman)
+        if (hasAuthority)
         {
             Job following = goal.CreateJob(this);
             SetJob(new JobGo(goal.FrontPosition, following));

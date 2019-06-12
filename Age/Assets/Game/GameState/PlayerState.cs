@@ -160,14 +160,15 @@ public class PlayerState : MonoBehaviour {
             UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
     }
 
-    public void MoveBuildingToBuild(Vector3 hitPoint)
+    public bool MoveBuildingToBuild(Vector3 hitPoint)
     {
         var bounds = BuildingToBuild.Bounds;
         bounds.center = hitPoint;
         foreach (var node in AstarPath.active.data.gridGraph.GetNodesInRegion(bounds))
             if (!node.Walkable)
-                return;
+                return false;
         BuildingToBuild.transform.position = hitPoint;
+        return true;
     }
 
     public void SetTempBuilding(TemporaryBuilding building) => BuildingToBuild = building;

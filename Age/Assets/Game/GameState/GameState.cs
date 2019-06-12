@@ -62,6 +62,8 @@ public class GameState : NetworkBehaviour {
             OrderBy(s => Vector3.Distance(position, s.transform.position)).FirstOrDefault();
     }
 
+    public Vector3 GetClosestFreePosition(Vector3 position, int playerId) => GetSquares(playerId).GetClosestFreePosition(position);
+
     public void PositionChange(Unit unit)
     {
         Vector2 squarePosition = SquarePosition(unit.transform.position);
@@ -80,6 +82,7 @@ public class GameState : NetworkBehaviour {
     private Vector2 SquarePosition(Vector3 position) => GetSquares().GetSquare(position);
 
     public void RemoveFromSquare(Vector2 squareId, TemporaryBuilding selectable) => ForEachSquare(s => s.RemoveFromSquare(squareId, selectable));
+
     public void RemoveFromSquare(Vector2 squareId, Building selectable) => ForEachSquare(s => s.RemoveFromSquare(squareId, selectable));
     public void RemoveFromSquare(Vector2 squareId, Resource selectable) => ForEachSquare(s => s.RemoveFromSquare(squareId, selectable));
 
@@ -158,6 +161,7 @@ public class GameState : NetworkBehaviour {
         building.healthBarOffset = tempBuilding.healthBarOffset;
         building.owner = tempBuilding.owner;
         building.size = tempBuilding.size;
+        building.playerId = tempBuilding.playerId;
         building.SetHealthBar(tempBuilding.TransferHealthBar(building));
         building.Init();
 
