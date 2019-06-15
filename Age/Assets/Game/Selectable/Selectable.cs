@@ -161,7 +161,7 @@ public abstract class Selectable : NetworkBehaviour {
             GetEnemyJob().Completed = true;
         if (GetOwnJob() != null)
             GetOwnJob().Completed = true;
-        if (PlayerState.Get(playerId) != null && PlayerState.Get(playerId).SelectedObject == this)
+        if (playerId >= 0 && PlayerState.Get(playerId) != null && PlayerState.Get(playerId).SelectedObject == this)
             PlayerState.Get(playerId).Deselect();
     }
 }

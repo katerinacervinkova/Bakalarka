@@ -3771,6 +3771,9 @@ MonoBehaviour:
   _playerNumber: 0
   _isMatchmaking: 0
   nextButton: {fileID: 0}
+  AIplayerPrefab: {fileID: 0}
+  playerPositions: []
+  playerCount: 0
 --- !u!114 &114210598823649420
 MonoBehaviour:
   m_ObjectHideFlags: 1

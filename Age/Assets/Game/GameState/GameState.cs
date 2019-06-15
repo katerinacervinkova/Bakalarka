@@ -68,7 +68,7 @@ public class GameState : NetworkBehaviour {
     {
         Vector2 squarePosition = SquarePosition(unit.transform.position);
 
-        if (squarePosition != unit.SquareID)
+        if (squarePosition != unit.SquareID && !float.IsPositiveInfinity(squarePosition.x))
         {
             ForEachSquare(s =>
             {
@@ -79,7 +79,12 @@ public class GameState : NetworkBehaviour {
         }
     }
 
-    private Vector2 SquarePosition(Vector3 position) => GetSquares().GetSquare(position);
+    private Vector2 SquarePosition(Vector3 position)
+    {
+        if (GetSquares() == null)
+            return Vector2.positiveInfinity;
+        return GetSquares().GetSquare(position);
+    }
 
     public void RemoveFromSquare(Vector2 squareId, TemporaryBuilding selectable) => ForEachSquare(s => s.RemoveFromSquare(squareId, selectable));
 
@@ -165,7 +170,7 @@ public class GameState : NetworkBehaviour {
         building.SetHealthBar(tempBuilding.TransferHealthBar(building));
         building.Init();
 
-        var squarePosition = SquarePosition(tempBuilding.transform.position);
+        var squarePosition = tempBuilding.SquareID;
         ForEachSquare(s =>
         {
             s.AddToSquare(squarePosition, building);

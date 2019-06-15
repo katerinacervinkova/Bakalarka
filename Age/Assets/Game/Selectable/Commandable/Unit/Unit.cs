@@ -2,7 +2,6 @@
 
 public class Unit : Commandable
 {
-
     public override string Name => "Unit";
 
     protected AIUnetPath aiUnetPath;
@@ -45,6 +44,8 @@ public class Unit : Commandable
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
+        if (PlayerState.Get(playerId).units.Count == 0)
+            owner.StartTheGame();
         PlayerState.Get(playerId).units.Add(this);
         SetVisibility(true);
     }

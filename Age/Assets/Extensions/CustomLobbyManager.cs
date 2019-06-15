@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CustomLobbyManager : LobbyManager {
@@ -49,5 +48,15 @@ public class CustomLobbyManager : LobbyManager {
         playerCount--;
         if (player.playerControllerId == 0)
             base.OnServerRemovePlayer(conn, player);
+    }
+
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        StopClient();
+    }
+
+    public override void OnServerDisconnect(NetworkConnection nc)
+    {
+        NetworkServer.DestroyPlayersForConnection(nc);
     }
 }

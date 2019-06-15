@@ -1,6 +1,7 @@
 ﻿using Pathfinding;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
 {
@@ -15,10 +16,9 @@ public class Player : NetworkBehaviour
     public Factory factory;
     public VictoryCondition victoryCondition;
 
-    public GameObject winningText;
-    public GameObject losingText;
-
-    private bool initialized = false;
+    [SyncVar]
+    public bool InGame = false;
+    private GameObject endGameCanvas;
 
     public override void OnStartLocalPlayer()
     {
@@ -28,62 +28,90 @@ public class Player : NetworkBehaviour
             Camera.main.transform.parent.position = transform.position;
     }
 
+    public bool Init()
+    {
+        if (!hasAuthority || (connectionToClient != null && !connectionToClient.isReady) || GameState.Instance == null)
+            return false;
+        GameState.Instance.SetVisibilitySquares(playerControllerId, factory.CreateVisibilitySquares());
+
+        CmdCreateUnit(transform.position, transform.position);
+        return true;
+    }
+
+    public void StartTheGame()
+    {
+        PlayerState.Get(playerControllerId).Population = 1;
+        if (!IsHuman)
+        {
+            AIPlayer aiPlayer = factory.CreateAIPlayer();
+            SimpleAI AI = factory.CreateAI();
+            aiPlayer.playerState = PlayerState.Get(playerControllerId);
+            aiPlayer.gameState = GameState.Instance;
+            AI.aiPlayer = aiPlayer;
+        }
+        else
+        {
+            endGameCanvas = GameObject.Find("EndGameCanvas");
+            endGameCanvas.SetActive(false);
+        }
+        CmdChangeInGame(true);
+    }
+
     private void Update()
     {
-        if (hasAuthority && initialized && victoryCondition != null)
+        if (victoryCondition == null)
+        {
+            var vc = GameObject.Find("VictoryCondition");
+            if (vc != null)
+            {
+                victoryCondition = vc.GetComponent<VictoryCondition>();
+                victoryCondition.players.Add(this);
+            }
+        }
+        if (hasAuthority && InGame && victoryCondition != null)
+        {
             if (victoryCondition.PlayerMeetsLosingConditions(this))
                 Lose();
+            else if (victoryCondition.PlayerMeetsConditions(this))
+                Win();
+        }
     }
 
     public void Lose()
     {
         if (IsHuman)
-            losingText.SetActive(true);
+            endGameCanvas.GetComponent<Text>().text = "You lose!";
         EndGame();
     }
 
     public void Win()
     {
         if (IsHuman)
-            winningText.SetActive(true);
+            endGameCanvas.GetComponent<Text>().text = "You win!";
         EndGame();
     }
 
     public void EndGame()
     {
-        victoryCondition.CmdRemove(netId);
+        CmdChangeInGame(false);
         if (IsHuman)
+        {
+            endGameCanvas.SetActive(true);
+            endGameCanvas.transform.Find("MenuButton").GetComponent<Button>().onClick.AddListener(OnClickMainMenu);
             ((HumanVisibilitySquares)GameState.Instance.GetSquares(playerControllerId)).SeeEverything();
+            Destroy(GameObject.Find("MainCanvas"));
+        }
+    }
+
+    private void OnClickMainMenu()
+    {
+
     }
 
     public void ExitBuilding(Unit unit, Building building)
     {
         if (unit != null && building != null)
             CmdExitBuilding(unit.netId, building.FrontPosition, building.DefaultDestination);
-    }
-
-    public bool Init()
-    {
-        if (!hasAuthority)
-            return false;
-        if (connectionToClient == null || connectionToClient.isReady)
-        {
-            GameState.Instance.SetVisibilitySquares(playerControllerId, factory.CreateVisibilitySquares());
-            CmdCreateUnit(transform.position, transform.position);
-            PlayerState.Get(playerControllerId).Population = 1;
-            if (!IsHuman)
-            {
-                AIPlayer aiPlayer = factory.CreateAIPlayer();
-                SimpleAI AI = factory.CreateAI();
-                aiPlayer.playerState = PlayerState.Get(playerControllerId);
-                aiPlayer.gameState = GameState.Instance;
-                AI.aiPlayer = aiPlayer;
-
-            }
-            initialized = true;
-            return true;
-        }
-        return false;
     }
 
     public void EnterBuilding(Unit unit, Building building)
@@ -134,6 +162,12 @@ public class Player : NetworkBehaviour
             walkable = true
         };
         return AstarPath.active.GetNearest(position, nodeConstraint).position;
+    }
+
+    [Command]
+    private void CmdChangeInGame(bool inGame)
+    {
+        InGame = inGame;
     }
 
     [Command]
