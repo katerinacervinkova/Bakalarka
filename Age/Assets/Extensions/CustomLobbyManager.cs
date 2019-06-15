@@ -17,6 +17,8 @@ public class CustomLobbyManager : LobbyManager {
 
     public int playerCount = 0;
 
+    public int aiCount = 0;
+
     public override void OnLobbyStartServer()
     {
         base.OnLobbyStartServer();
@@ -37,6 +39,7 @@ public class CustomLobbyManager : LobbyManager {
             base.OnServerAddPlayer(conn, playerControllerId);
         else
         {
+            aiCount++;
             player = Instantiate(AIplayerPrefab, playerPositions[playerCount], Quaternion.identity);
             NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
         }
@@ -48,6 +51,11 @@ public class CustomLobbyManager : LobbyManager {
         playerCount--;
         if (player.playerControllerId == 0)
             base.OnServerRemovePlayer(conn, player);
+        else
+        {
+            aiCount--;
+            NetworkServer.Destroy(player.gameObject);
+        }
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)

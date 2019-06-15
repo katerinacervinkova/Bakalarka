@@ -277,7 +277,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 388299346}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.048233032, z: 0}
+  m_LocalPosition: {x: 0, y: 0.06335449, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 822370370}
@@ -1118,7 +1118,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 388299347}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99957246
+  m_Size: 0.9994384
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1277,7 +1277,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1669708208}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 122.70524, z: 0}
+  m_LocalPosition: {x: 0, y: 122.69063, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 682884622}
@@ -1285,7 +1285,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00000029648032, y: -0.105003424}
+  m_AnchoredPosition: {x: 0.00000029648032, y: -0.11961479}
   m_SizeDelta: {x: -2.9999678, y: -64}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1669708210
@@ -1827,6 +1827,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  playButton: {fileID: 1007895227}
+  addPlayerbutton: {fileID: 948858493}
+  backButton: {fileID: 2071860332}
 --- !u!114 &2093098086
 MonoBehaviour:
   m_ObjectHideFlags: 0

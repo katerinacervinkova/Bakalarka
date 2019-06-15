@@ -165,6 +165,14 @@ public class Unit : Commandable
         Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Library));
     }
 
+    public void OnTargetReached()
+    {
+        destination = Vector3.positiveInfinity;
+        Reg?.MovementCompleted(this);
+        if (Job is JobGo)
+            Job.Completed = true;
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -174,13 +182,5 @@ public class Unit : Commandable
             PlayerState.Get(playerId).units.Remove(this);
             PlayerState.Get(playerId).Population--;
         }
-    }
-
-    public void OnTargetReached()
-    {
-        destination = Vector3.positiveInfinity;
-        Reg?.MovementCompleted(this);
-        if (Job is JobGo)
-            Job.Completed = true;
     }
 }

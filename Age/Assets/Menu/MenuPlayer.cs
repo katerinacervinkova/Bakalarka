@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class MenuPlayer : NetworkBehaviour {
     private PlayerRow playerRow;
     private MenuPlayerList playerList;
     private CustomLobbyManager lobbyManager;
+    private MenuManager menuManager;
 
     [SerializeField]
     private bool isHuman;
@@ -27,6 +29,7 @@ public class MenuPlayer : NetworkBehaviour {
         DontDestroyOnLoad(gameObject);
         lobbyManager = FindObjectOfType<CustomLobbyManager>();
         playerList = FindObjectOfType<MenuPlayerList>();
+        menuManager = FindObjectOfType<MenuManager>();
         SceneManager.activeSceneChanged += SceneChanged;
         playerRow = Instantiate(playerRowPrefab, playerList.transform);
         playerRow.player = this;
@@ -35,11 +38,10 @@ public class MenuPlayer : NetworkBehaviour {
     public override void OnStartAuthority()
     {
         playerRow.SetInteractivity();
-        var manager = FindObjectOfType<MenuManager>();
         if (isHuman)
-            manager.player = this;
+            menuManager.player = this;
         if (isServer)
-            manager.SetInteractivity();
+            menuManager.SetServerInteractivity();
         CmdSetColor();
     }
 
@@ -54,15 +56,9 @@ public class MenuPlayer : NetworkBehaviour {
         }
     }
 
-    public void AddPlayer(out bool maxPlayers)
-    {
-        ClientScene.AddPlayer((short)connectionToServer.playerControllers.Count);
-        maxPlayers = lobbyManager.maxPlayers <= lobbyManager.playerCount;
-    }
-
     public void RemovePlayer()
     {
-        ClientScene.RemovePlayer(playerControllerId);
+        menuManager.RemovePlayer(playerControllerId);
     }
 
     public void ChangeColor()

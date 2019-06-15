@@ -5,28 +5,53 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour {
 
     public MenuPlayer player;
+    private CustomLobbyManager lobbyManager;
 
-    public void SetInteractivity()
+    [SerializeField]
+    private Button playButton;
+    [SerializeField]
+    private Button addPlayerbutton;
+    [SerializeField]
+    private Button backButton;
+
+
+    private void Awake()
     {
-        transform.Find("PlayButton").GetComponent<Button>().interactable = true;
-        transform.Find("AddPlayerButton").GetComponent<Button>().interactable = true;
-        transform.Find("BackButton").GetComponent<Button>().interactable = true;
+        lobbyManager = FindObjectOfType<CustomLobbyManager>();
+    }
+
+    public void SetServerInteractivity()
+    {
+        if (lobbyManager.playerCount > 1)
+            playButton.interactable = true;
+        addPlayerbutton.interactable = true;
+        backButton.interactable = true;
     }
     public void OnClickPlay()
     {
-        GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>().ServerChangeScene("Game");
+        lobbyManager.ServerChangeScene("Game");
     }
 
     public void OnClickAddPlayer()
     {
-        bool maxPlayers;
-        player.AddPlayer(out maxPlayers);
-        if (maxPlayers)
-            transform.Find("AddPlayerButton").GetComponent<Button>().interactable = false;
+        ClientScene.AddPlayer((short)(lobbyManager.aiCount + 1));
+        if (lobbyManager.playerCount == 2)
+            playButton.interactable = true;
+        if (lobbyManager.maxPlayers == lobbyManager.playerCount)
+            addPlayerbutton.interactable = false;
+    }
+
+    public void RemovePlayer(short playerControllerId)
+    {
+        ClientScene.RemovePlayer(playerControllerId);
+        if (lobbyManager.playerCount == 1)
+            playButton.interactable = false;
+        if (lobbyManager.maxPlayers - 1 == lobbyManager.playerCount)
+            addPlayerbutton.interactable = true;
     }
 
     public void OnClickBack()
     {
-        GameObject.Find("LobbyManager").GetComponent<NetworkLobbyManager>().ServerChangeScene("Lobby");
+        lobbyManager.ServerChangeScene("Lobby");
     }
 }
