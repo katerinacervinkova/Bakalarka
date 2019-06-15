@@ -171,7 +171,12 @@ public class PlayerState : MonoBehaviour {
         return true;
     }
 
-    public void SetTempBuilding(TemporaryBuilding building) => BuildingToBuild = building;
+    public void SetTempBuilding(TemporaryBuilding building)
+    {
+        if (BuildingToBuild != null)
+            ResetBuildingToBuild();
+        BuildingToBuild = building;
+    }
 
     public void ResetBuildingToBuild()
     {
