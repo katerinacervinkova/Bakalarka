@@ -22,7 +22,6 @@ public class Player : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        Debug.Log(playerControllerId);
         PlayerState.Set(playerControllerId, factory.CreatePlayerState());
         PlayerState.Get(playerControllerId).playerPurchases = factory.CreatePlayerPurchases();
         if (IsHuman)

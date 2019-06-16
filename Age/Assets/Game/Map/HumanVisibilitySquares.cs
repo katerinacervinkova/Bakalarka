@@ -10,7 +10,13 @@
 
 	protected override void Update ()
     {
-        if (!seeEverything)
+        if (seeEverything)
+            foreach (var square in squares.Values)
+            {
+                square.activated = true;
+                square.UpdateVisibility();
+            }
+        else
         {
             foreach (var square in squares.Values)
                 if (square.ContainsFriend)
@@ -22,12 +28,6 @@
 
     public void SeeEverything()
     {
-        foreach (var square in squares.Values)
-        {
-            square.activated = true;
-            square.UpdateVisibility();
-        }
         seeEverything = true;
-
     }
 }

@@ -55,10 +55,7 @@ public class PlayerPurchases : MonoBehaviour {
         };
     }
 
-    public Purchase Get(PurchasesEnum purchasesEnum)
-    {
-        return purchases[purchasesEnum];
-    }
+    public Purchase Get(PurchasesEnum purchasesEnum) => purchases[purchasesEnum];
 
     public Purchase Get(BuildingEnum buildingType)
     {

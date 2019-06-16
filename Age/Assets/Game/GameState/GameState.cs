@@ -18,6 +18,8 @@ public class GameState : NetworkBehaviour {
         }
     }
 
+    public GameObject errorCanvas;
+
     public List<Unit> Units { get; private set; } = new List<Unit>();
     public List<Building> Buildings { get; private set; } = new List<Building>();
     public List<Resource> Resources { get; private set; } = new List<Resource>();

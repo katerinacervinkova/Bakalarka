@@ -53,7 +53,7 @@ public class Purchase
             d.AppendLine(ResourceDescription("Wood", wood, PlayerState.Get(playerId).Wood));
         if (gold > 0)
             d.AppendLine(ResourceDescription("Gold", gold, PlayerState.Get(playerId).Gold));
-        if (gold > 0)
+        if (population > 0)
             d.AppendLine(PopulationDescription(population, PlayerState.Get(playerId).Population, PlayerState.Get(playerId).MaxPopulation));
         d.Append(description);
         return d.ToString();

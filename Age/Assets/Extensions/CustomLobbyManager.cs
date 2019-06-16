@@ -15,6 +15,9 @@ public class CustomLobbyManager : LobbyManager {
     [SerializeField]
     private List<Vector3> playerPositions;
 
+    [SerializeField]
+    public GameObject errorPanel;
+
     public int playerCount = 0;
 
     public int aiCount = 0;
@@ -61,10 +64,14 @@ public class CustomLobbyManager : LobbyManager {
     public override void OnClientDisconnect(NetworkConnection conn)
     {
         StopClient();
+        ChangeTo(mainMenuPanel);
+        errorPanel.SetActive(true);
     }
 
     public override void OnServerDisconnect(NetworkConnection nc)
     {
         NetworkServer.DestroyPlayersForConnection(nc);
+        GameState.Instance.errorCanvas.SetActive(true);
+
     }
 }
