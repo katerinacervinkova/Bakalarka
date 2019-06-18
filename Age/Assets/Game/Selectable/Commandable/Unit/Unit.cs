@@ -23,7 +23,7 @@ public class Unit : Commandable
     public float Range => 5;
     private Job Job { get; set; }
 
-    public bool HasJob => Job != null;
+    public bool HasJob => !(Job is JobLookForTarget);
     protected void Awake()
     {
         atts = GetComponent<Attributes>();
@@ -48,6 +48,7 @@ public class Unit : Commandable
         if (PlayerState.Get(playerId).units.Count == 0)
             owner.StartTheGame();
         PlayerState.Get(playerId).units.Add(this);
+        Job = new JobLookForTarget();
         SetVisibility(true);
     }
 
@@ -117,10 +118,7 @@ public class Unit : Commandable
         SetJob(new JobGo(hitPoint));
     }
 
-    public override string GetObjectDescription()
-    {
-        return $"{base.GetObjectDescription()}\n{atts.GetDescription()}";
-    }
+    public override string GetObjectDescription() => $"{base.GetObjectDescription()}\n{atts.GetDescription()}";
 
     public override void SetGoal(Selectable goal)
     {
@@ -137,18 +135,14 @@ public class Unit : Commandable
     {
         HideTarget();
         destination = Vector3.positiveInfinity;
+        if (job == null)
+            job = new JobLookForTarget();
         Job = job;
     }
 
-    public void SetNextJob()
-    {
-        SetJob(Job.Following);
-    }
+    public void SetNextJob() => SetJob(Job.Following);
 
-    public void ResetJob()
-    {
-        SetJob(null);
-    }
+    public void ResetJob() => SetJob(null);
 
     public void Go(Vector3 destination)
     {
