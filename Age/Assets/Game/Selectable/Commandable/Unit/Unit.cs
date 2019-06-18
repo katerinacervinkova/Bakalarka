@@ -70,7 +70,7 @@ public class Unit : Commandable
         visibleObject.SetActive(false);
     }
 
-
+    public override void DealAttack(Selectable selectable) => SetJob(new JobAttack(selectable));
 
     public override void SetSelection(bool selected)
     {

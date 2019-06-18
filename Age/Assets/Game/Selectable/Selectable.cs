@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -128,6 +129,8 @@ public abstract class Selectable : NetworkBehaviour {
         return $"Health: {(int)Health}/{(int)MaxHealth}";
     }
 
+
+    public virtual void DealAttack(Selectable selectable) { }
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
     public virtual void RightMouseClickObject(Selectable hitObject) { }
 

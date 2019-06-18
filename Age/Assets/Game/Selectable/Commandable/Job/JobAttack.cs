@@ -36,6 +36,7 @@ public class JobAttack : Job {
 
             var value = target.Health - worker.Swordsmanship;
             worker.owner.ChangeHealth(target, value);
+            worker.owner.Attack(worker, target);
             if (value <= 0)
                 Completed = true;
         }

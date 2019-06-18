@@ -1,4 +1,5 @@
-﻿using Pathfinding;
+﻿using System;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -127,45 +128,15 @@ public class Player : NetworkBehaviour
             CmdExitBuilding(unit.netId, building.FrontPosition, building.DefaultDestination);
     }
 
-    public void EnterBuilding(Unit unit, Building building)
-    {
-        CmdEnterBuilding(unit.netId);
-    }
-
-    public void Gather(float amount, Resource resource)
-    {
-        CmdGather(amount, resource.netId);
-    }
-
-    public void ChangeAttribute(Unit unit, AttEnum attEnum, float value)
-    {
-        CmdChangeAttribute(unit.netId, attEnum, value);
-    }
-
-    public void CreateTempBuilding(BuildingEnum buildingType)
-    {
-        CmdCreateTempBuilding(buildingType);
-    }
-
-    public void CreateUnit(Building building)
-    {
-        CmdCreateUnit(building.FrontPosition, building.DefaultDestination);
-    }
-
-    public void PlaceBuilding(TemporaryBuilding temporaryBuilding)
-    {
-        CmdPlaceBuilding(temporaryBuilding.transform.position, temporaryBuilding.netId);
-    }
-
-    public void ChangeHealth(Selectable selectable, float value)
-    {
-        CmdChangeHealth(selectable.netId, value);
-    }
-
-    public void DestroySelectedObject(Selectable selectedObject)
-    {
-        CmdDestroy(selectedObject.netId);
-    }
+    public void Attack(Selectable attacker, Selectable target) => CmdAttack(attacker.netId, target.netId);
+    public void EnterBuilding(Unit unit, Building building) => CmdEnterBuilding(unit.netId);
+    public void Gather(float amount, Resource resource) => CmdGather(amount, resource.netId);
+    public void ChangeAttribute(Unit unit, AttEnum attEnum, float value) => CmdChangeAttribute(unit.netId, attEnum, value);
+    public void CreateTempBuilding(BuildingEnum buildingType) => CmdCreateTempBuilding(buildingType);
+    public void CreateUnit(Building building) => CmdCreateUnit(building.FrontPosition, building.DefaultDestination);
+    public void PlaceBuilding(TemporaryBuilding temporaryBuilding) => CmdPlaceBuilding(temporaryBuilding.transform.position, temporaryBuilding.netId);
+    public void ChangeHealth(Selectable selectable, float value) => CmdChangeHealth(selectable.netId, value);
+    public void DestroySelectedObject(Selectable selectedObject) => CmdDestroy(selectedObject.netId);
 
     private Vector3 NearestWalkable(Vector3 position)
     {
@@ -193,6 +164,12 @@ public class Player : NetworkBehaviour
             if (selectable.Health == 0)
                 CmdDestroy(selectableId);
         }
+    }
+
+    [Command]
+    private void CmdAttack(NetworkInstanceId attackerId, NetworkInstanceId targetId)
+    {
+        GameState.Instance.RpcAttack(attackerId, targetId);
     }
 
     [Command]

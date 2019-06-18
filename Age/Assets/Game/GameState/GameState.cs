@@ -183,6 +183,24 @@ public class GameState : NetworkBehaviour {
     }
 
     [ClientRpc]
+    public void RpcAttack(NetworkInstanceId attackerId, NetworkInstanceId targetId)
+    {
+        NetworkIdentity targetIdentity;
+        ClientScene.objects.TryGetValue(targetId, out targetIdentity);
+        if (targetIdentity != null)
+        {
+            Selectable target = targetIdentity.GetComponent<Selectable>();
+            if (target.hasAuthority)
+            {
+                NetworkIdentity attackerIdentity;
+                ClientScene.objects.TryGetValue(attackerId, out attackerIdentity);
+                if (attackerIdentity != null)
+                    target.DealAttack(attackerIdentity.GetComponent<Selectable>());
+            }
+        }
+    }
+
+    [ClientRpc]
     public void RpcDestroyObject(Vector3 center, Vector3 size)
     {
         UpdateGraph(new Bounds(center, size));
