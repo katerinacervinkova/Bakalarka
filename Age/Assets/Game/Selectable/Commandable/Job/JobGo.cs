@@ -2,9 +2,9 @@
 
 public class JobGo : Job
 {
-    private readonly Job following;
     private Unit worker;
     private Vector3 destination;
+    private readonly Job following;
 
     public JobGo(Vector3 destination, Job following = null)
     {

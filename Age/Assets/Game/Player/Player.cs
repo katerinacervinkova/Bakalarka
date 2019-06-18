@@ -1,6 +1,7 @@
 ﻿using Pathfinding;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
@@ -53,6 +54,7 @@ public class Player : NetworkBehaviour
         {
             endGameCanvas = GameObject.Find("EndGameCanvas");
             endGameCanvas.SetActive(false);
+            endGameCanvas.transform.Find("MenuButton").GetComponent<Button>().onClick.AddListener(OnClickMainMenu);
         }
         CmdChangeInGame(true);
     }
@@ -80,14 +82,14 @@ public class Player : NetworkBehaviour
     public void Lose()
     {
         if (IsHuman)
-            endGameCanvas.GetComponent<Text>().text = "You lose!";
+            endGameCanvas.transform.Find("Text").GetComponent<Text>().text = "You lose!";
         EndGame();
     }
 
     public void Win()
     {
         if (IsHuman)
-            endGameCanvas.GetComponent<Text>().text = "You win!";
+            endGameCanvas.transform.Find("Text").GetComponent<Text>().text = "You win!";
         EndGame();
     }
 
@@ -97,7 +99,6 @@ public class Player : NetworkBehaviour
         if (IsHuman)
         {
             endGameCanvas.SetActive(true);
-            endGameCanvas.transform.Find("MenuButton").GetComponent<Button>().onClick.AddListener(OnClickMainMenu);
             ((HumanVisibilitySquares)GameState.Instance.GetSquares(playerControllerId)).SeeEverything();
             Destroy(GameObject.Find("MainCanvas"));
         }
@@ -105,7 +106,19 @@ public class Player : NetworkBehaviour
 
     private void OnClickMainMenu()
     {
-
+        // TODO
+        var manager = FindObjectOfType<CustomLobbyManager>();
+        manager.StopClient();
+        if (isServer)
+        {
+            Destroy(NetworkManager.singleton);
+            NetworkManager.singleton.StopHost();
+            NetworkManager.singleton.StopMatchMaker();
+            Network.Disconnect();
+            NetworkServer.Reset();
+        }
+        manager.ChangeTo(manager.mainMenuPanel);
+        Destroy(manager.gameObject);
     }
 
     public void ExitBuilding(Unit unit, Building building)

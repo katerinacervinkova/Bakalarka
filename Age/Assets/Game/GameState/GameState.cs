@@ -55,14 +55,10 @@ public class GameState : NetworkBehaviour {
     public List<TemporaryBuilding> VisibleEnemyTemporaryBuildings(int playerId) => GetSquares(playerId).VisibleEnemyTemporaryBuildings();
     public List<Resource> VisibleResources(int playerId) => GetSquares(playerId).VisibleResources();
 
-    public T GetClosestResource<T>(Vector2 squareID, T resource) where T : Resource => GetSquares().ClosestResource(resource, squareID);
-    public T ClosestVisibleResource<T>(Vector3 destination, int playerId) where T : Resource => GetSquares(playerId).ClosestVisibleResource<T>(SquarePosition(destination));
+    public T GetClosestResource<T>(Vector2 squareID, T resource) where T : Resource => GetSquares().ClosestVisibleResource(resource, squareID);
+    public T ClosestVisibleResource<T>(Vector3 destination, int playerId) where T : Resource => GetSquares(playerId).ClosestGloballyVisibleResource<T>(SquarePosition(destination));
 
-    public Selectable GetNearestTarget(Vector3 position, int maxDistance)
-    {
-        return ((IEnumerable<Selectable>)Units).Concat(Buildings).Where(s => s != null && !s.hasAuthority && Vector3.Distance(position, s.transform.position) < maxDistance).
-            OrderBy(s => Vector3.Distance(position, s.transform.position)).FirstOrDefault();
-    }
+    public Selectable ClosestVisibleTarget(Vector3 position, int playerId) => GetSquares(playerId).ClosestVisibleTarget(SquarePosition(position));
 
     public Vector3 GetClosestFreePosition(Vector3 position, int playerId) => GetSquares(playerId).GetClosestFreePosition(position);
 

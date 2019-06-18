@@ -20,6 +20,7 @@ public class Unit : Commandable
     public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
     public float Accuracy { get { return atts.Get(AttEnum.Accuracy); } set { atts.Set(AttEnum.Accuracy, value); } }
 
+    public float Range => 5;
     private Job Job { get; set; }
 
     public bool HasJob => Job != null;
@@ -125,8 +126,10 @@ public class Unit : Commandable
     {
         if (hasAuthority)
         {
-            Job following = goal.CreateJob(this);
-            SetJob(new JobGo(goal.FrontPosition, following));
+            if (goal.owner == owner)
+                SetJob(new JobGo(goal.FrontPosition, goal.GetOwnJob(this)));
+            else
+                SetJob(new JobFollow(goal, goal.GetEnemyJob(this)));
         }
     }
 

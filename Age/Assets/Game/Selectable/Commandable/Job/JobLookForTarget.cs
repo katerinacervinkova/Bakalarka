@@ -4,7 +4,7 @@ public class JobLookForTarget : Job
 {
     private Job following = null;
     private readonly float minTime = 1;
-    private float timeElapsed = 0;
+    private float timeElapsed = 1;
     public override Job Following => following;
 
     public override void Do(Unit worker)
@@ -12,11 +12,11 @@ public class JobLookForTarget : Job
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
-            Selectable target = GameState.Instance.GetNearestTarget(worker.transform.position, 20);
+            Selectable target = GameState.Instance.ClosestVisibleTarget(worker.transform.position, worker.playerId);
             if (target != null)
             {
                 Completed = true;
-                following = new JobGo(target.FrontPosition, new AttackJob(target));
+                following = new JobFollow(target, new JobAttack(target));
             }
             timeElapsed -= minTime;
         }

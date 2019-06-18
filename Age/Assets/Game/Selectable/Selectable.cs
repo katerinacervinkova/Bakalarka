@@ -39,7 +39,7 @@ public abstract class Selectable : NetworkBehaviour {
     public List<Purchase> Purchases { get; private set; } = new List<Purchase>();
 
     public abstract Job GetOwnJob(Commandable worker = null);
-    public virtual Job GetEnemyJob(Commandable worker = null) => new AttackJob(this);
+    public virtual Job GetEnemyJob(Commandable worker = null) => new JobAttack(this);
 
     public override void OnStartClient()
     {
@@ -130,12 +130,6 @@ public abstract class Selectable : NetworkBehaviour {
 
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
     public virtual void RightMouseClickObject(Selectable hitObject) { }
-    public virtual Job CreateJob(Commandable worker)
-    {
-        if (owner == worker.owner)
-            return GetOwnJob(worker);
-        return GetEnemyJob(worker);
-    }
 
     public bool IsWithinSight(Vector3 position)
     {

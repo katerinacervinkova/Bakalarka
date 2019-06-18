@@ -13,7 +13,6 @@ public class MenuPlayer : NetworkBehaviour {
 
     private PlayerRow playerRow;
     private MenuPlayerList playerList;
-    private CustomLobbyManager lobbyManager;
     private MenuManager menuManager;
 
     [SerializeField]
@@ -27,7 +26,6 @@ public class MenuPlayer : NetworkBehaviour {
     {
         base.OnStartClient();
         DontDestroyOnLoad(gameObject);
-        lobbyManager = FindObjectOfType<CustomLobbyManager>();
         playerList = FindObjectOfType<MenuPlayerList>();
         menuManager = FindObjectOfType<MenuManager>();
         SceneManager.activeSceneChanged += SceneChanged;

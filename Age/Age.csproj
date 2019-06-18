@@ -387,10 +387,11 @@
     <Compile Include="Assets\Game\Selectable\Building\TemporaryBuilding.cs" />
     <Compile Include="Assets\Game\Selectable\Building\Transaction.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Commandable.cs" />
-    <Compile Include="Assets\Game\Selectable\Commandable\Job\AttackJob.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\Job.cs" />
+    <Compile Include="Assets\Game\Selectable\Commandable\Job\JobAttack.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobBuild.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobEnter.cs" />
+    <Compile Include="Assets\Game\Selectable\Commandable\Job\JobFollow.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobGather.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobGo.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobLookForTarget.cs" />

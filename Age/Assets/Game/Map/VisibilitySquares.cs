@@ -57,7 +57,7 @@ public class VisibilitySquares : MonoBehaviour {
     {
         var units = new List<Unit>();
         foreach (var square in squares.Values)
-            if (square.activated)
+            if (square.wasActive)
                 units.AddRange(square.EnemyUnits);
         return units;
     }
@@ -100,10 +100,45 @@ public class VisibilitySquares : MonoBehaviour {
         return Vector3.positiveInfinity;
     }
 
-    public T ClosestResource<T>(T resource, Vector2 squareID) where T : Resource => (T)squares[squareID].AdjoiningSquares.SelectMany(s => s.Resources).
+    public T ClosestVisibleResource<T>(T resource, Vector2 squareID) where T : Resource => (T)squares[squareID].AdjoiningSquares.SelectMany(s => s.Resources).
         Where(r => r is T && r != resource).OrderBy(r => Vector2.Distance(squareID, r.SquareID)).FirstOrDefault();
 
-    public T ClosestVisibleResource<T>(Vector2 squareId) where T : Resource => (T)VisibleResources().Where(r => r is T).OrderBy(r => Vector2.Distance(squareId, r.SquareID)).FirstOrDefault();
+    public T ClosestGloballyVisibleResource<T>(Vector2 squareId) where T : Resource => (T)VisibleResources().Where(r => r is T).OrderBy(r => Vector2.Distance(squareId, r.SquareID)).FirstOrDefault();
+
+    public Selectable ClosestGloballyVisibleTarget(Vector2 id)
+    {
+        var unit = VisibleEnemyUnits().OrderBy(u => Vector2.Distance(id, u.SquareID)).FirstOrDefault();
+        var tempBuilding = VisibleEnemyTemporaryBuildings().OrderBy(b => Vector2.Distance(id, b.SquareID)).FirstOrDefault();
+        var building = VisibleEnemyBuildings().OrderBy(b => Vector2.Distance(id, b.SquareID)).FirstOrDefault();
+
+        var unitDist = float.PositiveInfinity;
+        var buildingDist = float.PositiveInfinity;
+        var tempBuildingDist = float.PositiveInfinity;
+
+        if (unit != null)
+            unitDist = Vector2.Distance(id, unit.SquareID);
+        if (building != null)
+            buildingDist = Vector2.Distance(id, building.SquareID);
+        if (tempBuilding != null)
+            tempBuildingDist = Vector2.Distance(id, tempBuilding.SquareID);
+
+        if (unitDist < tempBuildingDist && unitDist < buildingDist)
+            return unit;
+        if (buildingDist < tempBuildingDist && buildingDist < unitDist)
+            return building;
+        return tempBuilding;
+    }
+
+    public Selectable ClosestVisibleTarget(Vector2 squareId)
+    {
+        var unit = squares[squareId].AdjoiningSquares.SelectMany(s => s.EnemyUnits).OrderBy(b => Vector2.Distance(squareId, b.SquareID)).FirstOrDefault();
+        if (unit != null)
+            return unit;
+        var building = squares[squareId].AdjoiningSquares.SelectMany(s => s.EnemyTemporaryBuildings).OrderBy(b => Vector2.Distance(squareId, b.SquareID)).FirstOrDefault();
+        if (building != null)
+            return building;
+        return squares[squareId].AdjoiningSquares.SelectMany(s => s.EnemyBuildings).OrderBy(b => Vector2.Distance(squareId, b.SquareID)).FirstOrDefault();
+    }
 
     public Vector2 GetSquare(Vector3 position) => new Vector2((float)Math.Round(position.x / 5), (float)Math.Round(position.z / 5));
     public Vector3 GetPosition(Vector2 squareId) => new Vector3(5 * squareId.x, 0, 5 * squareId.y);
