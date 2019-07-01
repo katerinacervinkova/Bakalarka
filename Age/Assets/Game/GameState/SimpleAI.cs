@@ -10,12 +10,14 @@ public class SimpleAI : MonoBehaviour {
 
     void Update () {
 
-        if (!hasBuilding)
+        aiPlayer.SenseIdleUnits().ForEach(u => aiPlayer.Explore(u));
+
+        /*if (!hasBuilding)
             hasBuilding = aiPlayer.BuildBuilding(BuildingEnum.MainBuilding, new Vector3());
         else
         {
             aiPlayer.BuildUnit();
-            aiPlayer.SenseIdleUnits().ForEach(u => aiPlayer.Gather<FoodResource>(u));
-        }
+            //aiPlayer.SenseIdleUnits().ForEach(u => aiPlayer.Gather<FoodResource>(u));
+        }*/
     }
 }

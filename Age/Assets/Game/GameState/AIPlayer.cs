@@ -86,4 +86,6 @@ public class AIPlayer : MonoBehaviour
         if (res != null)
             GatherFromResource(commandable, res);
     }
+
+    public void Explore(Unit unit) => unit.SetJob(new JobExplore());
 }

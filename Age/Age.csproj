@@ -355,7 +355,7 @@
     <Compile Include="Assets\Extensions\CustomLobbyHook.cs" />
     <Compile Include="Assets\Extensions\CustomLobbyManager.cs" />
     <Compile Include="Assets\Extensions\CustomLobbyMenu.cs" />
-    <Compile Include="Assets\Extensions\LobbyExitButton.cs" />
+    <Compile Include="Assets\Extensions\ExitButton.cs" />
     <Compile Include="Assets\Game\GameState\AIPlayer.cs" />
     <Compile Include="Assets\Game\GameState\CameraMovement.cs" />
     <Compile Include="Assets\Game\GameState\GameState.cs" />
@@ -391,6 +391,7 @@
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobAttack.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobBuild.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobEnter.cs" />
+    <Compile Include="Assets\Game\Selectable\Commandable\Job\JobExplore.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobFollow.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobGather.cs" />
     <Compile Include="Assets\Game\Selectable\Commandable\Job\JobGo.cs" />

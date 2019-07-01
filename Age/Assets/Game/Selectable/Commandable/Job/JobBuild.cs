@@ -13,6 +13,7 @@ public class JobBuild : Job {
         this.building = building;
         buildingPos = building.transform.position;
         buildingCollider = building.GetComponent<Collider>();
+        this.playerId = playerId;
     }
 
     public override Job Following

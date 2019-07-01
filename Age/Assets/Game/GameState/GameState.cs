@@ -1,7 +1,6 @@
 ﻿using Pathfinding;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,6 +18,8 @@ public class GameState : NetworkBehaviour {
     }
 
     public GameObject errorCanvas;
+
+    public readonly int MapSize = 200;
 
     public List<Unit> Units { get; private set; } = new List<Unit>();
     public List<Building> Buildings { get; private set; } = new List<Building>();
@@ -54,6 +55,12 @@ public class GameState : NetworkBehaviour {
     public List<Building> VisibleEnemyBuildings(int playerId) => GetSquares(playerId).VisibleEnemyBuildings();
     public List<TemporaryBuilding> VisibleEnemyTemporaryBuildings(int playerId) => GetSquares(playerId).VisibleEnemyTemporaryBuildings();
     public List<Resource> VisibleResources(int playerId) => GetSquares(playerId).VisibleResources();
+
+    public void OnClientDisconnect()
+    {
+        if (PlayerState.Get().player.InGame)
+            errorCanvas.SetActive(true);
+    }
 
     public T GetClosestResource<T>(Vector2 squareID, T resource) where T : Resource => GetSquares().ClosestVisibleResource(resource, squareID);
     public T ClosestVisibleResource<T>(Vector3 destination, int playerId) where T : Resource => GetSquares(playerId).ClosestGloballyVisibleResource<T>(SquarePosition(destination));
@@ -95,6 +102,8 @@ public class GameState : NetworkBehaviour {
             if (visibilitySquares != null)
                 action.Invoke(visibilitySquares);
     }
+
+    public Vector3 GetRandomDestination() => new Vector3(UnityEngine.Random.value - 0.5f, 0, UnityEngine.Random.value - 0.5f) * MapSize * 2;
 
     [ClientRpc]
     public void RpcPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)

@@ -71,7 +71,6 @@ public class CustomLobbyManager : LobbyManager {
     public override void OnServerDisconnect(NetworkConnection nc)
     {
         NetworkServer.DestroyPlayersForConnection(nc);
-        GameState.Instance.errorCanvas.SetActive(true);
-
+        GameState.Instance.OnClientDisconnect();
     }
 }

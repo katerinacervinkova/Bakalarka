@@ -55,7 +55,6 @@ public class Player : NetworkBehaviour
         {
             endGameCanvas = GameObject.Find("EndGameCanvas");
             endGameCanvas.SetActive(false);
-            endGameCanvas.transform.Find("MenuButton").GetComponent<Button>().onClick.AddListener(OnClickMainMenu);
         }
         CmdChangeInGame(true);
     }
@@ -103,23 +102,6 @@ public class Player : NetworkBehaviour
             ((HumanVisibilitySquares)GameState.Instance.GetSquares(playerControllerId)).SeeEverything();
             Destroy(GameObject.Find("MainCanvas"));
         }
-    }
-
-    private void OnClickMainMenu()
-    {
-        // TODO
-        var manager = FindObjectOfType<CustomLobbyManager>();
-        manager.StopClient();
-        if (isServer)
-        {
-            Destroy(NetworkManager.singleton);
-            NetworkManager.singleton.StopHost();
-            NetworkManager.singleton.StopMatchMaker();
-            Network.Disconnect();
-            NetworkServer.Reset();
-        }
-        manager.ChangeTo(manager.mainMenuPanel);
-        Destroy(manager.gameObject);
     }
 
     public void ExitBuilding(Unit unit, Building building)

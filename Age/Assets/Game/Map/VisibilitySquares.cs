@@ -7,6 +7,8 @@ public class VisibilitySquares : MonoBehaviour {
 
     public int playerId;
 
+    private const int SQUARE_SIZE = 5;
+
     [SerializeField]
     protected MapSquare squarePrefab;
 
@@ -14,8 +16,9 @@ public class VisibilitySquares : MonoBehaviour {
 
     protected virtual void Start()
     {
-        for (int i = -40; i <= 40; i++)
-            for (int j = -40; j <= 40; j++)
+        int count = GameState.Instance.MapSize / SQUARE_SIZE;
+        for (int i = -count ; i <= count; i++)
+            for (int j = -count; j <= count; j++)
             {
                 Vector2 squareId = new Vector2(i, j);
                 squares[squareId] = Instantiate(squarePrefab, GetPosition(squareId), Quaternion.identity, transform);
@@ -141,7 +144,7 @@ public class VisibilitySquares : MonoBehaviour {
     }
 
     public Vector2 GetSquare(Vector3 position) => new Vector2((float)Math.Round(position.x / 5), (float)Math.Round(position.z / 5));
-    public Vector3 GetPosition(Vector2 squareId) => new Vector3(5 * squareId.x, 0, 5 * squareId.y);
+    public Vector3 GetPosition(Vector2 squareId) => new Vector3(SQUARE_SIZE * squareId.x, 0, SQUARE_SIZE * squareId.y);
 
     public void AddToSquare(Vector2 square, Unit unit)
     {
