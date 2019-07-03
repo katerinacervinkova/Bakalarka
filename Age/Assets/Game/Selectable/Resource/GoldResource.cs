@@ -4,7 +4,7 @@ public class GoldResource : Resource
 {
     public override string Name => "Gold mine";
 
-    private static readonly float maxCapacity = 100;
+    private static readonly float maxCapacity = 1000;
 
     protected override float MaxCapacity => maxCapacity;
 

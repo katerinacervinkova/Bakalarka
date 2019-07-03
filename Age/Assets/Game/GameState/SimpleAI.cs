@@ -6,7 +6,7 @@ public class SimpleAI : MonoBehaviour {
 
     public AIPlayer aiPlayer;
 
-    bool hasBuilding = false;
+    //bool hasBuilding = false;
 
     void Update () {
 

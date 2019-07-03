@@ -52,8 +52,9 @@ public class Unit : Commandable
         SetVisibility(true);
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
         JobUpdate();
         GameState.Instance.PositionChange(this);
     }
@@ -154,12 +155,12 @@ public class Unit : Commandable
 
     protected override void InitPurchases()
     {
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.House));
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Barracks));
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Mill));
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.MainBuilding));
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Infirmary));
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Library));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.House));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Barracks));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Mill));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.MainBuilding));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Infirmary));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Library));
     }
 
     public void OnTargetReached()

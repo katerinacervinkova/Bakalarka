@@ -127,6 +127,8 @@ public class Player : NetworkBehaviour
             constrainWalkability = true,
             walkable = true
         };
+        if (AstarPath.active == null)
+            return new Vector3();
         return AstarPath.active.GetNearest(position, nodeConstraint).position;
     }
 

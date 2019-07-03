@@ -18,7 +18,10 @@ public class MainBuilding : Building {
 
     protected override void InitPurchases()
     {
-        Purchases.Add(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Unit));
+        AddPurchase(PurchasesEnum.Unit);
+        AddPurchase(PurchasesEnum.StoneAge);
+        AddPurchase(PurchasesEnum.IronAge);
+        AddPurchase(PurchasesEnum.DiamondAge);
     }
 
     protected override void UpdateUnit(Unit unit) { }

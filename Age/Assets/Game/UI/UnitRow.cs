@@ -29,12 +29,12 @@ public class UnitRow : MonoBehaviour {
             building.Exit(unit);
             building.OnUnitsChange();
         });
-        unitNameText.text = unit.Name;
         UpdateDescription();
     }
 
     public void UpdateDescription()
     {
-        unitText.text = building.UnitTextFunc.Invoke(unit);
+        unitNameText.text = building.UnitName(unit);
+        unitText.text = building.UnitTextFunc(unit);
     }
 }

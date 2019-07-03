@@ -44,9 +44,9 @@ public class MenuManager : MonoBehaviour {
     public void RemovePlayer(short playerControllerId)
     {
         ClientScene.RemovePlayer(playerControllerId);
-        if (lobbyManager.playerCount == 1)
+        if (lobbyManager.playerCount == 1 && playButton != null)
             playButton.interactable = false;
-        if (lobbyManager.maxPlayers - 1 == lobbyManager.playerCount)
+        if (lobbyManager.maxPlayers - 1 == lobbyManager.playerCount && addPlayerbutton != null)
             addPlayerbutton.interactable = true;
     }
 

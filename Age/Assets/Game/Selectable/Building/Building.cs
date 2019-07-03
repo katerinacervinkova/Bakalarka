@@ -16,13 +16,14 @@ public abstract class Building : Selectable {
     private readonly float minTime = 1;
     private float timeElapsed = 0;
 
-    protected abstract int MaxPopulationIncrease { get; }
+    protected virtual int MaxPopulationIncrease { get; } = 0;
 
     protected abstract void UpdateUnit(Unit unit);
 
     protected abstract void ChangeColor();
 
     public abstract Func<Unit, string> UnitTextFunc { get; }
+    public virtual string UnitName(Unit unit) => unit.Name;
 
     public override void OnStartClient() { }
 
@@ -32,8 +33,9 @@ public abstract class Building : Selectable {
         ShowUnitsWindow();
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {

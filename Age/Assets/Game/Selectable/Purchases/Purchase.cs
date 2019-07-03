@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -6,15 +7,17 @@ public class Purchase
 {
     protected readonly int playerId;
 
-    public string Name;
-    public Texture2D image;
-    public Action<Selectable> action;
+    public readonly string Name;
+    public readonly Texture2D image;
+    protected readonly Action<Selectable> action;
+    public readonly Predicate<Selectable> IsActive;
+    private Dictionary<Selectable, bool> wasActive = new Dictionary<Selectable, bool>();
 
     protected int food, wood, gold, population;
     protected string description;
 
-
-    public Purchase(string Name, int playerId, Texture2D image, string description, Action<Selectable> action, int food, int wood, int gold, int population = 0)
+    public Purchase(string Name, int playerId, Texture2D image, string description, Action<Selectable> action, Predicate<Selectable> IsActive,
+        int food, int wood, int gold, int population = 0)
     {
         this.Name = Name;
         this.playerId = playerId;
@@ -24,6 +27,7 @@ public class Purchase
         this.population = population;
         this.description = description;
         this.action = action;
+        this.IsActive = IsActive;
         this.image = image;
     }
 
@@ -38,7 +42,7 @@ public class Purchase
         return false;
     }
 
-    public void Reset()
+    public virtual void Reset(Selectable selectable = null)
     {
         PlayerState.Get(playerId).Pay(-food, -wood, -gold, -population);
     }
@@ -73,5 +77,17 @@ public class Purchase
         if (increase + current > max)
             return $"<color=red>{line}</color>";
         return line;
+    }
+
+    public bool ActiveChanged(Selectable selectable)
+    {
+        bool active = IsActive(selectable);
+
+        if (!wasActive.ContainsKey(selectable)) 
+            wasActive[selectable] = active;
+        if (active == wasActive[selectable])
+            return false;
+        wasActive[selectable] = active;
+        return true;
     }
 }

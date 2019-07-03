@@ -2,6 +2,7 @@
 
 public class JobGather<T> : Job where T : Resource {
 
+    private Collider resourceCollider;
     private Vector2 squareID;
     private T resource;
     private readonly float minTime = 1;
@@ -20,12 +21,13 @@ public class JobGather<T> : Job where T : Resource {
     public JobGather(T resource)
     {
         this.resource = resource;
+        resourceCollider = resource.GetComponent<Collider>();
         squareID = resource.SquareID;
     }
 
     public override void Do(Unit worker)
     {
-        if (resource == null || Vector3.Distance(resource.FrontPosition, worker.transform.position) > resource.size.x + 3)
+        if (resource == null || Vector3.Distance(resourceCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > resource.size.x + 2)
         {
             worker.SetNextJob();
             return;

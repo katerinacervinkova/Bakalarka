@@ -5,7 +5,7 @@
     protected override void Start()
     {
         base.Start();
-        SeeEverything();
+        // SeeEverything();
     }
 
 	protected override void Update ()

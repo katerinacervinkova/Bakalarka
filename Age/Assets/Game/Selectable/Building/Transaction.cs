@@ -29,7 +29,7 @@ public class Transaction
 
     public void Reset()
     {
-        purchase.Reset();
+        purchase.Reset(building);
     }
 }
 

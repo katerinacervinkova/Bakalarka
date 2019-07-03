@@ -9,8 +9,9 @@ public class Regiment : Commandable {
 
     public override string Name => $"Units({units.Count})";
 
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
         if (PlayerState.Get(playerId).SelectedObject != this || units.Count == 0)
         {
             units.ForEach(u => u.Reg = null);
@@ -32,7 +33,7 @@ public class Regiment : Commandable {
 
     protected override void ShowAllButtons()
     {
-        UIManager.Instance.ShowPurchaseButtons(units[0].Purchases);
+        UIManager.Instance.ShowPurchaseButtons(units[0].Purchases, this);
     }
 
     protected override void HideAllButtons()

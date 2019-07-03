@@ -43,17 +43,16 @@ public class UIManager : MonoBehaviour {
 
     public Building BuildingWindowShown { get; private set; }
 
-    public void ShowPurchaseButtons(List<Purchase> transactions)
+    public void ShowPurchaseButtons(List<Purchase> purchases, Selectable selectable)
     {
+        int j = 0;
         for (int i = 0; i < schedulers.Count; i++)
         {
-            if (i < transactions.Count)
-            {
-                buttons[i].SetPurchase(transactions[i]);
-                buttons[i].gameObject.SetActive(true);
-            }
-            else
-                buttons[i].gameObject.SetActive(false);
+            while (j < purchases.Count && !purchases[j].IsActive(selectable))
+                j++;
+            buttons[i].gameObject.SetActive(j < purchases.Count);
+            if (j < purchases.Count)
+                buttons[i].SetPurchase(purchases[j++]);
         }
     }
 
@@ -68,6 +67,7 @@ public class UIManager : MonoBehaviour {
         {
             if (i < transactions.Count)
             {
+                schedulers[i].toolTippedObject.Description = transactions[i].purchase.Name;
                 schedulers[i].image.fillAmount = 1 - (transactions[i].Progress / transactions[i].MaxProgress);
                 schedulers[i].gameObject.SetActive(true);
             }
@@ -131,10 +131,10 @@ public class UIManager : MonoBehaviour {
         PlayerState.Get().SelectIdle();
     }
 
-    public void ChangePlayerStateText(string playerName, string description)
+    public void ChangePlayerStateText(string playerName, PlayerState.AgeEnum age, string description)
     {
         if (playerStateText != null)
-            playerStateText.text = $"<b><i>{playerName}</i></b>\n{description}";
+            playerStateText.text = $"<b><i>{playerName}</i></b>\n<i>{age} Age</i>\n{description}";
     }
 
     public void ShowObjectText(string objectName, string description)

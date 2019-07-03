@@ -66,6 +66,23 @@ public abstract class Selectable : NetworkBehaviour {
 
     protected virtual void InitPurchases() { }
 
+    public void AddPurchase(PurchasesEnum purchasesEnum)
+    {
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(purchasesEnum));
+    }
+
+    public void AddPurchase(Purchase purchase)
+    {
+        Purchases.Add(purchase);
+        PlayerState.Get().OnStateChange(this);
+    }
+
+    public void RemovePurchase(Purchase purchase)
+    {
+        Purchases.Remove(purchase);
+        PlayerState.Get().OnStateChange(this);
+    }
+
     public virtual void SetSelection(bool selected)
     {
         SetVisualSelection(selected);
@@ -114,9 +131,18 @@ public abstract class Selectable : NetworkBehaviour {
             healthBar.transform.localScale = new Vector3(2, 2, 2);
     }
 
+    protected virtual void Update()
+    {
+        foreach (Purchase purchase in Purchases)
+        {
+            if (purchase.ActiveChanged(this))
+                PlayerState.Get().OnStateChange(purchase);
+        }
+    }
+
     protected virtual void ShowAllButtons()
     {
-        UIManager.Instance.ShowPurchaseButtons(Purchases);
+        UIManager.Instance.ShowPurchaseButtons(Purchases, this);
     }
 
     protected virtual void HideAllButtons()

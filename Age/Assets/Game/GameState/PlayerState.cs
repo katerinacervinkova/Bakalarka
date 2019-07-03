@@ -29,7 +29,7 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-       
+
     private int population = 0;
     public int Population
     {
@@ -71,6 +71,23 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
+
+    public enum AgeEnum { Wood, Stone, Iron, Diamond }
+    private AgeEnum age = AgeEnum.Wood;
+    public AgeEnum Age
+    {
+        get { return age; }
+        set
+        {
+            age = value;
+            OnPlayerStateChange();
+        }
+    }
+
+    public bool BuildingBooks { get; set; } = false;
+    public bool MedicineBooks1 { get; set; } = false;
+    public bool MedicineBooks2 { get; set; } = false;
+
 
     public Selectable SelectedObject { get; private set; }
     public TemporaryBuilding BuildingToBuild { get; private set; }
@@ -120,7 +137,7 @@ public class PlayerState : MonoBehaviour {
     public void OnPlayerStateChange()
     {
         if (player != null && player.IsHuman && UIManager.Instance != null)
-            UIManager.Instance.ChangePlayerStateText(player.Name, GetResourceText());
+            UIManager.Instance.ChangePlayerStateText(player.Name, Age, GetResourceText());
     }
 
     private string GetResourceText()
@@ -157,7 +174,16 @@ public class PlayerState : MonoBehaviour {
     public void OnStateChange(Selectable selectable)
     {
         if (player.IsHuman && SelectedObject == selectable)
+        {
             UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
+            UIManager.Instance.ShowPurchaseButtons(selectable.Purchases, selectable);
+        }
+    }
+
+    public void OnStateChange(Purchase purchase)
+    {
+        if (SelectedObject != null && SelectedObject.Purchases.Contains(purchase))
+            UIManager.Instance.ShowPurchaseButtons(SelectedObject.Purchases, SelectedObject);
     }
 
     public bool MoveBuildingToBuild(Vector3 hitPoint)

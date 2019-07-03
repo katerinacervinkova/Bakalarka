@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 224591825283554734}
   - component: {fileID: 114579649446729468}
   - component: {fileID: 114717087627731068}
+  - component: {fileID: 114392540512027218}
   m_Layer: 5
   m_Name: TransactionButton
   m_TagString: Untagged
@@ -89,6 +90,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 0
   m_FillOrigin: 2
+--- !u!114 &114392540512027218
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161923684244982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4164a01072e47d04f92b826cbb94aab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  description: 
 --- !u!114 &114579649446729468
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -103,6 +116,7 @@ MonoBehaviour:
   index: 0
   backgroundImage: {fileID: 114804287220816304}
   image: {fileID: 114368359606722356}
+  toolTippedObject: {fileID: 114392540512027218}
 --- !u!114 &114717087627731068
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -209,7 +223,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1161923684244982}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -270, y: 12, z: 0}
+  m_LocalPosition: {x: -280, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224010234134795700}
@@ -218,7 +232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -270, y: 12}
+  m_AnchoredPosition: {x: -280, y: 2}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224865936430794612
