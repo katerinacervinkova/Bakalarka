@@ -7,6 +7,8 @@ public class House : Building
 
     public override string Name => "House";
 
+    protected override int UnitCapacity => 1;
+
     protected override int MaxPopulationIncrease => 10;
 
     protected override void ChangeColor()

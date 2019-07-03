@@ -6,7 +6,9 @@ public class Infirmary : Building
     private readonly float noHealerHealthIncrease = 0.2f;
     private readonly float healthIncrease = 0.05f;
 
-    private int maxUnitsHealing = 5;
+    private int maxUnitsHealing = 2;
+
+    protected override int UnitCapacity => 20;
 
     private readonly float healingIncrease = 0.005f;
     public Unit Healer = null;

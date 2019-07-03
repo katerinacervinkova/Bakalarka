@@ -11,7 +11,7 @@ public abstract class Building : Selectable {
     public List<Transaction> transactions = new List<Transaction>();
 
     protected List<Unit> unitsInside = new List<Unit>();
-    protected int unitCapacity = 10;
+    protected virtual int UnitCapacity => 5;
 
     private readonly float minTime = 1;
     private float timeElapsed = 0;
@@ -91,7 +91,7 @@ public abstract class Building : Selectable {
 
     public bool Enter(Unit unit)
     {
-        if (unitsInside.Count + 1 >= unitCapacity)
+        if (unitsInside.Count + 1 >= UnitCapacity)
             return false;
         unitsInside.Add(unit);
         return true;

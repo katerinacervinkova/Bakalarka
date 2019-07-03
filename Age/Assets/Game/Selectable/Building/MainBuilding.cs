@@ -9,6 +9,8 @@ public class MainBuilding : Building {
 
     protected override int MaxPopulationIncrease => 5;
 
+    protected override int UnitCapacity => 100;
+
     protected override void ChangeColor()
     {
         visibleObject.transform.Find("Building/Main Roof").GetComponent<MeshRenderer>().material.color = owner.color;
