@@ -7,6 +7,7 @@
     MainBuilding,
     Mill,
     Sawmill,
+    Bank,
 
     Unit,
     StoneAge,

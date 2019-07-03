@@ -379,6 +379,7 @@
     <Compile Include="Assets\Game\Player\MouseActivity.cs" />
     <Compile Include="Assets\Game\Player\Player.cs" />
     <Compile Include="Assets\Game\Player\RightMouseActivity.cs" />
+    <Compile Include="Assets\Game\Selectable\Building\Bank.cs" />
     <Compile Include="Assets\Game\Selectable\Building\Barracks.cs" />
     <Compile Include="Assets\Game\Selectable\Building\Building.cs" />
     <Compile Include="Assets\Game\Selectable\Building\BuildingEnum.cs" />

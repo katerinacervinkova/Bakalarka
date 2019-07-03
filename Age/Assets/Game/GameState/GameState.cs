@@ -169,6 +169,9 @@ public class GameState : NetworkBehaviour {
             case BuildingEnum.Sawmill:
                 building = tempBuilding.gameObject.AddComponent<Sawmill>() as Sawmill;
                 break;
+            case BuildingEnum.Bank:
+                building = tempBuilding.gameObject.AddComponent<Bank>() as Bank;
+                break;
             default:
                 building = null;
                 break;

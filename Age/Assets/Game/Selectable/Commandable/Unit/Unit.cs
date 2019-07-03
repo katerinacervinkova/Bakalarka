@@ -159,6 +159,7 @@ public class Unit : Commandable
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Barracks));
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Mill));
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Sawmill));
+        AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Bank));
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.MainBuilding));
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Infirmary));
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(PurchasesEnum.Library));

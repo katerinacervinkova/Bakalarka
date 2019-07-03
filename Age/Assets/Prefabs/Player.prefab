@@ -122,6 +122,8 @@ MonoBehaviour:
     type: 2}
   sawmillPrefab: {fileID: 114683138186723670, guid: 68385f773dc40cb4088325e1d569485a,
     type: 2}
+  bankPrefab: {fileID: 114610002085775398, guid: 98d2d6cb5e2265641a494c7e099e08c0,
+    type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}
   unitPrefab: {fileID: 114252306648027516, guid: 306508b1a11cf8d47b055b78b3965e0a,

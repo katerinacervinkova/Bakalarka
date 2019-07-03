@@ -24,6 +24,8 @@ public class PlayerPurchases : MonoBehaviour {
     [SerializeField]
     private Texture2D sawmillImage;
     [SerializeField]
+    private Texture2D bankImage;
+    [SerializeField]
     private Texture2D unitImage;
     [SerializeField]
     private Texture2D stoneAgeImage;
@@ -106,6 +108,11 @@ public class PlayerPurchases : MonoBehaviour {
                 "Sawmill", player.playerControllerId, sawmillImage, "Create Sawmill to gather wood.",
                 s => player.CreateTempBuilding(BuildingEnum.Sawmill),
                 s => ReachedAge(PlayerState.AgeEnum.Stone), food: 0, wood: 10, gold: 0),
+
+            [PurchasesEnum.Bank] = new Purchase(
+                "Bank", player.playerControllerId, bankImage, "Create Bank to gather gold.",
+                s => player.CreateTempBuilding(BuildingEnum.Bank),
+                s => ReachedAge(PlayerState.AgeEnum.Iron), food: 0, wood: 10, gold: 0),
             #endregion
 
             #region main building purchases
@@ -254,6 +261,8 @@ public class PlayerPurchases : MonoBehaviour {
                 return Get(PurchasesEnum.Mill);
             case BuildingEnum.Sawmill:
                 return Get(PurchasesEnum.Sawmill);
+            case BuildingEnum.Bank:
+                return Get(PurchasesEnum.Bank);
             default:
                 return null;
         }

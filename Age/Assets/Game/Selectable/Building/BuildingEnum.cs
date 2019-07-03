@@ -6,5 +6,6 @@
     Infirmary,
     House,
     Mill,
-    Sawmill
+    Sawmill,
+    Bank
 }
