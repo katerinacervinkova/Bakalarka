@@ -26,6 +26,8 @@ public class Factory : MonoBehaviour
     [SerializeField]
     private TemporaryBuilding millPrefab;
     [SerializeField]
+    private TemporaryBuilding sawmillPrefab;
+    [SerializeField]
     private Regiment regimentPrefab;
     [SerializeField]
     private Unit unitPrefab;
@@ -117,6 +119,9 @@ public class Factory : MonoBehaviour
                 break;
             case BuildingEnum.Mill:
                 building = Instantiate(millPrefab);
+                break;
+            case BuildingEnum.Sawmill:
+                building = Instantiate(sawmillPrefab);
                 break;
             default:
                 building = null;

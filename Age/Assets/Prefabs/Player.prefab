@@ -91,8 +91,7 @@ MonoBehaviour:
   color: {r: 1, g: 0.003, b: 0, a: 0}
   factory: {fileID: 114881949609890668}
   victoryCondition: {fileID: 0}
-  winningText: {fileID: 0}
-  losingText: {fileID: 0}
+  InGame: 0
 --- !u!114 &114881949609890668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -120,6 +119,8 @@ MonoBehaviour:
   housePrefab: {fileID: 114251242508473602, guid: 1220e6964f01af646b3ab36acdf54e52,
     type: 2}
   millPrefab: {fileID: 114064050216438920, guid: 52a3191114b7dc0439f917b14f2dfc11,
+    type: 2}
+  sawmillPrefab: {fileID: 114683138186723670, guid: 68385f773dc40cb4088325e1d569485a,
     type: 2}
   regimentPrefab: {fileID: 114460282736292326, guid: f33358a452430c84da85337954a004c5,
     type: 2}

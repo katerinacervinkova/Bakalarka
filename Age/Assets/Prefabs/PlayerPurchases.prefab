@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1033672169012986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 83.88077, y: 6.148215e-17, z: -110.75639}
+  m_LocalPosition: {x: -126.71051, y: 1.7634168, z: -190.01817}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -58,4 +58,24 @@ MonoBehaviour:
   infirmaryImage: {fileID: 2800000, guid: 1808aaf328818114196be6815205d724, type: 3}
   houseImage: {fileID: 2800000, guid: 46f54490c934edf47b7091f7b26d43c6, type: 3}
   millImage: {fileID: 2800000, guid: 6c8bef770f41e224696d262232be9e6f, type: 3}
+  sawmillImage: {fileID: 2800000, guid: 2f2f1e11a535bc14aac57c694fbe037c, type: 3}
   unitImage: {fileID: 2800000, guid: 0de014ef540d7dd4291d8f56ab24a9db, type: 3}
+  stoneAgeImage: {fileID: 2800000, guid: 49b985b49ed5a4b4b886bf4f6fd185e2, type: 3}
+  ironAgeImage: {fileID: 2800000, guid: 5df31c612183b3e429984391e9a96d8e, type: 3}
+  diamondAgeImage: {fileID: 2800000, guid: d1da9f6052637d142a0dfcbe3b01c165, type: 3}
+  books1Image: {fileID: 2800000, guid: 42cad70accae2df42a94c3bdd0c3bac8, type: 3}
+  books2Image: {fileID: 2800000, guid: d1b309a065b609345bb123d61fafc787, type: 3}
+  books3Image: {fileID: 2800000, guid: d3d08ab630e7dbd40bc791f8844d51ff, type: 3}
+  books4Image: {fileID: 2800000, guid: a9655cb3608580248ae7f5d0c007ea00, type: 3}
+  books5Image: {fileID: 2800000, guid: 287e8ec09289a4246b799591464a6dcc, type: 3}
+  buildingBooksImage: {fileID: 0}
+  medicineBooks1Image: {fileID: 0}
+  medicineBooks2Image: {fileID: 0}
+  intelligenceImage: {fileID: 0}
+  buildingImage: {fileID: 0}
+  healingImage: {fileID: 0}
+  gear1Image: {fileID: 0}
+  gear2Image: {fileID: 0}
+  gear3Image: {fileID: 0}
+  gear4Image: {fileID: 0}
+  gear5Image: {fileID: 0}

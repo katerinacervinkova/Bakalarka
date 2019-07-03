@@ -5,5 +5,6 @@
     Barracks,
     Infirmary,
     House,
-    Mill
+    Mill,
+    Sawmill
 }

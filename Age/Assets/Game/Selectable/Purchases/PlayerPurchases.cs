@@ -8,6 +8,7 @@ public class PlayerPurchases : MonoBehaviour {
     
     private Dictionary<PurchasesEnum, Purchase> purchases;
 
+    #region images
     [SerializeField]
     private Texture2D mainBuildingImage;
     [SerializeField]
@@ -21,7 +22,48 @@ public class PlayerPurchases : MonoBehaviour {
     [SerializeField]
     private Texture2D millImage;
     [SerializeField]
+    private Texture2D sawmillImage;
+    [SerializeField]
     private Texture2D unitImage;
+    [SerializeField]
+    private Texture2D stoneAgeImage;
+    [SerializeField]
+    private Texture2D ironAgeImage;
+    [SerializeField]
+    private Texture2D diamondAgeImage;
+    [SerializeField]
+    private Texture2D books1Image;
+    [SerializeField]
+    private Texture2D books2Image;
+    [SerializeField]
+    private Texture2D books3Image;
+    [SerializeField]
+    private Texture2D books4Image;
+    [SerializeField]
+    private Texture2D books5Image;
+    [SerializeField]
+    private Texture2D buildingBooksImage;
+    [SerializeField]
+    private Texture2D medicineBooks1Image;
+    [SerializeField]
+    private Texture2D medicineBooks2Image;
+    [SerializeField]
+    private Texture2D intelligenceImage;
+    [SerializeField]
+    private Texture2D buildingImage;
+    [SerializeField]
+    private Texture2D healingImage;
+    [SerializeField]
+    private Texture2D gear1Image;
+    [SerializeField]
+    private Texture2D gear2Image;
+    [SerializeField]
+    private Texture2D gear3Image;
+    [SerializeField]
+    private Texture2D gear4Image;
+    [SerializeField]
+    private Texture2D gear5Image;
+    #endregion
 
     private PlayerState PlayerState => PlayerState.Get(player.playerControllerId);
 
@@ -59,6 +101,11 @@ public class PlayerPurchases : MonoBehaviour {
                 "Mill", player.playerControllerId, millImage, "Create Mill to gather food.",
                 s => player.CreateTempBuilding(BuildingEnum.Mill),
                 s => true, food: 0, wood: 10, gold: 0),
+
+            [PurchasesEnum.Sawmill] = new Purchase(
+                "Sawmill", player.playerControllerId, sawmillImage, "Create Sawmill to gather wood.",
+                s => player.CreateTempBuilding(BuildingEnum.Sawmill),
+                s => ReachedAge(PlayerState.AgeEnum.Stone), food: 0, wood: 10, gold: 0),
             #endregion
 
             #region main building purchases
@@ -68,86 +115,86 @@ public class PlayerPurchases : MonoBehaviour {
                 s => true, food: 20, wood: 0, gold: 0, population: 1),
 
             [PurchasesEnum.StoneAge] = new LoadingPurchase(
-                1, "Stone Age", player.playerControllerId, null, "Advance to the Stone Age. Grants access to new advancements and foundations.",
+                1, "Stone Age", player.playerControllerId, stoneAgeImage, "Advance to the Stone Age. Grants access to new advancements and foundations.",
                 s => PlayerState.Age = PlayerState.AgeEnum.Stone,
                 s => true, food: 0, wood: 1, gold: 0, oneTimePurchase: true),
 
             [PurchasesEnum.IronAge] = new LoadingPurchase(
-                1, "Iron Age", player.playerControllerId, null, "Advance to the Iron Age. Grants access to new advancements and foundations.",
+                1, "Iron Age", player.playerControllerId, ironAgeImage, "Advance to the Iron Age. Grants access to new advancements and foundations.",
                 s => PlayerState.Age = PlayerState.AgeEnum.Iron,
                 s => ReachedAge(PlayerState.AgeEnum.Stone), food: 0, wood: 1, gold: 0, oneTimePurchase: true),
 
             [PurchasesEnum.DiamondAge] = new LoadingPurchase(
-                1, "Diamond Age", player.playerControllerId, null, "Advance to the Diamond Age. Grants access to new advancements and foundations.",
+                1, "Diamond Age", player.playerControllerId, diamondAgeImage, "Advance to the Diamond Age. Grants access to new advancements and foundations.",
                 s => PlayerState.Age = PlayerState.AgeEnum.Diamond,
                 s => ReachedAge(PlayerState.AgeEnum.Iron), food: 0, wood: 1, gold: 0, oneTimePurchase: true),
             #endregion
 
             #region library purchases
             [PurchasesEnum.Books1] = new LoadingPurchase(
-                1, "Books 1", player.playerControllerId, null, "Supply library with new books. Increases maximum intelligence.",
+                1, "Books 1", player.playerControllerId, books1Image, "Supply library with new books. Increases maximum intelligence.",
                 s => { (s as Library).maxIntelligence = 20; (s as Library).Books1 = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Stone),
                 food: 0, wood: 1, gold: 1, oneTimePurchase: true),
 
             [PurchasesEnum.Books2] = new LoadingPurchase(
-                1, "Books 2", player.playerControllerId, null, "Supply library with new books. Increases maximum intelligence.",
+                1, "Books 2", player.playerControllerId, books2Image, "Supply library with new books. Increases maximum intelligence.",
                 s => { (s as Library).maxIntelligence = 35; (s as Library).Books2 = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Library).Books1,
                 food: 0, wood: 1, gold: 1, oneTimePurchase: true),
 
             [PurchasesEnum.Books3] = new LoadingPurchase(
-                1, "Books 3", player.playerControllerId, null, "Supply library with new books. Increases maximum intelligence.",
+                1, "Books 3", player.playerControllerId, books3Image, "Supply library with new books. Increases maximum intelligence.",
                 s => { (s as Library).maxIntelligence = 55; (s as Library).Books3 = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && PlayerState.Get(player.playerControllerId).units.Count > 30 && (s as Library).Books2,
                 food: 0, wood: 1, gold: 1, oneTimePurchase: true),
 
             [PurchasesEnum.Books4] = new LoadingPurchase(
-                1, "Books 4", player.playerControllerId, null, "Supply library with new books. Increases maximum intelligence.",
+                1, "Books 4", player.playerControllerId, books4Image, "Supply library with new books. Increases maximum intelligence.",
                 s => { (s as Library).maxIntelligence = 75; (s as Library).Books4 = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Diamond) && PlayerState.buildings.Where(b => b is Mill).Any() && (s as Library).Books3,
                 food: 0, wood: 1, gold: 1, oneTimePurchase: true),
 
             [PurchasesEnum.Books5] = new LoadingPurchase(
-                1, "Books 5", player.playerControllerId, null, "Supply library with new books. Increases maximum intelligence.",
+                1, "Books 5", player.playerControllerId, books5Image, "Supply library with new books. Increases maximum intelligence.",
                 s => { (s as Library).maxIntelligence = 100; (s as Library).Books5 = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Diamond) && (s as Library).Books4 && PlayerState.MedicineBooks2
                 && PlayerState.buildings.Where(b => b is Barracks && (b as Barracks).Gear5).Any(),
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
             [PurchasesEnum.BuildingBooks] = new LoadingPurchase(
-                1, "Building Books", player.playerControllerId, null, "Supply library with new books about building. Enables building skill development in library.",
+                1, "Building Books", player.playerControllerId, buildingBooksImage, "Supply library with new books about building. Enables building skill development in library.",
                 s => PlayerState.BuildingBooks = true,
-                s => ReachedAge(PlayerState.AgeEnum.Stone) && (s as Library).Books2,
+                s => ReachedAge(PlayerState.AgeEnum.Stone) && (s as Library).Books2 && PlayerState.buildings.Where(b => b is Sawmill).Any(),
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
             [PurchasesEnum.MedicineBooks1] = new LoadingPurchase(
-                1, "Medicine Books 1", player.playerControllerId, null, "Supply library with new books about medicine. Enables healing skill development in library.",
+                1, "Medicine Books 1", player.playerControllerId, medicineBooks1Image, "Supply library with new books about medicine. Enables healing skill development in library.",
                 s => PlayerState.MedicineBooks1 = true,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Library).Books3 && PlayerState.buildings.Where(b => b is Infirmary).Any(),
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
             [PurchasesEnum.MedicineBooks2] = new LoadingPurchase(
-                1, "Medicine Books 2", player.playerControllerId, null, "Supply library with new books about medicine. Increases doctors' effectivity.",
+                1, "Medicine Books 2", player.playerControllerId, medicineBooks2Image, "Supply library with new books about medicine. Increases doctors' effectivity.",
                 s => PlayerState.MedicineBooks2 = true,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && PlayerState.MedicineBooks1,
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
 
             [PurchasesEnum.Intelligence] = new LoadingPurchase(
-                5, "Intelligence", player.playerControllerId, null, "Change library focus to intelligence",
+                5, "Intelligence", player.playerControllerId, intelligenceImage, "Change library focus to intelligence",
                 s => (s as Library).Focus = Library.FocusEnum.Intelligence,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Library).Focus != Library.FocusEnum.Intelligence,
                 food: 0, wood: 0, gold: 0, oneTimePurchase: false),
 
             [PurchasesEnum.Building] = new LoadingPurchase(
-                5, "Building", player.playerControllerId, null, "Change library focus to building",
+                5, "Building", player.playerControllerId, buildingImage, "Change library focus to building",
                 s => (s as Library).Focus = Library.FocusEnum.Building,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && PlayerState.BuildingBooks && (s as Library).Focus != Library.FocusEnum.Building,
                 food: 0, wood: 0, gold: 0, oneTimePurchase: false),
 
             [PurchasesEnum.Healing] = new LoadingPurchase(
-                5, "Healing", player.playerControllerId, null, "Change library focus to healing",
+                5, "Healing", player.playerControllerId, healingImage, "Change library focus to healing",
                 s => (s as Library).Focus = Library.FocusEnum.Healing,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && PlayerState.MedicineBooks1 && (s as Library).Focus != Library.FocusEnum.Healing,
                 food: 0, wood: 0, gold: 0, oneTimePurchase: false),
@@ -155,31 +202,31 @@ public class PlayerPurchases : MonoBehaviour {
 
             #region barracks purchases
             [PurchasesEnum.Gear1] = new LoadingPurchase(
-                1, "Books 1", player.playerControllerId, null, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Books 1", player.playerControllerId, gear1Image, "Supply barracks with better gear. Increases maximum swordsmanship.",
                 s => (s as Barracks).maxSwordsmanship = 20,
                 s => ReachedAge(PlayerState.AgeEnum.Stone),
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
             [PurchasesEnum.Gear2] = new LoadingPurchase(
-                1, "Books 2", player.playerControllerId, null, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Books 2", player.playerControllerId, gear2Image, "Supply barracks with better gear. Increases maximum swordsmanship.",
                 s => (s as Barracks).maxSwordsmanship = 35,
                 s => ReachedAge(PlayerState.AgeEnum.Stone) && (s as Barracks).Gear1 && PlayerState.buildings.Where(b => b is Library && (b as Library).Books1).Any(),
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
             [PurchasesEnum.Gear3] = new LoadingPurchase(
-                1, "Books 3", player.playerControllerId, null, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Books 3", player.playerControllerId, gear3Image, "Supply barracks with better gear. Increases maximum swordsmanship.",
                 s => (s as Barracks).maxSwordsmanship = 55,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Barracks).Gear2,
                 food: 0, wood: 10, gold: 10, oneTimePurchase: true),
 
             [PurchasesEnum.Gear4] = new LoadingPurchase(
-                1, "Books 4", player.playerControllerId, null, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Books 4", player.playerControllerId, gear4Image, "Supply barracks with better gear. Increases maximum swordsmanship.",
                 s => (s as Barracks).maxSwordsmanship = 75,
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Barracks).Gear3 && PlayerState.buildings.Where(b => b is Library && (b as Library).Books2).Any(),
                 food: 0, wood: 10, gold: 0, oneTimePurchase: true),
 
             [PurchasesEnum.Gear5] = new LoadingPurchase(
-                1, "Books 5", player.playerControllerId, null, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Books 5", player.playerControllerId, gear5Image, "Supply barracks with better gear. Increases maximum swordsmanship.",
                 s => (s as Barracks).maxSwordsmanship = 100,
                 s => ReachedAge(PlayerState.AgeEnum.Diamond) && (s as Barracks).Gear4 && PlayerState.buildings.Where(b => b is Library && (b as Library).Books4).Any(),
                 food: 0, wood: 10, gold: 0, oneTimePurchase: true),
@@ -205,6 +252,8 @@ public class PlayerPurchases : MonoBehaviour {
                 return Get(PurchasesEnum.House);
             case BuildingEnum.Mill:
                 return Get(PurchasesEnum.Mill);
+            case BuildingEnum.Sawmill:
+                return Get(PurchasesEnum.Sawmill);
             default:
                 return null;
         }
