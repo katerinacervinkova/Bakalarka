@@ -3,29 +3,29 @@ using UnityEngine;
 
 public class Infirmary : Building
 {
-    private readonly float noHealerHealthIncrease = 0.2f;
-    private readonly float healthIncrease = 0.05f;
+    public override string Name => "Infirmary";
+    public override string UnitText(Unit unit)
+    {
+        if (unit == Healer)
+            return $"Healing: {(int)unit.Healing}";
+        return $"Health: {(int)unit.Health}/{(int)unit.MaxHealth}";
+    }
 
-    private int maxUnitsHealing = 2;
-
-    protected override int UnitCapacity => 20;
-
-    private readonly float healingIncrease = 0.005f;
     public Unit Healer = null;
 
-    public override Func<Unit, string> UnitTextFunc => u => {
-        if (u == Healer)
-            return $"Healing: {(int)u.Healing}";
-        return $"Health: {(int)u.Health}/{(int)u.MaxHealth}";
-        };
+    private readonly float noHealerHealthIncrease = 0.2f;
+    private readonly float healthIncrease = 0.05f;
+    private readonly float healingIncrease = 0.005f;
+
+    private int maxUnitsHealing = 2;
+    public override int UnitCapacity => 20;
+
     public override string UnitName(Unit unit)
     {
         if (Healer == unit)
             return "Healer";
         return base.UnitName(unit);
     }
-
-    public override string Name => "Infirmary";
 
     protected override void ChangeColor()
     {

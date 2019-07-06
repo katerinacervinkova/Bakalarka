@@ -1558,7 +1558,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1002605280894830}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -99.63286, y: -6.431186e-17, z: 115.85395}
+  m_LocalPosition: {x: -36.78215, y: 3.7488847, z: 122.86621}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4952016487092494}
@@ -4248,7 +4248,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: cca5d97d04a1f264a847119dbf0bcb0a, type: 2}
+  - {fileID: 2100000, guid: 391680205da45064d8b22e0d00297f11, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5816,12 +5816,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a79bd2967c6b04ebbdfa8a204a35cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
   size: {x: 4.6, y: 0, z: 4.6}
   healthBarOffset: 6
   buildingType: 1
+  maxProgress: 350
   placed: 0
 --- !u!114 &114405928072242422
 MonoBehaviour:

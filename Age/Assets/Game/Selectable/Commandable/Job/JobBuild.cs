@@ -8,6 +8,10 @@ public class JobBuild : Job {
     private readonly Collider buildingCollider;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
+
+    private readonly float buildingIncrease = 0.005f;
+    private readonly float slowBuildingIncrease = 0.001f;
+
     public JobBuild(TemporaryBuilding building, int playerId)
     {
         this.building = building;
@@ -39,7 +43,10 @@ public class JobBuild : Job {
         while (timeElapsed > minTime)
         {
             building.Build(worker.Building);
-            worker.owner.ChangeAttribute(worker, AttEnum.Building, worker.Building + 0.1f);
+            if (worker.Building < worker.Intelligence)
+                worker.owner.ChangeAttribute(worker, AttEnum.Building, worker.Building + buildingIncrease * worker.Intelligence);
+            else
+                worker.owner.ChangeAttribute(worker, AttEnum.Building, worker.Building + slowBuildingIncrease * worker.Intelligence);
             timeElapsed -= minTime;
         }
     }

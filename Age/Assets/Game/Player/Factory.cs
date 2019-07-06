@@ -144,9 +144,8 @@ public class Factory : MonoBehaviour
         int swordsmanship = rnd.Next(100);
         int healing = rnd.Next(100);
         int building = rnd.Next(100);
-        int accuracy = rnd.Next(100);
 
-        int ratio = (health + gathering + intelligence + swordsmanship + healing + building + accuracy);
+        int ratio = (health + gathering + intelligence + swordsmanship + healing + building);
 
         unit.MaxHealth = 100 + health * sumOfProperties / ratio + 1;
         unit.Health = unit.MaxHealth;
@@ -155,6 +154,5 @@ public class Factory : MonoBehaviour
         unit.Swordsmanship = swordsmanship * sumOfProperties / ratio + 1;
         unit.Healing = healing * sumOfProperties / ratio + 1;
         unit.Building = building * sumOfProperties / ratio + 1;
-        unit.Accuracy = accuracy * sumOfProperties / ratio + 1;
     }
 }

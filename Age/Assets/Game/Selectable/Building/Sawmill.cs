@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class Sawmill : Building
 {
-    public override Func<Unit, string> UnitTextFunc => u => $"Gathering: {(int)u.Gathering}";
-
     public override string Name => "Sawmill";
+    public override string UnitText(Unit unit) => $"Gathering: {(int)unit.Gathering}";
+
+    private readonly float gatheringIncrease = 0.005f;
+    private readonly float slowGatheringIncrease = 0.001f;
 
     protected override void ChangeColor()
     {
@@ -15,6 +17,9 @@ public class Sawmill : Building
     protected override void UpdateUnit(Unit unit)
     {
         PlayerState.Get(playerId).Wood += unit.Gathering / 2;
-        owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + 0.05f);
+        if (unit.Gathering < unit.Intelligence)
+            owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + gatheringIncrease * unit.Intelligence);
+        else
+            owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + slowGatheringIncrease * unit.Intelligence);
     }
 }

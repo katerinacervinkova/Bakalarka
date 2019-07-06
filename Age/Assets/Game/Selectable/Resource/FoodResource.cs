@@ -4,7 +4,7 @@ public class FoodResource : Resource
 {
     public override string Name => "Berries";
 
-    private static readonly float maxCapacity = 100;
+    private static readonly float maxCapacity = 2000;
 
     protected override float MaxCapacity => maxCapacity;
 

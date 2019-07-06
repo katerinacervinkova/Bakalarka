@@ -3,9 +3,8 @@ using UnityEngine;
 
 public class Bank : Building
 {
-    public override Func<Unit, string> UnitTextFunc => u => $"Gathering: {(int)u.Gathering}";
-
     public override string Name => "Bank";
+    public override string UnitText(Unit unit) => $"Gathering: {(int)unit.Gathering}";
 
     protected override void ChangeColor()
     {

@@ -4,9 +4,24 @@ using UnityEngine;
 public class Library : Building {
 
     public override string Name => "Library";
+    public override string UnitText(Unit unit)
+    {
+        switch (Focus)
+        {
+            case FocusEnum.Intelligence:
+                return $"Intelligence: {(int)unit.Intelligence}";
+            case FocusEnum.Building:
+                return $"Building: {(int)unit.Building}";
+            case FocusEnum.Healing:
+                return $"Healing: {(int)unit.Healing}";
+            default:
+                return "";
+        }
+    }
+
+    public int maxIntelligence = 10;
 
     public enum FocusEnum { Intelligence, Building, Healing }
-
     public FocusEnum Focus = FocusEnum.Intelligence;
 
     public bool Books1 = false;
@@ -15,28 +30,10 @@ public class Library : Building {
     public bool Books4 = false;
     public bool Books5 = false;
 
-    public override Func<Unit, string> UnitTextFunc
-    {
-        get
-        {
-            switch (Focus)
-            {
-                case FocusEnum.Intelligence:
-                    return u => $"Intelligence: {(int)u.Intelligence}";
-                case FocusEnum.Building:
-                    return u => $"Building: {(int)u.Building}";
-                case FocusEnum.Healing:
-                    return u => $"Healing: {(int)u.Healing}";
-                default:
-                    return u => "";
-            }
-        }
-    }
-
-    public int maxIntelligence = 10;
-
     private readonly float buildingIncrease = 0.005f;
+    private readonly float slowBuildingIncrease = 0.001f;
     private readonly float healingIncrease = 0.005f;
+    private readonly float slowHealingIncrease = 0.001f;
     private readonly float intelligenceIncrease = 0.1f;
     private readonly float slowIntelligenceIncrease = 0.02f;
 
@@ -71,10 +68,16 @@ public class Library : Building {
                     owner.ChangeAttribute(unit, AttEnum.Intelligence, unit.Intelligence + slowIntelligenceIncrease);
                 break;
             case FocusEnum.Building:
-                owner.ChangeAttribute(unit, AttEnum.Building, unit.Building + buildingIncrease * unit.Intelligence);
+                if (unit.Building < unit.Intelligence)
+                    owner.ChangeAttribute(unit, AttEnum.Building, unit.Building + buildingIncrease * unit.Intelligence);
+                else
+                    owner.ChangeAttribute(unit, AttEnum.Building, unit.Building + slowBuildingIncrease * unit.Intelligence);
                 break;
             case FocusEnum.Healing:
-                owner.ChangeAttribute(unit, AttEnum.Healing, unit.Healing + healingIncrease * unit.Intelligence);
+                if (unit.Healing < unit.Intelligence)
+                    owner.ChangeAttribute(unit, AttEnum.Healing, unit.Healing + healingIncrease * unit.Intelligence);
+                else
+                    owner.ChangeAttribute(unit, AttEnum.Healing, unit.Healing + slowHealingIncrease * unit.Intelligence);
                 break;
         }
 

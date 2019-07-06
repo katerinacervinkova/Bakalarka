@@ -4,7 +4,7 @@ public class WoodResource : Resource
 {
     public override string Name => "Tree";
 
-    private static readonly int maxCapacity = 100;
+    private static readonly int maxCapacity = 1000;
 
     protected override float MaxCapacity => maxCapacity;
 
@@ -13,7 +13,7 @@ public class WoodResource : Resource
         bool completed = capacity - gathering <= 0;
         float amount = Math.Min(gathering, capacity);
         player.Gather(amount, this);
-        PlayerState.Get(playerId).Wood += amount;
+        PlayerState.Get(player.playerControllerId).Wood += amount;
         return completed;
     }
 

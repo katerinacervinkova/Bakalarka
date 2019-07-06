@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1033672169012986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -128.60747, y: 9.384892e-17, z: -169.06319}
+  m_LocalPosition: {x: -215.9358, y: 49.387688, z: 4.4620895}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -69,14 +69,16 @@ MonoBehaviour:
   books3Image: {fileID: 2800000, guid: d3d08ab630e7dbd40bc791f8844d51ff, type: 3}
   books4Image: {fileID: 2800000, guid: a9655cb3608580248ae7f5d0c007ea00, type: 3}
   books5Image: {fileID: 2800000, guid: 287e8ec09289a4246b799591464a6dcc, type: 3}
-  buildingBooksImage: {fileID: 0}
-  medicineBooks1Image: {fileID: 0}
-  medicineBooks2Image: {fileID: 0}
-  intelligenceImage: {fileID: 0}
-  buildingImage: {fileID: 0}
-  healingImage: {fileID: 0}
-  gear1Image: {fileID: 0}
-  gear2Image: {fileID: 0}
-  gear3Image: {fileID: 0}
-  gear4Image: {fileID: 0}
-  gear5Image: {fileID: 0}
+  buildingBooksImage: {fileID: 2800000, guid: f4304bae16810214da9f0b023f983ba4, type: 3}
+  medicineBooks1Image: {fileID: 2800000, guid: 57989e1b8a1629145821e7776d8c0ad9, type: 3}
+  medicineBooks2Image: {fileID: 2800000, guid: f48a40d5cd3b59c45a0f5b21e557abe1, type: 3}
+  intelligenceImage: {fileID: 2800000, guid: 29a7883a26e2bf44892b1221b3a99391, type: 3}
+  buildingImage: {fileID: 2800000, guid: 22bc5ec26b1494a40892f479ed0f57a5, type: 3}
+  healingImage: {fileID: 2800000, guid: 8e57331add1d24f41b1c099723248679, type: 3}
+  gear1Image: {fileID: 2800000, guid: 0126cb0386592f6438b8fd7b5c9f588b, type: 3}
+  gear2Image: {fileID: 2800000, guid: 8471f9a2459c0c54fbe27a596d4c72f6, type: 3}
+  gear3Image: {fileID: 2800000, guid: fcb2b23cf55830d4a84d4fc1d9739fc9, type: 3}
+  gear4Image: {fileID: 2800000, guid: bd6fd92fd0d6d184288e4c32094aa89f, type: 3}
+  gear5Image: {fileID: 2800000, guid: b9682acd90175c342a00647e02f52923, type: 3}
+  flourImage: {fileID: 2800000, guid: 97bda998ee94dfd4590c0ee02615c00a, type: 3}
+  breadImage: {fileID: 2800000, guid: 9046df39aefea544f8843d1eb0b81c85, type: 3}

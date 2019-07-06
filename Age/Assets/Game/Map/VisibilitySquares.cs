@@ -95,11 +95,14 @@ public class VisibilitySquares : MonoBehaviour {
     public Vector3 GetClosestFreePosition(Vector3 position)
     {
         Vector2 square = GetSquare(position);
-        var sq =  squares[square].AdjoiningSquares.
-            Where(s => s.Resources.Count == 0 && s.EnemyBuildings.Count == 0 && s.FriendlyBuildings.Count == 0 && s.EnemyTemporaryBuildings.Count == 0 && s.FriendlyTemporaryBuildings.Count == 0).
-            Select(s => GetPosition(s.squareId));
-        if (sq.Any())
-            return sq.First();
+        if (squares.ContainsKey(square))
+        {
+            var sq = squares[square].AdjoiningSquares.
+                Where(s => s.Resources.Count == 0 && s.EnemyBuildings.Count == 0 && s.FriendlyBuildings.Count == 0 && s.EnemyTemporaryBuildings.Count == 0 && s.FriendlyTemporaryBuildings.Count == 0).
+                Select(s => GetPosition(s.squareId));
+            if (sq.Any())
+                return sq.First();
+        }
         return Vector3.positiveInfinity;
     }
 

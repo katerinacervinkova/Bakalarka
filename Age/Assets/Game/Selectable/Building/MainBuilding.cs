@@ -4,12 +4,11 @@ using UnityEngine;
 public class MainBuilding : Building {
 
     public override string Name => "Main building";
-
-    public override Func<Unit, string> UnitTextFunc => u => $"Health: {u.Health}";
+    public override string UnitText(Unit unit) => $"Health: {unit.Health}";
+    public override int UnitCapacity => 100;
 
     protected override int MaxPopulationIncrease => 5;
 
-    protected override int UnitCapacity => 100;
 
     protected override void ChangeColor()
     {

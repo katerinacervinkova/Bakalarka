@@ -35,6 +35,6 @@ public class UnitRow : MonoBehaviour {
     public void UpdateDescription()
     {
         unitNameText.text = building.UnitName(unit);
-        unitText.text = building.UnitTextFunc(unit);
+        unitText.text = building.UnitText(unit);
     }
 }

@@ -13,7 +13,7 @@ public class Purchase
     public readonly Predicate<Selectable> IsActive;
     private Dictionary<Selectable, bool> wasActive = new Dictionary<Selectable, bool>();
 
-    protected int food, wood, gold, population;
+    public int food, wood, gold, population;
     protected string description;
 
     public Purchase(string Name, int playerId, Texture2D image, string description, Action<Selectable> action, Predicate<Selectable> IsActive,

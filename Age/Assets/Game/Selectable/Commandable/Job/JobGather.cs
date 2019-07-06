@@ -7,6 +7,10 @@ public class JobGather<T> : Job where T : Resource {
     private T resource;
     private readonly float minTime = 1;
     private float timeElapsed = 0;
+
+    private readonly float gatheringIncrease = 0.01f;
+    private readonly float slowGatheringIncrease = 0.002f;
+
     public override Job Following
     {
         get
@@ -37,7 +41,10 @@ public class JobGather<T> : Job where T : Resource {
         {
             if (resource.Gather(worker.Gathering, worker.owner))
                 Completed = true;
-            worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + 0.1f);
+            if (worker.Gathering < worker.Intelligence)
+                worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + gatheringIncrease * worker.Intelligence);
+            else
+                worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + slowGatheringIncrease * worker.Intelligence);
             timeElapsed -= minTime;
         }
     }

@@ -5,7 +5,9 @@ using UnityEngine.Networking;
 public class TemporaryBuilding : Selectable
 {
     public BuildingEnum buildingType;
-    static readonly int maxProgress = 100;
+
+    [SerializeField]
+    private int maxProgress;
     [SyncVar]
     public bool placed = false;
 
@@ -22,7 +24,8 @@ public class TemporaryBuilding : Selectable
     {
         base.OnStartAuthority();
         gameObject.SetActive(true);
-        SetVisibility(true);
+        if (playerId == 0)
+            SetVisibility(true);
         PlayerState.Get(playerId).SetTempBuilding(this);
         PlayerState.Get(playerId).temporaryBuildings.Add(this);
     }

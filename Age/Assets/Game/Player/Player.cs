@@ -1,8 +1,6 @@
-﻿using System;
-using Pathfinding;
+﻿using Pathfinding;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
@@ -36,7 +34,7 @@ public class Player : NetworkBehaviour
             return false;
         GameState.Instance.SetVisibilitySquares(playerControllerId, factory.CreateVisibilitySquares());
 
-        CmdCreateUnit(transform.position, transform.position);
+        CmdCreateInitialUnit(transform.position, transform.position);
         return true;
     }
 
@@ -54,6 +52,8 @@ public class Player : NetworkBehaviour
         else
         {
             endGameCanvas = GameObject.Find("EndGameCanvas");
+            CustomLobbyManager manager = FindObjectOfType<CustomLobbyManager>();
+            endGameCanvas.transform.Find("MenuButton").GetComponent<Button>().onClick.AddListener(manager.GoBack);
             endGameCanvas.SetActive(false);
         }
         CmdChangeInGame(true);
@@ -176,6 +176,16 @@ public class Player : NetworkBehaviour
     private void CmdCreateUnit(Vector3 position, Vector3 destination)
     {
         Unit unit = factory.CreateUnit(NearestWalkable(position), netId);
+        NetworkServer.SpawnWithClientAuthority(unit.gameObject, gameObject);
+        if (destination != position)
+            unit.SetJob(new JobGo(destination));
+    }
+
+    [Command]
+    private void CmdCreateInitialUnit(Vector3 position, Vector3 destination)
+    {
+        Unit unit = factory.CreateUnit(NearestWalkable(position), netId);
+        unit.Building = 7;
         NetworkServer.SpawnWithClientAuthority(unit.gameObject, gameObject);
         if (destination != position)
             unit.SetJob(new JobGo(destination));

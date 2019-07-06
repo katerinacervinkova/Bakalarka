@@ -12,16 +12,13 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.2.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -359,20 +356,19 @@
     <Compile Include="Assets\Extensions\CustomLobbyManager.cs" />
     <Compile Include="Assets\Extensions\CustomLobbyMenu.cs" />
     <Compile Include="Assets\Extensions\ExitButton.cs" />
-    <Compile Include="Assets\Game\GameState\AIPlayer.cs" />
+    <Compile Include="Assets\Game\AI\AIPlayer.cs" />
+    <Compile Include="Assets\Game\AI\SimpleAI.cs" />
     <Compile Include="Assets\Game\GameState\CameraMovement.cs" />
     <Compile Include="Assets\Game\GameState\GameState.cs" />
     <Compile Include="Assets\Game\GameState\GameWindow.cs" />
     <Compile Include="Assets\Game\GameState\InputOptions.cs" />
     <Compile Include="Assets\Game\GameState\LastOneStandingVictoryCondition.cs" />
     <Compile Include="Assets\Game\GameState\PlayerState.cs" />
-    <Compile Include="Assets\Game\GameState\SimpleAI.cs" />
     <Compile Include="Assets\Game\GameState\VictoryCondition.cs" />
     <Compile Include="Assets\Game\Map\GridGraph.cs" />
     <Compile Include="Assets\Game\Map\HumanVisibilitySquares.cs" />
     <Compile Include="Assets\Game\Map\MapSquare.cs" />
     <Compile Include="Assets\Game\Map\VisibilitySquares.cs" />
-    <Compile Include="Assets\Game\Player\ColorNetworkManager.cs" />
     <Compile Include="Assets\Game\Player\Factory.cs" />
     <Compile Include="Assets\Game\Player\FirstUnitCreator.cs" />
     <Compile Include="Assets\Game\Player\LeftMouseActivity.cs" />

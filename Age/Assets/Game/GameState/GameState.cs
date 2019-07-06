@@ -67,8 +67,6 @@ public class GameState : NetworkBehaviour {
 
     public Selectable ClosestVisibleTarget(Vector3 position, int playerId) => GetSquares(playerId).ClosestVisibleTarget(SquarePosition(position));
 
-    public Vector3 GetClosestFreePosition(Vector3 position, int playerId) => GetSquares(playerId).GetClosestFreePosition(position);
-
     public void PositionChange(Unit unit)
     {
         Vector2 squarePosition = SquarePosition(unit.transform.position);
@@ -103,7 +101,10 @@ public class GameState : NetworkBehaviour {
                 action.Invoke(visibilitySquares);
     }
 
-    public Vector3 GetRandomDestination() => new Vector3(UnityEngine.Random.value - 0.5f, 0, UnityEngine.Random.value - 0.5f) * MapSize * 2;
+    public Vector3 GetRandomDestination(Vector3 position, int distance) => position + new Vector3(UnityEngine.Random.value - 0.5f, 0, UnityEngine.Random.value - 0.5f) * distance * 2;
+
+
+    public Vector3 GetRandomDestination() => GetRandomDestination(new Vector3(), MapSize);
 
     [ClientRpc]
     public void RpcPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)

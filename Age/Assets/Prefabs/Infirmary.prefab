@@ -5201,12 +5201,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a79bd2967c6b04ebbdfa8a204a35cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
   size: {x: 2.2, y: 0, z: 2.2}
   healthBarOffset: 7
   buildingType: 3
+  maxProgress: 250
   placed: 0
 --- !u!119 &119477110462879276
 Projector:

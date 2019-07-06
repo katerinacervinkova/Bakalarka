@@ -19,7 +19,15 @@ public class PlayerState : MonoBehaviour {
     public List<Building> buildings = new List<Building>();
     public List<TemporaryBuilding> temporaryBuildings = new List<TemporaryBuilding>();
 
+    public enum AgeEnum { Wood, Stone, Iron, Diamond }
+    private AgeEnum age = AgeEnum.Wood;
+
+    private float food = 1200;
+    private float wood = 1200;
+    private float gold = 1200;
+    private int population = 0;
     private int maxPopulation = 5;
+
     public int MaxPopulation
     {
         get { return maxPopulation; }
@@ -29,8 +37,6 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-
-    private int population = 0;
     public int Population
     {
         get { return population; }
@@ -40,7 +46,6 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-    private float gold = 50;
     public float Gold
     {
         get { return gold; }
@@ -50,7 +55,6 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-    private float wood = 50;
     public float Wood
     {
         get { return wood; }
@@ -60,8 +64,6 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-
-    private float food = 50;
     public float Food
     {
         get { return food; }
@@ -71,9 +73,6 @@ public class PlayerState : MonoBehaviour {
             OnPlayerStateChange();
         }
     }
-
-    public enum AgeEnum { Wood, Stone, Iron, Diamond }
-    private AgeEnum age = AgeEnum.Wood;
     public AgeEnum Age
     {
         get { return age; }
@@ -176,13 +175,14 @@ public class PlayerState : MonoBehaviour {
         if (player.IsHuman && SelectedObject == selectable)
         {
             UIManager.Instance.ShowObjectText(selectable.Name, selectable.GetObjectDescription());
-            UIManager.Instance.ShowPurchaseButtons(selectable.Purchases, selectable);
+            if (selectable.playerId == 0)
+                UIManager.Instance.ShowPurchaseButtons(selectable.Purchases, selectable);
         }
     }
 
     public void OnStateChange(Purchase purchase)
     {
-        if (SelectedObject != null && SelectedObject.Purchases.Contains(purchase))
+        if (SelectedObject != null && SelectedObject.Purchases.Contains(purchase) && SelectedObject.playerId == 0)
             UIManager.Instance.ShowPurchaseButtons(SelectedObject.Purchases, SelectedObject);
     }
 

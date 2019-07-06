@@ -5312,12 +5312,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a79bd2967c6b04ebbdfa8a204a35cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
   size: {x: 8, y: 0, z: 8}
   healthBarOffset: 12
   buildingType: 0
+  maxProgress: 400
   placed: 0
 --- !u!114 &114121454109239844
 MonoBehaviour:

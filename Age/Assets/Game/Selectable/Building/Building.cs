@@ -4,14 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Building : Selectable {
+
     public Vector3 DefaultDestination { get; private set; }
+
+    public virtual int UnitCapacity => 5;
+    public int UnitCount => unitsInside.Count;
+
+    public List<Transaction> transactions = new List<Transaction>();
+    public virtual string UnitName(Unit unit) => unit.Name;
+    public abstract string UnitText(Unit unit);
+
 
     private readonly int maxTransactions = 16;
     private Transaction activeTransaction;
-    public List<Transaction> transactions = new List<Transaction>();
 
     protected List<Unit> unitsInside = new List<Unit>();
-    protected virtual int UnitCapacity => 5;
 
     private readonly float minTime = 1;
     private float timeElapsed = 0;
@@ -22,8 +29,6 @@ public abstract class Building : Selectable {
 
     protected abstract void ChangeColor();
 
-    public abstract Func<Unit, string> UnitTextFunc { get; }
-    public virtual string UnitName(Unit unit) => unit.Name;
 
     public override void OnStartClient() { }
 

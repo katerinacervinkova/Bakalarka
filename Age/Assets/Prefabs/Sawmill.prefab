@@ -5495,6 +5495,7 @@ MonoBehaviour:
   size: {x: 3, y: 0, z: 4}
   healthBarOffset: 8
   buildingType: 6
+  maxProgress: 250
   placed: 0
 --- !u!119 &119801509711833904
 Projector:

@@ -4,7 +4,7 @@ public class GoldResource : Resource
 {
     public override string Name => "Gold mine";
 
-    private static readonly float maxCapacity = 1000;
+    private static readonly float maxCapacity = 10000;
 
     protected override float MaxCapacity => maxCapacity;
 
@@ -13,7 +13,7 @@ public class GoldResource : Resource
         bool completed = capacity - gathering <= 0;
         float amount = Math.Min(gathering, capacity);
         player.Gather(amount, this);
-        PlayerState.Get(playerId).Gold += amount;
+        PlayerState.Get(player.playerControllerId).Gold += amount;
         return completed;
     }
 

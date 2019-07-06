@@ -14,8 +14,6 @@ public class Attributes : NetworkBehaviour {
     private float Healing;
     [SyncVar(hook = "OnBuildingChange")]
     private float Building;
-    [SyncVar(hook = "OnAccuracyChange")]
-    private float Accuracy;
 
     private void Awake()
     {
@@ -36,8 +34,6 @@ public class Attributes : NetworkBehaviour {
                 return Healing;
             case AttEnum.Building:
                 return Building;
-            case AttEnum.Accuracy:
-                return Accuracy;
             default:
                 return 0;
         }
@@ -61,9 +57,6 @@ public class Attributes : NetworkBehaviour {
                 break;
             case AttEnum.Building:
                 Building = value;
-                break;
-            case AttEnum.Accuracy:
-                Accuracy = value;
                 break;
         }
     }
@@ -94,16 +87,11 @@ public class Attributes : NetworkBehaviour {
         Building = value;
         OnChange();
     }
-    private void OnAccuracyChange(float value)
-    {
-        Accuracy = value;
-        OnChange();
-    }
 
     private void OnChange()
     {
-        if (unit.owner != null && unit.owner.IsHuman && PlayerState.Get() != null && PlayerState.Get().SelectedObject == unit)
-            UIManager.Instance.ShowObjectText(unit.Name, unit.GetObjectDescription());
+        if (PlayerState.Get() != null && PlayerState.Get().SelectedObject == unit)
+            PlayerState.Get().OnStateChange(unit);
     }
 
     public string GetDescription()
@@ -112,7 +100,6 @@ public class Attributes : NetworkBehaviour {
             $"Intelligence: {(int)Intelligence}\n" +
             $"Swordsmanship: {(int)Swordsmanship}\n" +
             $"Healing: {(int)Healing}\n" +
-            $"Building: {(int)Building}\n" +
-            $"Accuracy: {(int)Accuracy}";
+            $"Building: {(int)Building}\n";
     }
 }

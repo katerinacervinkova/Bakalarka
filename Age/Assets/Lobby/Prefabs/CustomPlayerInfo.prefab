@@ -104,7 +104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &134858
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +155,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &153230
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,7 +278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &192674
 GameObject:
   m_ObjectHideFlags: 1
@@ -367,10 +367,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.441, g: 0.09079413, b: 0.09079413, a: 1}
-    m_HighlightedColor: {r: 0.441, g: 0.09079413, b: 0.09079413, a: 1}
-    m_PressedColor: {r: 0.441, g: 0.09079413, b: 0.09079413, a: 1}
-    m_DisabledColor: {r: 0.441, g: 0.09079413, b: 0.09079413, a: 1}
+    m_NormalColor: {r: 1, g: 0, b: 0.39607844, a: 1}
+    m_HighlightedColor: {r: 1, g: 0, b: 0.39607844, a: 1}
+    m_PressedColor: {r: 1, g: 0, b: 0.39607844, a: 1}
+    m_DisabledColor: {r: 1, g: 0, b: 0.39607844, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.2
   m_SpriteState:
@@ -414,22 +414,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 173
-    i1: 114
-    i2: 125
-    i3: 126
-    i4: 20
-    i5: 98
-    i6: 236
-    i7: 196
-    i8: 248
-    i9: 60
-    i10: 137
-    i11: 142
-    i12: 204
-    i13: 80
-    i14: 25
-    i15: 151
+    i0: 54
+    i1: 89
+    i2: 16
+    i3: 129
+    i4: 240
+    i5: 182
+    i6: 49
+    i7: 228
+    i8: 169
+    i9: 218
+    i10: 167
+    i11: 166
+    i12: 45
+    i13: 137
+    i14: 239
+    i15: 160
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
 --- !u!114 &11417486
@@ -536,7 +536,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 159926}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
@@ -720,7 +720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.09803922, g: 0.8901961, b: 0.69411767, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -974,7 +974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811523f8e578d6f4abb259f1fbaa5e0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowLobbyGUI: 0
+  ShowLobbyGUI: 1
   colorButton: {fileID: 11488840}
   nameInput: {fileID: 11487112}
   readyButton: {fileID: 11413860}
@@ -1045,7 +1045,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 1, g: 0.9647059, b: 0, a: 1}
-  m_Text: 
+  m_Text: Player1
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0

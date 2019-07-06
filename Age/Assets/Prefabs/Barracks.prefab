@@ -1031,8 +1031,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4701142400412644}
   - component: {fileID: 114605667064180216}
-  - component: {fileID: 114240467502079042}
   - component: {fileID: 136960922949573116}
+  - component: {fileID: 114240467502079042}
   m_Layer: 0
   m_Name: Barracks
   m_TagString: Untagged
@@ -5156,17 +5156,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a79bd2967c6b04ebbdfa8a204a35cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
-  visibleObject: {fileID: 1746356499339758}
-  selector: {fileID: 0}
-  minimapIcon: {fileID: 0}
-  minimapColor: {r: 0, g: 0, b: 0, a: 0}
-  objectsToColor: []
   size: {x: 5, y: 0, z: 5}
   healthBarOffset: 8
   buildingType: 2
+  maxProgress: 250
   placed: 0
 --- !u!114 &114605667064180216
 MonoBehaviour:

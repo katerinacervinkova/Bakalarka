@@ -1,4 +1,5 @@
 ﻿using Prototype.NetworkLobby;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -15,9 +16,6 @@ public class CustomLobbyManager : LobbyManager {
     [SerializeField]
     private List<Vector3> playerPositions;
 
-    [SerializeField]
-    public GameObject errorPanel;
-
     public int playerCount = 0;
 
     public int aiCount = 0;
@@ -25,10 +23,13 @@ public class CustomLobbyManager : LobbyManager {
     public override void OnLobbyStartServer()
     {
         base.OnLobbyStartServer();
+        playerCount = 0;
+        aiCount = 0;
         nextButton.interactable = true;
     }
 
     public override void OnLobbyServerPlayersReady() { }
+
 
     public void OnNextClicked()
     {
@@ -37,13 +38,12 @@ public class CustomLobbyManager : LobbyManager {
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
-        GameObject player;
         if (playerControllerId == 0)
             base.OnServerAddPlayer(conn, playerControllerId);
         else
         {
             aiCount++;
-            player = Instantiate(AIplayerPrefab, playerPositions[playerCount], Quaternion.identity);
+            GameObject player = Instantiate(AIplayerPrefab, playerPositions[playerCount], Quaternion.identity);
             NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
         }
         playerCount++;
@@ -63,14 +63,19 @@ public class CustomLobbyManager : LobbyManager {
 
     public override void OnClientDisconnect(NetworkConnection conn)
     {
-        StopClient();
-        ChangeTo(mainMenuPanel);
-        errorPanel.SetActive(true);
+        GoBack();
     }
 
     public override void OnServerDisconnect(NetworkConnection nc)
     {
         NetworkServer.DestroyPlayersForConnection(nc);
-        GameState.Instance.OnClientDisconnect();
+        if (GameState.Instance)
+            GameState.Instance.OnClientDisconnect();
+    }
+
+    public void GoBack()
+    {
+        nextButton.interactable = false;
+        GoBackButton();
     }
 }

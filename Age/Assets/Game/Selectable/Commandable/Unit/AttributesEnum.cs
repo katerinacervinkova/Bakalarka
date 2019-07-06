@@ -5,5 +5,4 @@
     Swordsmanship,
     Healing,
     Building,
-    Accuracy
 }

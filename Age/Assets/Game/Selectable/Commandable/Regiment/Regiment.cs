@@ -66,12 +66,11 @@ public class Regiment : Commandable {
     public override string GetObjectDescription()
     {
         return $"Health: {(int)units.Sum(u => u.Health)}/{(int)units.Sum(u => u.MaxHealth)}\n" +
-            $"Strength: {(int)units.Sum(u => u.Gathering)}\n" +
+            $"Gathering: {(int)units.Sum(u => u.Gathering)}\n" +
             $"Intelligence: {(int)units.Sum(u => u.Intelligence)}\n" +
             $"Swordsmanship: {(int)units.Sum(u => u.Swordsmanship)}\n" +
             $"Healing: {(int)units.Sum(u => u.Healing)}\n" +
-            $"Building: {(int)units.Sum(u => u.Building)}\n" +
-            $"Accuracy: {(int)units.Sum(u => u.Accuracy)}";
+            $"Building: {(int)units.Sum(u => u.Building)}";
     }
     public void MovementCompleted(Unit unit)
     {

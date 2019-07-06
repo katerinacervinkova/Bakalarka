@@ -3,15 +3,14 @@ using UnityEngine;
 
 public class Barracks : Building
 {
-    public override Func<Unit, string> UnitTextFunc => u => $"Swordsmanship: {(int)u.Swordsmanship}";
+    public override string Name => "Barracks";
+    public override string UnitText(Unit unit) => $"Swordsmanship: {(int)unit.Swordsmanship}";
 
     public bool Gear1;
     public bool Gear2;
     public bool Gear3;
     public bool Gear4;
     public bool Gear5;
-
-    public override string Name => "Barracks";
 
     public int maxSwordsmanship = 10;
     private readonly float swordsmanshipIncrease = 0.005f;
