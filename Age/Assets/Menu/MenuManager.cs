@@ -2,6 +2,9 @@
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
+/// <summary>
+/// Main class for the Menu Scene
+/// </summary>
 public class MenuManager : MonoBehaviour {
 
     public MenuPlayer player;
@@ -20,6 +23,9 @@ public class MenuManager : MonoBehaviour {
         lobbyManager = FindObjectOfType<CustomLobbyManager>();
     }
 
+    /// <summary>
+    /// Sets buttons' interactivity for server.
+    /// </summary>
     public void SetServerInteractivity()
     {
         if (lobbyManager.playerCount > 1)
@@ -27,11 +33,18 @@ public class MenuManager : MonoBehaviour {
         addPlayerbutton.interactable = true;
         backButton.interactable = true;
     }
+
+    /// <summary>
+    /// Starts the game.
+    /// </summary>
     public void OnClickPlay()
     {
         lobbyManager.ServerChangeScene("Game");
     }
 
+    /// <summary>
+    /// Adds new player and updates buttons' interactivity.
+    /// </summary>
     public void OnClickAddPlayer()
     {
         ClientScene.AddPlayer((short)(lobbyManager.aiCount + 1));
@@ -41,6 +54,10 @@ public class MenuManager : MonoBehaviour {
             addPlayerbutton.interactable = false;
     }
 
+    /// <summary>
+    /// Removes the player and updates buttons' interactivity.
+    /// </summary>
+    /// <param name="playerControllerId">ID of the player controller the player is using</param>
     public void RemovePlayer(short playerControllerId)
     {
         ClientScene.RemovePlayer(playerControllerId);
@@ -50,6 +67,9 @@ public class MenuManager : MonoBehaviour {
             addPlayerbutton.interactable = true;
     }
 
+    /// <summary>
+    /// Moves back to the Lobby scene.
+    /// </summary>
     public void OnClickBack()
     {
         lobbyManager.ServerChangeScene("Lobby");

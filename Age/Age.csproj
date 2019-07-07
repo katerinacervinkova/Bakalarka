@@ -352,7 +352,6 @@
     <Compile Include="Assets\AstarPathfindingProject\Utilities\RetainedGizmos.cs" />
     <Compile Include="Assets\AstarPathfindingProject\Utilities\UnityReferenceHelper.cs" />
     <Compile Include="Assets\Extensions\AIUnetPath.cs" />
-    <Compile Include="Assets\Extensions\CustomLobbyHook.cs" />
     <Compile Include="Assets\Extensions\CustomLobbyManager.cs" />
     <Compile Include="Assets\Extensions\CustomLobbyMenu.cs" />
     <Compile Include="Assets\Extensions\ExitButton.cs" />
