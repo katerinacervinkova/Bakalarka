@@ -3,7 +3,10 @@ using UnityEngine.UI;
 
 namespace Prototype.NetworkLobby
 {
-    //Main menu, mainly only a bunch of callback called by the UI (setup throught the Inspector)
+    /// <summary>
+    /// Class dealing with calls from the UI.
+    /// Based on LobbyMenu class
+    /// </summary>
     public class CustomLobbyMenu : MonoBehaviour
     {
         public LobbyManager lobbyManager;
@@ -12,6 +15,9 @@ namespace Prototype.NetworkLobby
 
         public InputField ipInput;
 
+        /// <summary>
+        /// Initializes the panel.
+        /// </summary>
         public void OnEnable()
         {
             lobbyManager.topPanel.ToggleVisibility(true);
@@ -20,11 +26,17 @@ namespace Prototype.NetworkLobby
             ipInput.onEndEdit.AddListener(onEndEditIP);
         }
 
+        /// <summary>
+        /// Starts the host.
+        /// </summary>
         public void OnClickHost()
         {
             lobbyManager.StartHost();
         }
 
+        /// <summary>
+        /// Joins the client to the ip in inInput.
+        /// </summary>
         public void OnClickJoin()
         {
             lobbyManager.ChangeTo(lobbyPanel);
@@ -38,6 +50,10 @@ namespace Prototype.NetworkLobby
             lobbyManager.SetServerInfo("Connecting...", lobbyManager.networkAddress);
         }
 
+        /// <summary>
+        /// Deals with the text change in ipInput.
+        /// </summary>
+        /// <param name="text">text in the field</param>
         void onEndEditIP(string text)
         {
             if (Input.GetKeyDown(KeyCode.Return))
