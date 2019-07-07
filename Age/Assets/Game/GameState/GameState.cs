@@ -51,6 +51,8 @@ public class GameState : NetworkBehaviour {
         AstarPath.active?.UpdateGraphs(guo);
     }
 
+
+
     public List<Unit> VisibleEnemyUnits(int playerId) => GetSquares(playerId).VisibleEnemyUnits();
     public List<Building> VisibleEnemyBuildings(int playerId) => GetSquares(playerId).VisibleEnemyBuildings();
     public List<TemporaryBuilding> VisibleEnemyTemporaryBuildings(int playerId) => GetSquares(playerId).VisibleEnemyTemporaryBuildings();
@@ -219,6 +221,12 @@ public class GameState : NetworkBehaviour {
     [ClientRpc]
     public void RpcDestroyObject(Vector3 center, Vector3 size)
     {
-        UpdateGraph(new Bounds(center, size));
+        var guo = new GraphUpdateObject(new Bounds(center, size))
+        {
+            modifyWalkability = true,
+            setWalkability = true,
+            updatePhysics = true
+        };
+        AstarPath.active?.UpdateGraphs(guo);
     }
 }

@@ -14,9 +14,9 @@ public class SimpleAI : MonoBehaviour {
         AddLastPurchase(PurchasesEnum.MainBuilding);
         for(int i = 0; i < 10; i++)
             AddLastPurchase(PurchasesEnum.Unit);
-        AddLastPurchase(PurchasesEnum.StoneAge);
-        AddLastPurchase(PurchasesEnum.Barracks);
-        AddLastFunction(() => aiPlayer.TrainUnit(AttEnum.Swordsmanship));
+        AddLastFunction(() => aiPlayer.Explore());
+        for(int i = 0; i < 10; i++)
+        AddLastFunction(() => aiPlayer.Attack());
     }
 
     void Update () {

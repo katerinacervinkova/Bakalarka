@@ -207,6 +207,24 @@ public class AIPlayer : MonoBehaviour
                 return false;
         }
     }
+
+    public bool Attack(Unit unit = null, Selectable target = null)
+    {
+        if (unit == null)
+            unit = RandomElement(SenseIdleUnits());
+        if (unit == null)
+            return false;
+        if (target == null)
+            target = RandomElement(SenseVisibleEnemyUnits());
+        if (target == null)
+            target = RandomElement(SenseVisibleEnemyBuildings());
+        if (target == null)
+            target = RandomElement(SenseVisibleEnemyTemporaryBuildings());
+        if (target == null)
+            return false;
+        unit.SetGoal(target);
+        return true;
+    }
     
     public void GetPurchaseCost(PurchasesEnum purchaseEnum, out int food, out int wood, out int gold, out int population)
     {
