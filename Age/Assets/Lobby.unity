@@ -1563,7 +1563,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 115.5, y: 0.000030517578}
-  m_SizeDelta: {x: 259.6, y: 46}
+  m_SizeDelta: {x: 614.8, y: 46}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &865179618
 MonoBehaviour:
@@ -1598,7 +1598,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: TODO
+  m_Text: Network Lobby
 --- !u!222 &865179619
 CanvasRenderer:
   m_ObjectHideFlags: 0
