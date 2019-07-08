@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Class used for instantiating prefabs and initializing some of its variables.
+/// </summary>
 public class Factory : MonoBehaviour
 {
     protected System.Random rnd = new System.Random();
