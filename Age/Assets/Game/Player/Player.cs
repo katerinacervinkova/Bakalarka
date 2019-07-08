@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
+/// <summary>
+/// Main class for the player. Does most of operations, that have to be synchronized, on the server.
+/// </summary>
 public class Player : NetworkBehaviour
 {
     [SyncVar]
@@ -20,6 +23,9 @@ public class Player : NetworkBehaviour
     public bool InGame = false;
     private GameObject endGameCanvas;
 
+    /// <summary>
+    /// Creates player state, player purchases and moves the camera.
+    /// </summary>
     public override void OnStartLocalPlayer()
     {
         PlayerState.Set(playerControllerId, factory.CreatePlayerState());
@@ -28,6 +34,10 @@ public class Player : NetworkBehaviour
             Camera.main.transform.parent.position = transform.position;
     }
 
+    /// <summary>
+    /// If the scene and player is ready, inits the fog of war and creates the initial unit.
+    /// </summary>
+    /// <returns>true if succeeded</returns>
     public bool Init()
     {
         if (!hasAuthority || (connectionToClient != null && !connectionToClient.isReady) || GameState.Instance == null)
@@ -38,6 +48,9 @@ public class Player : NetworkBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Start the game as soon as the initial unit is created.
+    /// </summary>
     public void StartTheGame()
     {
         PlayerState.Get(playerControllerId).Population = 1;
@@ -59,6 +72,9 @@ public class Player : NetworkBehaviour
         CmdChangeInGame(true);
     }
 
+    /// <summary>
+    /// Check the victory condition in each frame.
+    /// </summary>
     private void Update()
     {
         if (victoryCondition == null)
@@ -79,6 +95,9 @@ public class Player : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Shows the losing screen and ends the game.
+    /// </summary>
     public void Lose()
     {
         if (IsHuman)
@@ -86,6 +105,9 @@ public class Player : NetworkBehaviour
         EndGame();
     }
 
+    /// <summary>
+    /// Shows the winning screen and ends the game.
+    /// </summary>
     public void Win()
     {
         if (IsHuman)
@@ -93,6 +115,9 @@ public class Player : NetworkBehaviour
         EndGame();
     }
 
+    /// <summary>
+    /// Ends the game for this player and removes UI and fog of war
+    /// </summary>
     public void EndGame()
     {
         CmdChangeInGame(false);
@@ -104,22 +129,74 @@ public class Player : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Makes unit exit the building if it is currently inhabiting it.
+    /// </summary>
+    /// <param name="unit">unit to exit</param>
+    /// <param name="building">building the unit is about to leave</param>
     public void ExitBuilding(Unit unit, Building building)
     {
         if (unit != null && building != null)
             CmdExitBuilding(unit.netId, building.FrontPosition, building.DefaultDestination);
     }
 
+    /// <summary>
+    /// Makes the attacker attack the target.
+    /// </summary>
+    /// <param name="attacker">attacker to attack</param>
+    /// <param name="target">target to be attacked</param>
     public void Attack(Selectable attacker, Selectable target) => CmdAttack(attacker.netId, target.netId);
+    /// <summary>
+    /// Makes unit enter the building.
+    /// </summary>
+    /// <param name="unit">unit to enter the building</param>
+    /// <param name="building">building to be entered</param>
     public void EnterBuilding(Unit unit, Building building) => CmdEnterBuilding(unit.netId);
+    /// <summary>
+    /// Takes given amount away from given resource
+    /// </summary>
+    /// <param name="amount">amount to be gathered</param>
+    /// <param name="resource">resource to be gathered from</param>
     public void Gather(float amount, Resource resource) => CmdGather(amount, resource.netId);
+    /// <summary>
+    /// Changes the unit's attribute.
+    /// </summary>
+    /// <param name="unit">unit which the attribute belongs to</param>
+    /// <param name="attEnum">type of the attribute</param>
+    /// <param name="value">new value for the attribute</param>
     public void ChangeAttribute(Unit unit, AttEnum attEnum, float value) => CmdChangeAttribute(unit.netId, attEnum, value);
+    /// <summary>
+    /// Creates the temporary building of given type.
+    /// </summary>
+    /// <param name="buildingType">type of the building</param>
     public void CreateTempBuilding(BuildingEnum buildingType) => CmdCreateTempBuilding(buildingType);
+    /// <summary>
+    /// Creates unit from the given building.
+    /// </summary>
+    /// <param name="building">building to create the unit</param>
     public void CreateUnit(Building building) => CmdCreateUnit(building.FrontPosition, building.DefaultDestination);
+    /// <summary>
+    /// Places building onto its current position and makes it visible for all clients.
+    /// </summary>
+    /// <param name="temporaryBuilding"></param>
     public void PlaceBuilding(TemporaryBuilding temporaryBuilding) => CmdPlaceBuilding(temporaryBuilding.transform.position, temporaryBuilding.netId);
+    /// <summary>
+    /// Changes health of the selectable.
+    /// </summary>
+    /// <param name="selectable">selectable whose health is changing</param>
+    /// <param name="value">new value of health</param>
     public void ChangeHealth(Selectable selectable, float value) => CmdChangeHealth(selectable.netId, value);
+    /// <summary>
+    /// Destroys given object.
+    /// </summary>
+    /// <param name="selectedObject">object to be destroyed</param>
     public void DestroySelectedObject(Selectable selectedObject) => CmdDestroy(selectedObject.netId);
 
+    /// <summary>
+    /// Finds the nearest walkable position to the given position.
+    /// </summary>
+    /// <param name="position">position to start with</param>
+    /// <returns> the nearest walkable position</returns>
     private Vector3 NearestWalkable(Vector3 position)
     {
         NNConstraint nodeConstraint = new NNConstraint
@@ -131,6 +208,9 @@ public class Player : NetworkBehaviour
             return new Vector3();
         return AstarPath.active.GetNearest(position, nodeConstraint).position;
     }
+
+    // bunch of commands that perform given operations on the server
+    // and call the functions that synchronize them with clients
 
     [Command]
     private void CmdChangeInGame(bool inGame)
@@ -192,7 +272,7 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdCreateTempBuilding(BuildingEnum buildingType)
+    private void CmdCreateTempBuilding(BuildingEnum buildingType)
     {
         var tempBuilding = factory.CreateTemporaryMainBuilding(netId, buildingType);
         NetworkServer.SpawnWithClientAuthority(tempBuilding.gameObject, gameObject);
@@ -212,7 +292,7 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdGather(float amount, NetworkInstanceId resourceId)
+    private void CmdGather(float amount, NetworkInstanceId resourceId)
     {
         if (NetworkServer.objects.ContainsKey(resourceId))
         {
@@ -224,7 +304,7 @@ public class Player : NetworkBehaviour
     } 
 
     [Command]
-    public void CmdPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)
+    private void CmdPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)
     {
         TemporaryBuilding temporaryBuilding = NetworkServer.objects[tempBuildingId].GetComponent<TemporaryBuilding>();
         temporaryBuilding.transform.position = position;
@@ -233,7 +313,7 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdDestroy(NetworkInstanceId selectableId)
+    private void CmdDestroy(NetworkInstanceId selectableId)
     {
         GameObject selectable = NetworkServer.objects[selectableId].gameObject;
         var bounds = selectable.GetComponent<Collider>().bounds;
