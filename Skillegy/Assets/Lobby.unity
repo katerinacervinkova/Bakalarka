@@ -1585,7 +1585,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: Network Lobby
+  m_Text: 'Skillegy
+
+'
 --- !u!222 &865179619
 CanvasRenderer:
   m_ObjectHideFlags: 0
