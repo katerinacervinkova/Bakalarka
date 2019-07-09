@@ -12,16 +12,19 @@ public class RightMouseActivity : MouseActivity {
 
     private void RightMouseClick()
     {
-        if (inputOptions.MouseOverUI)
+        if (inputOptions.MouseOverUI || PlayerState.Get().SelectedObject == null)
             return;
+
         GameObject hitObject = FindHitObject();
         Vector3 hitPoint = FindHitPoint();
-        if (!hitObject || !PlayerState.Get().SelectedObject)
+        if (hitObject == null)
             return;
-        Selectable objectOfInterest = hitObject.GetComponent<Selectable>();
+
         if (hitObject.name == "Map")
             PlayerState.Get().SelectedObject.RightMouseClickGround(hitPoint);
-        else if (objectOfInterest != null)
-            PlayerState.Get().SelectedObject.RightMouseClickObject(hitObject.GetComponent<Selectable>());
+
+        Selectable selectable = hitObject.GetComponent<Selectable>();
+        if (selectable != null)
+            PlayerState.Get().SelectedObject.RightMouseClickObject(selectable);
     }
 }

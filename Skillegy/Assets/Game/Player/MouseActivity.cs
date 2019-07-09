@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// base class for handling left and right mouse buttons activity
 public class MouseActivity : MonoBehaviour {
 
     protected GameWindow gameWindow;

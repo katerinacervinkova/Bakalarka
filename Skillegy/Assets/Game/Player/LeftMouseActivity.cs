@@ -3,29 +3,36 @@ using System;
 
 public class LeftMouseActivity : MouseActivity {
 
+    // UI for the square used for selecting multiple units
     [SerializeField]
     private RectTransform selectionSquare;
+    private Vector3 squareStartPosition = Vector3.zero;
+
+    private bool isClicking = false;
     private readonly float maxClickTime = 0.3f;
     private float lastClickTime = 0;
+
     private GameObject hitObject = null;
     private Vector3 hitPoint = Vector3.zero;
-    private Vector3 squareStartPosition = Vector3.zero;
-    private bool isClicking = false;
 
     private void Update ()
     {
+        // game has not started yet or the classical input is paused by another window
         if (PlayerState.Get() == null || BuildingWindowShown)
         {
             selectionSquare.gameObject.SetActive(false);
             return;
         }
+        // classical input is paused by placing a building
         if (PlayerState.Get().BuildingToBuild != null)
         {
+            // "r" key resets the purchase of the building
             if (Input.GetKeyDown("r"))
             {
                 PlayerState.Get().ResetBuildingToBuild();
                 return;
             }
+            // moving the mouses moves the building as well
             Vector3 hitPoint = FindHitPoint();
             if (!float.IsPositiveInfinity(hitPoint.x))
             {
@@ -34,12 +41,15 @@ public class LeftMouseActivity : MouseActivity {
             }
         }
 
-        if (!isClicking && !MouseInBounds())
-            return;
-        if (Input.GetMouseButtonUp(0))
-            LeftMouseRelease();
+        // handles mouse click or release
         if (Input.GetMouseButtonDown(0))
             LeftMouseDown();
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (isClicking)
+                LeftMouseRelease();
+            selectionSquare.gameObject.SetActive(false);
+        }
     }
 
     private void OnGUI()
@@ -72,8 +82,7 @@ public class LeftMouseActivity : MouseActivity {
     {
         if (inputOptions.MouseOverUI)
             return;
-        if (PlayerState.Get().SelectedObject && PlayerState.Get().BuildingToBuild == null)
-            PlayerState.Get().Deselect();
+        // if the player is currently placing a building, place it
         if (PlayerState.Get().BuildingToBuild != null && !float.IsPositiveInfinity(hitPoint.x))
         {
             PlayerState.Get().PlaceBuilding();
@@ -81,10 +90,12 @@ public class LeftMouseActivity : MouseActivity {
         }
         if (!hitObject || float.IsPositiveInfinity(hitPoint.x))
             return;
+        // it the player has clicked on the ground, deselect currently selected object
         if (hitObject.name == "Map")
             PlayerState.Get().Deselect();
         else
         {
+            // select the object the player has chosen
             Selectable selectedObject = hitObject.transform.GetComponent<Selectable>();
             if (!selectedObject)
                 return;
@@ -93,6 +104,7 @@ public class LeftMouseActivity : MouseActivity {
     }
     private void LeftMouseDrag()
     {
+        // select all player's units within given rectangle
         inputOptions.MoveCameraEnabled = true;
         selectionSquare.gameObject.SetActive(false);
 
@@ -104,6 +116,7 @@ public class LeftMouseActivity : MouseActivity {
 
     private void DrawRectangle()
     {
+        // draws the UI selection rectangle and disables camera movement
         if (Time.time - lastClickTime < maxClickTime)
             return;
 
