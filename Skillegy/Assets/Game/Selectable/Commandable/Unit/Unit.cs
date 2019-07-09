@@ -10,14 +10,14 @@ public class Unit : Commandable
     public Regiment Reg { get; set; }
     private Attributes atts;
 
-    public float GetAttribute(AttEnum attEnum) => atts.Get(attEnum);
-    public void SetAttribute(AttEnum attEnum, float value) => atts.Set(attEnum, value);
+    public float GetSkillLevel(SkillEnum attEnum) => atts.Get(attEnum);
+    public void SetAttribute(SkillEnum attEnum, float value) => atts.Set(attEnum, value);
 
-    public float Gathering { get { return atts.Get(AttEnum.Gathering); } set { atts.Set(AttEnum.Gathering, value); } }
-    public float Intelligence { get { return atts.Get(AttEnum.Intelligence); } set { atts.Set(AttEnum.Intelligence, value); } }
-    public float Swordsmanship { get { return atts.Get(AttEnum.Swordsmanship); } set { atts.Set(AttEnum.Swordsmanship, value); } }
-    public float Healing { get { return atts.Get(AttEnum.Healing); } set { atts.Set(AttEnum.Healing, value); } }
-    public float Building { get { return atts.Get(AttEnum.Building); } set { atts.Set(AttEnum.Building, value); } }
+    public float Gathering { get { return atts.Get(SkillEnum.Gathering); } set { atts.Set(SkillEnum.Gathering, value); } }
+    public float Intelligence { get { return atts.Get(SkillEnum.Intelligence); } set { atts.Set(SkillEnum.Intelligence, value); } }
+    public float Swordsmanship { get { return atts.Get(SkillEnum.Swordsmanship); } set { atts.Set(SkillEnum.Swordsmanship, value); } }
+    public float Healing { get { return atts.Get(SkillEnum.Healing); } set { atts.Set(SkillEnum.Healing, value); } }
+    public float Building { get { return atts.Get(SkillEnum.Building); } set { atts.Set(SkillEnum.Building, value); } }
 
     public float Range => 5;
     private Job Job { get; set; }

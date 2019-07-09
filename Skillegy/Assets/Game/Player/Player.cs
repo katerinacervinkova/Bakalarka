@@ -164,7 +164,7 @@ public class Player : NetworkBehaviour
     /// <param name="unit">unit which the attribute belongs to</param>
     /// <param name="attEnum">type of the attribute</param>
     /// <param name="value">new value for the attribute</param>
-    public void ChangeAttribute(Unit unit, AttEnum attEnum, float value) => CmdChangeAttribute(unit.netId, attEnum, value);
+    public void ChangeAttribute(Unit unit, SkillEnum attEnum, float value) => CmdChangeAttribute(unit.netId, attEnum, value);
     /// <summary>
     /// Creates the temporary building of given type.
     /// </summary>
@@ -279,7 +279,7 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    private void CmdChangeAttribute(NetworkInstanceId unitId, AttEnum attEnum, float value)
+    private void CmdChangeAttribute(NetworkInstanceId unitId, SkillEnum attEnum, float value)
     {
         if (NetworkServer.objects.ContainsKey(unitId))
             NetworkServer.objects[unitId].GetComponent<Unit>().SetAttribute(attEnum, value);

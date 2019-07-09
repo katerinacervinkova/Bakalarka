@@ -25,9 +25,9 @@ public class Barracks : Building
     protected override void UpdateUnit(Unit unit)
     {
         if (unit.Swordsmanship < maxSwordsmanship)
-            owner.ChangeAttribute(unit, AttEnum.Swordsmanship, Math.Min(maxSwordsmanship, unit.Swordsmanship + swordsmanshipIncrease * unit.Intelligence));
+            owner.ChangeAttribute(unit, SkillEnum.Swordsmanship, Math.Min(maxSwordsmanship, unit.Swordsmanship + swordsmanshipIncrease * unit.Intelligence));
         else
-            owner.ChangeAttribute(unit, AttEnum.Swordsmanship, unit.Swordsmanship + slowSwordsmanshipIncrease * unit.Intelligence);
+            owner.ChangeAttribute(unit, SkillEnum.Swordsmanship, unit.Swordsmanship + slowSwordsmanshipIncrease * unit.Intelligence);
     }
 
     protected override void InitPurchases()

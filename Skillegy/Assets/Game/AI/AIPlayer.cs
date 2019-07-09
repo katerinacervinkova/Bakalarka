@@ -13,11 +13,11 @@ public class AIPlayer : MonoBehaviour
 
     public List<Unit> SenseIdleUnits() => playerState.IdleUnits();
 
-    public Unit SenseBestUnit(AttEnum attribute) => playerState.BestUnit(attribute);
-    public Unit SenseBestIdleUnit(AttEnum attribute) => playerState.BestIdleUnit(attribute);
+    public Unit SenseBestUnit(SkillEnum attribute) => playerState.BestUnit(attribute);
+    public Unit SenseBestIdleUnit(SkillEnum attribute) => playerState.BestIdleUnit(attribute);
 
-    public List<Unit> SenseGoodUnits(AttEnum attribute, float bar) => playerState.GoodUnits(attribute, bar);
-    public List<Unit> SenseGoodIdleUnits(AttEnum attribute, float bar) => playerState.GoodIdleUnits(attribute, bar);
+    public List<Unit> SenseGoodUnits(SkillEnum attribute, float bar) => playerState.GoodUnits(attribute, bar);
+    public List<Unit> SenseGoodIdleUnits(SkillEnum attribute, float bar) => playerState.GoodIdleUnits(attribute, bar);
 
     public List<Unit> SenseOwnUnits() => playerState.units;
     public List<Building> SenseOwnBuildings() => playerState.buildings;
@@ -162,7 +162,7 @@ public class AIPlayer : MonoBehaviour
         return true;
     }
 
-    public bool TrainUnit(AttEnum type, Unit unit = null)
+    public bool TrainUnit(SkillEnum type, Unit unit = null)
     {
         if (unit == null)
         {
@@ -172,19 +172,19 @@ public class AIPlayer : MonoBehaviour
         }
         switch (type)
         {
-            case AttEnum.Gathering:
+            case SkillEnum.Gathering:
                 return GatherFood(unit) || GatherWood(unit) || GatherGold(unit);
-            case AttEnum.Intelligence:
+            case SkillEnum.Intelligence:
                 var building = RandomElement(SenseOwnBuildings().Where(b => b is Library && (b as Library).Focus == Library.FocusEnum.Intelligence));
                 if (building == null)
                     return false;
                 return EnterBuilding(unit, building);
-            case AttEnum.Swordsmanship:
+            case SkillEnum.Swordsmanship:
                 building = RandomElement(SenseOwnBuildings().Where(b => b is Barracks));
                 if (building == null)
                     return false;
                 return EnterBuilding(unit, building);
-            case AttEnum.Healing:
+            case SkillEnum.Healing:
                 building = RandomElement(SenseOwnBuildings().Where(b => b is Library && (b as Library).Focus == Library.FocusEnum.Healing));
                 if (building != null)
                     return EnterBuilding(unit, building);
@@ -192,7 +192,7 @@ public class AIPlayer : MonoBehaviour
                 if (building == null)
                     return false;
                 return EnterBuilding(unit, building);
-            case AttEnum.Building:
+            case SkillEnum.Building:
                 var tempBuilding = SenseClosestTemporaryBuilding(unit.transform.position);
                 if (tempBuilding != null)
                 {
@@ -238,19 +238,19 @@ public class AIPlayer : MonoBehaviour
     {
         if (playerState.Food < food)
         {
-            Unit unit = SenseBestIdleUnit(AttEnum.Gathering);
+            Unit unit = SenseBestIdleUnit(SkillEnum.Gathering);
             if (unit != null)
                 GatherFood(unit);
         }
         if (playerState.Wood < wood)
         {
-            Unit unit = SenseBestIdleUnit(AttEnum.Gathering);
+            Unit unit = SenseBestIdleUnit(SkillEnum.Gathering);
             if (unit != null)
                 GatherWood(unit);
         }
         if (playerState.Gold < gold)
         {
-            Unit unit = SenseBestIdleUnit(AttEnum.Gathering);
+            Unit unit = SenseBestIdleUnit(SkillEnum.Gathering);
             if (unit != null)
                 GatherGold(unit);
         }

@@ -18,8 +18,8 @@ public class Sawmill : Building
     {
         PlayerState.Get(playerId).Wood += unit.Gathering / 2;
         if (unit.Gathering < unit.Intelligence)
-            owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + gatheringIncrease * unit.Intelligence);
+            owner.ChangeAttribute(unit, SkillEnum.Gathering, unit.Gathering + gatheringIncrease * unit.Intelligence);
         else
-            owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + slowGatheringIncrease * unit.Intelligence);
+            owner.ChangeAttribute(unit, SkillEnum.Gathering, unit.Gathering + slowGatheringIncrease * unit.Intelligence);
     }
 }

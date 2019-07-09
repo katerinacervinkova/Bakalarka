@@ -14,6 +14,6 @@ public class Bank : Building
     protected override void UpdateUnit(Unit unit)
     {
         PlayerState.Get(playerId).Gold += unit.Gathering / 2;
-        owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + 0.05f);
+        owner.ChangeAttribute(unit, SkillEnum.Gathering, unit.Gathering + 0.05f);
     }
 }

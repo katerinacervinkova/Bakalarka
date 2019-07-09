@@ -30,8 +30,8 @@ public class Mill : Building
     {
         PlayerState.Get(playerId).Food += unit.Gathering * Speed;
         if (unit.Gathering < unit.Intelligence)
-            owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + gatheringIncrease * unit.Intelligence);
+            owner.ChangeAttribute(unit, SkillEnum.Gathering, unit.Gathering + gatheringIncrease * unit.Intelligence);
         else
-            owner.ChangeAttribute(unit, AttEnum.Gathering, unit.Gathering + slowGatheringIncrease * unit.Intelligence);
+            owner.ChangeAttribute(unit, SkillEnum.Gathering, unit.Gathering + slowGatheringIncrease * unit.Intelligence);
     }
 }

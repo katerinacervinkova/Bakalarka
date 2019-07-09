@@ -42,9 +42,9 @@ public class JobGather<T> : Job where T : Resource {
             if (resource.Gather(worker.Gathering, worker.owner))
                 Completed = true;
             if (worker.Gathering < worker.Intelligence)
-                worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + gatheringIncrease * worker.Intelligence);
+                worker.owner.ChangeAttribute(worker, SkillEnum.Gathering, worker.Gathering + gatheringIncrease * worker.Intelligence);
             else
-                worker.owner.ChangeAttribute(worker, AttEnum.Gathering, worker.Gathering + slowGatheringIncrease * worker.Intelligence);
+                worker.owner.ChangeAttribute(worker, SkillEnum.Gathering, worker.Gathering + slowGatheringIncrease * worker.Intelligence);
             timeElapsed -= minTime;
         }
     }

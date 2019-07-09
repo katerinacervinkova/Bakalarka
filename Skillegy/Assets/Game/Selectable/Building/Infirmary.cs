@@ -39,7 +39,7 @@ public class Infirmary : Building
     protected override void UpdateUnit(Unit unit)
     {
         if (unit == Healer)
-            owner.ChangeAttribute(unit, AttEnum.Healing, unit.Healing + healingIncrease * unit.Intelligence);
+            owner.ChangeAttribute(unit, SkillEnum.Healing, unit.Healing + healingIncrease * unit.Intelligence);
         else if (Healer == null)
             owner.ChangeHealth(unit, unit.Health + noHealerHealthIncrease);
         else if (unitsInside.Count <= maxUnitsHealing + 1)

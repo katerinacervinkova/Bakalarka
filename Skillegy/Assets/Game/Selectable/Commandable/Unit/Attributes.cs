@@ -20,42 +20,42 @@ public class Attributes : NetworkBehaviour {
         unit = GetComponent<Unit>();
     }
 
-    public float Get(AttEnum attribute)
+    public float Get(SkillEnum attribute)
     {
         switch (attribute)
         {
-            case AttEnum.Gathering:
+            case SkillEnum.Gathering:
                 return Gathering;
-            case AttEnum.Intelligence:
+            case SkillEnum.Intelligence:
                 return Intelligence;
-            case AttEnum.Swordsmanship:
+            case SkillEnum.Swordsmanship:
                 return Swordsmanship;
-            case AttEnum.Healing:
+            case SkillEnum.Healing:
                 return Healing;
-            case AttEnum.Building:
+            case SkillEnum.Building:
                 return Building;
             default:
                 return 0;
         }
     }
 
-    public void Set(AttEnum attribute, float value)
+    public void Set(SkillEnum attribute, float value)
     {
         switch (attribute)
         {
-            case AttEnum.Gathering:
+            case SkillEnum.Gathering:
                 Gathering = value;
                 break;
-            case AttEnum.Intelligence:
+            case SkillEnum.Intelligence:
                 Intelligence = value;
                 break;
-            case AttEnum.Swordsmanship:
+            case SkillEnum.Swordsmanship:
                 Swordsmanship = value;
                 break;
-            case AttEnum.Healing:
+            case SkillEnum.Healing:
                 Healing = value;
                 break;
-            case AttEnum.Building:
+            case SkillEnum.Building:
                 Building = value;
                 break;
         }

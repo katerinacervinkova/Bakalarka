@@ -63,21 +63,21 @@ public class Library : Building {
         {
             case FocusEnum.Intelligence:
                 if (unit.Intelligence < maxIntelligence)
-                    owner.ChangeAttribute(unit, AttEnum.Intelligence, Math.Min(maxIntelligence, unit.Intelligence + intelligenceIncrease));
+                    owner.ChangeAttribute(unit, SkillEnum.Intelligence, Math.Min(maxIntelligence, unit.Intelligence + intelligenceIncrease));
                 else
-                    owner.ChangeAttribute(unit, AttEnum.Intelligence, unit.Intelligence + slowIntelligenceIncrease);
+                    owner.ChangeAttribute(unit, SkillEnum.Intelligence, unit.Intelligence + slowIntelligenceIncrease);
                 break;
             case FocusEnum.Building:
                 if (unit.Building < unit.Intelligence)
-                    owner.ChangeAttribute(unit, AttEnum.Building, unit.Building + buildingIncrease * unit.Intelligence);
+                    owner.ChangeAttribute(unit, SkillEnum.Building, unit.Building + buildingIncrease * unit.Intelligence);
                 else
-                    owner.ChangeAttribute(unit, AttEnum.Building, unit.Building + slowBuildingIncrease * unit.Intelligence);
+                    owner.ChangeAttribute(unit, SkillEnum.Building, unit.Building + slowBuildingIncrease * unit.Intelligence);
                 break;
             case FocusEnum.Healing:
                 if (unit.Healing < unit.Intelligence)
-                    owner.ChangeAttribute(unit, AttEnum.Healing, unit.Healing + healingIncrease * unit.Intelligence);
+                    owner.ChangeAttribute(unit, SkillEnum.Healing, unit.Healing + healingIncrease * unit.Intelligence);
                 else
-                    owner.ChangeAttribute(unit, AttEnum.Healing, unit.Healing + slowHealingIncrease * unit.Intelligence);
+                    owner.ChangeAttribute(unit, SkillEnum.Healing, unit.Healing + slowHealingIncrease * unit.Intelligence);
                 break;
         }
 

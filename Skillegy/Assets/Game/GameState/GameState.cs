@@ -73,8 +73,6 @@ public class GameState : NetworkBehaviour {
         AstarPath.active?.UpdateGraphs(guo);
     }
 
-
-
     public List<Unit> VisibleEnemyUnits(int playerId) => GetSquares(playerId).VisibleEnemyUnits();
     public List<Building> VisibleEnemyBuildings(int playerId) => GetSquares(playerId).VisibleEnemyBuildings();
     public List<TemporaryBuilding> VisibleEnemyTemporaryBuildings(int playerId) => GetSquares(playerId).VisibleEnemyTemporaryBuildings();
@@ -92,6 +90,9 @@ public class GameState : NetworkBehaviour {
     public T GetClosestResource<T>(Vector2 squareID, T resource) where T : Resource => GetSquares().ClosestVisibleResource(resource, squareID);
     public T ClosestVisibleResource<T>(Vector3 destination, int playerId) where T : Resource => GetSquares(playerId).ClosestGloballyVisibleResource<T>(SquareId(destination));
     public Selectable ClosestVisibleTarget(Vector3 position, int playerId) => GetSquares(playerId).ClosestVisibleTarget(SquareId(position));
+
+    public Vector3 GetRandomDestination(Vector3 position, int distance) => position + new Vector3(UnityEngine.Random.value - 0.5f, 0, UnityEngine.Random.value - 0.5f) * distance * 2;
+    public Vector3 GetRandomDestination() => GetRandomDestination(new Vector3(), MapSize);
 
 
     /// <summary>
@@ -140,9 +141,6 @@ public class GameState : NetworkBehaviour {
             if (visibilitySquares != null)
                 action.Invoke(visibilitySquares);
     }
-
-    public Vector3 GetRandomDestination(Vector3 position, int distance) => position + new Vector3(UnityEngine.Random.value - 0.5f, 0, UnityEngine.Random.value - 0.5f) * distance * 2;
-    public Vector3 GetRandomDestination() => GetRandomDestination(new Vector3(), MapSize);
 
     [ClientRpc]
     public void RpcPlaceBuilding(Vector3 position, NetworkInstanceId tempBuildingId)

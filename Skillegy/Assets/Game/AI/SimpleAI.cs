@@ -20,7 +20,7 @@ public class SimpleAI : MonoBehaviour {
         for (int i = 0; i < 3; i++)
             AddLast(PurchasesEnum.Library);
         for (int i = 0; i < 10; i++)
-            AddLast(() => aiPlayer.TrainUnit(AttEnum.Intelligence));
+            AddLast(() => aiPlayer.TrainUnit(SkillEnum.Intelligence));
     }
 
     void Update () {

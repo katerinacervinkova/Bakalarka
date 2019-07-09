@@ -44,9 +44,9 @@ public class JobBuild : Job {
         {
             building.Build(worker.Building);
             if (worker.Building < worker.Intelligence)
-                worker.owner.ChangeAttribute(worker, AttEnum.Building, worker.Building + buildingIncrease * worker.Intelligence);
+                worker.owner.ChangeAttribute(worker, SkillEnum.Building, worker.Building + buildingIncrease * worker.Intelligence);
             else
-                worker.owner.ChangeAttribute(worker, AttEnum.Building, worker.Building + slowBuildingIncrease * worker.Intelligence);
+                worker.owner.ChangeAttribute(worker, SkillEnum.Building, worker.Building + slowBuildingIncrease * worker.Intelligence);
             timeElapsed -= minTime;
         }
     }

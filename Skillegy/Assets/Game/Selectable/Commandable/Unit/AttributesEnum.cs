@@ -1,4 +1,4 @@
-﻿public enum AttEnum
+﻿public enum SkillEnum
 {
     Gathering,
     Intelligence,
