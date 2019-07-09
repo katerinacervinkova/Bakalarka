@@ -2,6 +2,9 @@
 using System.Linq;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Base for any victory condition that can be used in this game
+/// </summary>
 public abstract class VictoryCondition : NetworkBehaviour
 {
     [SyncVar]
@@ -9,6 +12,7 @@ public abstract class VictoryCondition : NetworkBehaviour
 
     public List<Player> players;
 
+    // true if game has already started.
     public bool InGame = false;
 
     public override void OnStartClient()
@@ -19,6 +23,9 @@ public abstract class VictoryCondition : NetworkBehaviour
         });
     }
 
+    /// <summary>
+    /// Gets the player count from the lobby manager.
+    /// </summary>
     public override void OnStartAuthority() => CmdPlayerCount();
 
     [Command]
@@ -28,11 +35,13 @@ public abstract class VictoryCondition : NetworkBehaviour
     {
         if (InGame)
         {
+            // player wins if he is the only one left
             var ps = players.Where(p => p != null && p.InGame);
             if (ps.Count() == 1 && ps.First() == player)
                 return true;
         }
-        else if (playerCount == players.Count && players.TrueForAll(p => p.InGame))
+        // if all players are initialized and ready, game has started
+        else if (playerCount > 0 && playerCount == players.Count && players.TrueForAll(p => p.InGame))
             InGame = true;
         return false;
     }
