@@ -16,8 +16,8 @@ public class MouseActivity : MonoBehaviour {
     protected bool MouseInBounds()
     {
         Vector3 mousePosition = Input.mousePosition;
-        bool insideWidth = mousePosition.x >= 0 && mousePosition.x <= Screen.width;
-        bool insideHeight = mousePosition.y >= gameWindow.BottomBorder && mousePosition.y <= Screen.height;
+        bool insideWidth = mousePosition.x >= gameWindow.LeftBorder && mousePosition.x <= gameWindow.RightBorder;
+        bool insideHeight = mousePosition.y >= gameWindow.BottomBorder && mousePosition.y <= gameWindow.TopBorder;
         return insideWidth && insideHeight;
     }
 
@@ -34,7 +34,7 @@ public class MouseActivity : MonoBehaviour {
         RaycastHit hit;
         if (FindRaycastHit(out hit))
             return hit.point;
-        return gameWindow.InvalidPosition;
+        return Vector3.positiveInfinity;
     }
 
     private bool FindRaycastHit(out RaycastHit hit)

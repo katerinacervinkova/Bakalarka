@@ -27,8 +27,11 @@ public class LeftMouseActivity : MouseActivity {
                 return;
             }
             Vector3 hitPoint = FindHitPoint();
-            hitPoint.y = 0;
-            PlayerState.Get().MoveBuildingToBuild(hitPoint);
+            if (!float.IsPositiveInfinity(hitPoint.x))
+            {
+                hitPoint.y = 0;
+                PlayerState.Get().MoveBuildingToBuild(hitPoint);
+            }
         }
 
         if (!isClicking && !MouseInBounds())
@@ -50,7 +53,7 @@ public class LeftMouseActivity : MouseActivity {
         lastClickTime = Time.time;
         hitObject = FindHitObject();
         hitPoint = FindHitPoint();
-        if (hitPoint == gameWindow.InvalidPosition)
+        if (float.IsPositiveInfinity(hitPoint.x))
             return;
         isClicking = true;
         squareStartPosition = Input.mousePosition;
@@ -71,12 +74,12 @@ public class LeftMouseActivity : MouseActivity {
             return;
         if (PlayerState.Get().SelectedObject && PlayerState.Get().BuildingToBuild == null)
             PlayerState.Get().Deselect();
-        if (PlayerState.Get().BuildingToBuild != null && hitPoint != gameWindow.InvalidPosition)
+        if (PlayerState.Get().BuildingToBuild != null && !float.IsPositiveInfinity(hitPoint.x))
         {
             PlayerState.Get().PlaceBuilding();
             return;
         }
-        if (!hitObject || hitPoint == gameWindow.InvalidPosition)
+        if (!hitObject || float.IsPositiveInfinity(hitPoint.x))
             return;
         if (hitObject.name == "Map")
             PlayerState.Get().Deselect();

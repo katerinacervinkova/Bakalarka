@@ -1,6 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// Class that handles camera movement and zooming
+/// </summary>
 public class CameraMovement : MonoBehaviour {
 
     [SerializeField]
