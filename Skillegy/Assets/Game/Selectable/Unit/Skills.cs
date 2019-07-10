@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Networking;
 
-public class Attributes : NetworkBehaviour {
+public class Skills : NetworkBehaviour {
 
     private Unit unit;
 

@@ -68,7 +68,8 @@ public class GameState : NetworkBehaviour {
         var guo = new GraphUpdateObject(bounds)
         {
             modifyWalkability = true,
-            updatePhysics = true
+            updatePhysics = true,
+            setWalkability = false,
         };
         AstarPath.active?.UpdateGraphs(guo);
     }

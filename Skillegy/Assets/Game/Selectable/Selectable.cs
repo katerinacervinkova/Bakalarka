@@ -42,11 +42,11 @@ public abstract class Selectable : NetworkBehaviour {
     /// <summary>
     /// Returns job for a unit that belongs to the same player.
     /// </summary>
-    public abstract Job GetOwnJob(Commandable worker = null);
+    public abstract Job GetOwnJob(Unit worker = null);
     /// <summary>
     /// Returns job for an enemy unit.
     /// </summary>
-    public virtual Job GetEnemyJob(Commandable worker = null) => new JobAttack(this);
+    public virtual Job GetEnemyJob(Unit worker = null) => new JobAttack(this);
 
     public override void OnStartClient()
     {
@@ -212,12 +212,12 @@ public abstract class Selectable : NetworkBehaviour {
     /// Called when the player has just right-clicked on the ground and this object was selected.
     /// </summary>
     /// <param name="hitPoint">world position of the click</param>
-    public virtual void RightMouseClickGround(Vector3 hitPoint) { }
+    public virtual void SetGoal(Vector3 hitPoint) { }
     /// <summary>
     /// Called when the player has just right-clicked on the given selectable and this object was selected.
     /// </summary>
     /// <param name="hitObject">object that the user clicked at</param>
-    public virtual void RightMouseClickObject(Selectable hitObject) { }
+    public virtual void SetGoal(Selectable hitObject) { }
     
     /// <summary>
     /// Called when the value of health changes.

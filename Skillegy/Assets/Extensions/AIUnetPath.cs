@@ -1,6 +1,4 @@
 ﻿using Pathfinding;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AIUnetPath : AIPath {
@@ -17,8 +15,7 @@ public class AIUnetPath : AIPath {
 
     public override void OnTargetReached()
     {
-        destination = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-        unit.OnTargetReached();
+        unit.movementController.OnTargetReached();
     }
 
     protected override void OnPathComplete(Path newPath)

@@ -21,10 +21,10 @@ public class RightMouseActivity : MouseActivity {
             return;
 
         if (hitObject.name == "Map")
-            PlayerState.Get().SelectedObject.RightMouseClickGround(hitPoint);
+            PlayerState.Get().SelectedObject.SetGoal(hitPoint);
 
         Selectable selectable = hitObject.GetComponent<Selectable>();
         if (selectable != null)
-            PlayerState.Get().SelectedObject.RightMouseClickObject(selectable);
+            PlayerState.Get().SelectedObject.SetGoal(selectable);
     }
 }

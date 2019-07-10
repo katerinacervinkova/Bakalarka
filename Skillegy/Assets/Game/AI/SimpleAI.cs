@@ -11,8 +11,9 @@ public class SimpleAI : MonoBehaviour {
 
     private void Start()
     {
+
         AddLast(PurchasesEnum.MainBuilding);
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             AddLast(PurchasesEnum.Unit);
         AddLast(() => aiPlayer.Explore());
         AddLast(PurchasesEnum.StoneAge);

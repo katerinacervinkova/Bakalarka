@@ -282,7 +282,7 @@ public class Player : NetworkBehaviour
     private void CmdChangeAttribute(NetworkInstanceId unitId, SkillEnum attEnum, float value)
     {
         if (NetworkServer.objects.ContainsKey(unitId))
-            NetworkServer.objects[unitId].GetComponent<Unit>().SetAttribute(attEnum, value);
+            NetworkServer.objects[unitId].GetComponent<Unit>().SetSkillLevel(attEnum, value);
     }
 
     [Command]

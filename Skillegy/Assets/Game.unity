@@ -7275,7 +7275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170f29fd4f9fcba479907439e59c0bc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bottomBarPanel: {fileID: 510422528}
 --- !u!114 &317788823
 MonoBehaviour:
   m_ObjectHideFlags: 0

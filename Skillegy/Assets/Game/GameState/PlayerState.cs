@@ -288,7 +288,8 @@ public class PlayerState : MonoBehaviour {
     public void PlaceBuilding()
     {
         player.PlaceBuilding(BuildingToBuild);
-        ((Commandable)SelectedObject)?.SetGoal(BuildingToBuild);
+        if (SelectedObject != null)
+            SelectedObject.SetGoal(BuildingToBuild);
         BuildingToBuild = null;
     }
 
@@ -324,6 +325,6 @@ public class PlayerState : MonoBehaviour {
     public void RightClickMinimap(Vector3 position)
     {
         if (player.IsHuman)
-            SelectedObject?.RightMouseClickGround(position);
+            SelectedObject?.SetGoal(position);
     }
 }

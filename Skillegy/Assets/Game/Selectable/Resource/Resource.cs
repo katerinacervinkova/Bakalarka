@@ -43,7 +43,7 @@ public abstract class Resource : Selectable {
         }
     }
 
-    public override Job GetOwnJob(Commandable worker)
+    public override Job GetOwnJob(Unit worker)
     {
         return GetEnemyJob(worker);
     }

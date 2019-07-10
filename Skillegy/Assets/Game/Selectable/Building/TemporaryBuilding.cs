@@ -93,7 +93,7 @@ public class TemporaryBuilding : Selectable
         return $"progress {(int)progress}/{maxProgress}";
     }
 
-    public override Job GetOwnJob(Commandable worker)
+    public override Job GetOwnJob(Unit worker)
     {
         if (buildJob == null)
             buildJob = new JobBuild(this, playerId);

@@ -174,7 +174,7 @@ public abstract class Building : Selectable {
         return transactions.Count < maxTransactions;
     }
 
-    public override void RightMouseClickGround(Vector3 hitPoint)
+    public override void SetGoal(Vector3 hitPoint)
     {
         if (!hasAuthority || !owner.IsHuman)
             return;
@@ -187,7 +187,7 @@ public abstract class Building : Selectable {
         return $"{base.GetObjectDescription()}\n{unitsInside.Count} unit(s) inside";
     }
 
-    public override Job GetOwnJob(Commandable worker)
+    public override Job GetOwnJob(Unit worker)
     {
         return new JobEnter(this);
     }

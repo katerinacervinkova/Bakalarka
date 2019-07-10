@@ -17,7 +17,7 @@ public class WoodResource : Resource
         return completed;
     }
 
-    public override Job GetEnemyJob(Commandable worker)
+    public override Job GetEnemyJob(Unit worker)
     {
         if (miningJob == null)
             miningJob = new JobGather<WoodResource>(this);

@@ -1031,8 +1031,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4701142400412644}
   - component: {fileID: 114605667064180216}
-  - component: {fileID: 136960922949573116}
   - component: {fileID: 114240467502079042}
+  - component: {fileID: 65394411973915174}
   m_Layer: 0
   m_Name: Barracks
   m_TagString: Untagged
@@ -1905,7 +1905,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1771390634385888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -95.49635, y: -6.3156404e-17, z: 113.77246}
+  m_LocalPosition: {x: -164.37616, y: -6.4855447e-17, z: 116.83319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4303557458590426}
@@ -2088,7 +2088,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1754645426158004}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.0699997, y: 3.3388896, z: 3.8499985}
+  m_LocalPosition: {x: -3.58, y: 3.3388896, z: 3.34}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children:
   - {fileID: 4561884376623150}
@@ -2230,7 +2230,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1588841381654950}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.9899979, y: 3.7, z: -0.9700012}
+  m_LocalPosition: {x: -1.38, y: 3.7, z: -0.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4171509672468410}
@@ -5145,6 +5145,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1224974155009788}
   m_Mesh: {fileID: 4300074, guid: d43f6afbe6fafa84e897c452718476f3, type: 3}
+--- !u!65 &65394411973915174
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1771390634385888}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8, y: 5, z: 8}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!114 &114240467502079042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5160,8 +5172,8 @@ MonoBehaviour:
   owner: {fileID: 0}
   Health: 0
   MaxHealth: 100
-  size: {x: 5, y: 0, z: 5}
   healthBarOffset: 8
+  size: {x: 8, y: 0, z: 8}
   buildingType: 2
   maxProgress: 250
   placed: 0
@@ -5215,19 +5227,6 @@ Projector:
   m_IgnoreLayers:
     serializedVersion: 2
     m_Bits: 0
---- !u!136 &136960922949573116
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1771390634385888}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 4.5
-  m_Height: 14.086302
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.52426434, z: 0}
 --- !u!212 &212494530405299318
 SpriteRenderer:
   m_ObjectHideFlags: 1
