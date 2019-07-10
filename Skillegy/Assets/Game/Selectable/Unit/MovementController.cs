@@ -91,14 +91,6 @@ public class MovementController : NetworkBehaviour {
         aiUnetPath.RpcOnPathComplete(path);
     }
 
-    public void OnTargetReached()
-    {
-        aiUnetPath.destination = Vector3.positiveInfinity; 
-        //informs unit that the job is completed
-        unit.OnTargetReached();
-        destination = Vector3.positiveInfinity;
-    }
-
 
     /// <summary>
     /// Called when the unit gets deselected or arrives at its destination. Hides the target.
