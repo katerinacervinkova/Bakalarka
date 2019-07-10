@@ -2,13 +2,17 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Base class for all objects that can be selected.
+/// </summary>
 [RequireComponent(typeof(Collider))]
 public abstract class Selectable : NetworkBehaviour {
 
     public abstract string Name { get; }
 
-    public int playerId;
+    protected bool initialized = false;
 
+    public int playerId;
     [SyncVar]
     public NetworkInstanceId playerNetId;
     public Player owner;
@@ -17,8 +21,11 @@ public abstract class Selectable : NetworkBehaviour {
     public float Health;
     [SyncVar]
     public float MaxHealth = 100;
-    [SyncVar]
-    protected float lineOfSight = 10;
+    public virtual float HealthValue => Health / MaxHealth;
+
+    [SerializeField]
+    public float healthBarOffset;
+    protected HealthBar healthBar;
 
     protected GameObject visibleObject;
     protected GameObject selector;
@@ -27,18 +34,18 @@ public abstract class Selectable : NetworkBehaviour {
 
     [SerializeField]
     public Vector3 size;
-
-    [SerializeField]
-    public float healthBarOffset;
-    protected HealthBar healthBar;
-    protected bool initialized = false;
-
     public Vector2 SquareID { get; set; } = Vector2.positiveInfinity;
     public Vector3 FrontPosition { get { var pos = transform.position; pos.x -= size.x / 2; pos.z -= size.z / 2; return pos; } }
-    public virtual float HealthValue => Health / MaxHealth;
+
     public List<Purchase> Purchases { get; private set; } = new List<Purchase>();
 
+    /// <summary>
+    /// Returns job for a unit that belongs to the same player.
+    /// </summary>
     public abstract Job GetOwnJob(Commandable worker = null);
+    /// <summary>
+    /// Returns job for an enemy unit.
+    /// </summary>
     public virtual Job GetEnemyJob(Commandable worker = null) => new JobAttack(this);
 
     public override void OnStartClient()
@@ -49,6 +56,9 @@ public abstract class Selectable : NetworkBehaviour {
         initialized = true;
     }
 
+    /// <summary>
+    /// Initializes the object.
+    /// </summary>
     public virtual void Init()
     {
         visibleObject = transform.Find("Visible").gameObject;
@@ -63,29 +73,45 @@ public abstract class Selectable : NetworkBehaviour {
         InitPurchases();
     }
 
+    /// <summary>
+    /// Adds purchases to the list.
+    /// </summary>
     protected virtual void InitPurchases() { }
 
+    /// <summary>
+    /// Adds purchase of given type to the list.
+    /// </summary>
     public void AddPurchase(PurchasesEnum purchasesEnum)
     {
         AddPurchase(PlayerState.Get(playerId).playerPurchases.Get(purchasesEnum));
     }
 
+    /// <summary>
+    /// Adds given purchase to the list.
+    /// </summary>
     public void AddPurchase(Purchase purchase)
     {
         Purchases.Add(purchase);
         PlayerState.Get().OnStateChange(this);
     }
 
+    /// <summary>
+    /// Removes given purchase from the list.
+    /// </summary>
     public void RemovePurchase(Purchase purchase)
     {
         Purchases.Remove(purchase);
         PlayerState.Get().OnStateChange(this);
     }
 
+    /// <summary>
+    /// Selects or deselects object. Shows visually that it was (de)selected and if that object belongs to player, shows the corresponding buttons.
+    /// </summary>
+    /// <param name="selected">true if the object was just selected, false if it was deselected</param>
     public virtual void SetSelection(bool selected)
     {
         SetVisualSelection(selected);
-        if ((owner == null || owner.IsHuman) && hasAuthority && UIManager.Instance != null)
+        if ((owner == null || owner.IsHuman) && playerId == 0 && hasAuthority && UIManager.Instance != null)
         {
             if (selected)
                 ShowAllButtons();
@@ -94,6 +120,10 @@ public abstract class Selectable : NetworkBehaviour {
         }
     }
 
+    /// <summary>
+    /// Selects or deselect object visually by turning on/of the projector above it, minimap icon and health bar.
+    /// </summary>
+    /// <param name="selected">true if the object was just selected, false if it was deselected</param>
     public virtual void SetVisualSelection(bool selected)
     {
         if (selector != null)
@@ -108,6 +138,10 @@ public abstract class Selectable : NetworkBehaviour {
         }
     }
 
+    /// <summary>
+    /// Makes the object visible or invisible.
+    /// </summary>
+    /// <param name="visible">true if object is to be visible, false if invisible</param>
     public void SetVisibility(bool visible)
     {
         if (visible)
@@ -116,12 +150,18 @@ public abstract class Selectable : NetworkBehaviour {
             Cover();
     }
 
+    /// <summary>
+    /// Hides the health bar.
+    /// </summary>
     protected virtual void Cover()
     {
         if (healthBar != null)
             healthBar.transform.localScale = new Vector3();
     }
 
+    /// <summary>
+    /// Shows the visible object and the health bar.
+    /// </summary>
     protected virtual void Uncover()
     {
         if (visibleObject != null)
@@ -130,6 +170,9 @@ public abstract class Selectable : NetworkBehaviour {
             healthBar.transform.localScale = new Vector3(2, 2, 2);
     }
 
+    /// <summary>
+    /// Check if some of the purchases are now (un)available.
+    /// </summary>
     protected virtual void Update()
     {
         foreach (Purchase purchase in Purchases)
@@ -139,6 +182,9 @@ public abstract class Selectable : NetworkBehaviour {
         }
     }
 
+    /// <summary>
+    /// Show all purchase buttons with available actions.
+    /// </summary>
     protected virtual void ShowAllButtons()
     {
         UIManager.Instance.ShowPurchaseButtons(Purchases, this);
@@ -149,21 +195,33 @@ public abstract class Selectable : NetworkBehaviour {
         UIManager.Instance.HidePurchaseButtons();
     }
 
+    /// <summary>
+    /// Returns string describing the health of the object.
+    /// </summary>
     public virtual string GetObjectDescription()
     {
         return $"Health: {(int)Health}/{(int)MaxHealth}";
     }
 
-
+    /// <summary>
+    /// Calls when the object is being attacked. 
+    /// </summary>
+    /// <param name="selectable">selectable who performed the attack</param>
     public virtual void DealAttack(Selectable selectable) { }
+    /// <summary>
+    /// Called when the player has just right-clicked on the ground and this object was selected.
+    /// </summary>
+    /// <param name="hitPoint">world position of the click</param>
     public virtual void RightMouseClickGround(Vector3 hitPoint) { }
+    /// <summary>
+    /// Called when the player has just right-clicked on the given selectable and this object was selected.
+    /// </summary>
+    /// <param name="hitObject">object that the user clicked at</param>
     public virtual void RightMouseClickObject(Selectable hitObject) { }
-
-    public bool IsWithinSight(Vector3 position)
-    {
-        return Vector3.Distance(transform.position, position) < lineOfSight;
-    }
     
+    /// <summary>
+    /// Called when the value of health changes.
+    /// </summary>
     protected virtual void OnHealthChange(float value)
     {
         Health = value;
