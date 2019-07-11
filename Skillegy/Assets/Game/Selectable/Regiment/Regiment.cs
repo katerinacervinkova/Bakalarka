@@ -28,8 +28,10 @@ public class Regiment : Selectable {
 
     public void Remove(Unit unit)
     {
+        // do not wait for unit to reach the destination if it has left the regiment
         if (unit.movementController.IsMoving)
             MovementCompleted(unit);
+
         units.Remove(unit);
         unit.Reg = null;
     }
@@ -37,6 +39,7 @@ public class Regiment : Selectable {
     protected override void Update()
     {
         base.Update();
+        // destroy the object, if there are no units or it is not selected
         if (PlayerState.Get(playerId).SelectedObject != this || units.Count == 0)
         {
             units.ForEach(u => u.Reg = null);
@@ -71,6 +74,10 @@ public class Regiment : Selectable {
     public override void SetGoal(Selectable goal) => units.ForEach(u => u.SetGoal(goal));
 
 
+    /// <summary>
+    /// Sets the destinations for the units randomly in a circle of radius depending on units' count
+    /// </summary>
+    /// <param name="hitPoint">desired destination</param>
     public override void SetGoal(Vector3 hitPoint)
     {
         unitsToArrive = units.Count;
@@ -85,6 +92,10 @@ public class Regiment : Selectable {
         }
     }
 
+    /// <summary>
+    /// Hides the target UI when all units have arrived.
+    /// </summary>
+    /// <param name="unit">unit that has just arrived</param>
     public void MovementCompleted(Unit unit)
     {
         if (!float.IsPositiveInfinity(destination.x))
