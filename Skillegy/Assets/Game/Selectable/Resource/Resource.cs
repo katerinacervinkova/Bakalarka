@@ -1,19 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public abstract class Resource : Selectable {
 
     protected Job miningJob = null;
 
-    private bool started = false;
+    // own job and enemy job are the same for everyone
+    public override Job GetOwnJob(Unit worker) => GetEnemyJob(worker);
+
+    public override string GetObjectDescription() => $"Capacity: {(int)capacity}/{(int)MaxCapacity}";
+
 
     [SyncVar(hook = "OnCapacityChange")]
     public float capacity = 0;
+    protected abstract float MaxCapacity { get; }
 
+    /// <summary>
+    /// value to be shown on the healthbar.
+    /// </summary>
     public override float HealthValue => capacity / MaxCapacity;
 
-    protected abstract float MaxCapacity { get; }
-    public abstract bool Gather(float gathering, Player player);
+    public virtual bool Gather(float gathering, Player player)
+    {
+        bool completed = capacity - gathering <= 0;
+        player.Gather(Math.Min(gathering, capacity), this);
+        return completed;
+    }
 
     public override void OnStartClient()
     {
@@ -27,11 +40,13 @@ public abstract class Resource : Selectable {
         capacity = MaxCapacity;
         visibleObject.SetActive(false);
         SetVisibility(false);
-        started = true;
         healthBar = UIManager.Instance.CreateHealthBar(this, healthBarOffset);
         minimapColor = minimapIcon.color;
     }
 
+    /// <summary>
+    /// Shows health bar for a while when the capacity changes
+    /// </summary>
     private void OnCapacityChange(float newCapacity)
     {
         capacity = newCapacity;
@@ -43,19 +58,9 @@ public abstract class Resource : Selectable {
         }
     }
 
-    public override Job GetOwnJob(Unit worker)
-    {
-        return GetEnemyJob(worker);
-    }
-
-    public override string GetObjectDescription()
-    {
-        return $"Capacity: {(int)capacity}/{(int)MaxCapacity}";
-    }
-
     private void OnDisable()
     {
-        if (started)
+        if (initialized)
             OnDestroy();
     }
 

@@ -8,13 +8,16 @@ public class WoodResource : Resource
 
     protected override float MaxCapacity => maxCapacity;
 
+    /// <summary>
+    /// Substracts given amount of wood and gives it to the player.
+    /// </summary>
+    /// <param name="gathering">amount to gather</param>
+    /// <param name="player">owner of the gatherer</param>
+    /// <returns>true if the tree capacity is now 0</returns>
     public override bool Gather(float gathering, Player player)
     {
-        bool completed = capacity - gathering <= 0;
-        float amount = Math.Min(gathering, capacity);
-        player.Gather(amount, this);
-        PlayerState.Get(player.playerControllerId).Wood += amount;
-        return completed;
+        PlayerState.Get(player.playerControllerId).Wood += Math.Min(gathering, capacity);
+        return base.Gather(gathering, player);
     }
 
     public override Job GetEnemyJob(Unit worker)

@@ -8,13 +8,16 @@ public class GoldResource : Resource
 
     protected override float MaxCapacity => maxCapacity;
 
+    /// <summary>
+    /// Substracts given amount of gold and gives it to the player.
+    /// </summary>
+    /// <param name="gathering">amount to gather</param>
+    /// <param name="player">owner of the gatherer</param>
+    /// <returns>true if the mine capacity is now 0</returns>
     public override bool Gather(float gathering, Player player)
     {
-        bool completed = capacity - gathering <= 0;
-        float amount = Math.Min(gathering, capacity);
-        player.Gather(amount, this);
-        PlayerState.Get(player.playerControllerId).Gold += amount;
-        return completed;
+        PlayerState.Get(player.playerControllerId).Gold += Math.Min(gathering, capacity);
+        return base.Gather(gathering, player);
     }
 
     public override Job GetEnemyJob(Unit worker)
