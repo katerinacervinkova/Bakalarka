@@ -16,6 +16,7 @@ public class JobGo : Job
 
     public override void Do(Unit unit)
     {
+        // the actual function within the if statement is called only for the first time
         if (worker != unit)
         {
             worker = unit;

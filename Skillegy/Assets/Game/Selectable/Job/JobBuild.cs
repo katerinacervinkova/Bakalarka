@@ -20,6 +20,9 @@ public class JobBuild : Job {
         this.playerId = playerId;
     }
 
+    /// <summary>
+    /// the next job is to build another temporary building
+    /// </summary>
     public override Job Following
     {
         get
@@ -34,15 +37,20 @@ public class JobBuild : Job {
 
     public override void Do(Unit worker)
     {
+        // building doesn't exist or the builder cannot reach it
         if (!building || Vector3.Distance(buildingCollider.ClosestPointOnBounds(worker.transform.position), worker.transform.position) > 3)
         {
             worker.SetNextJob();
             return;
         }
+        
+        // building cannot happen too often
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
             building.Build(worker.Building);
+
+            // increases the builder's working skill
             if (worker.Building < worker.Intelligence)
                 worker.owner.ChangeAttribute(worker, SkillEnum.Building, worker.Building + buildingIncrease * worker.Intelligence);
             else

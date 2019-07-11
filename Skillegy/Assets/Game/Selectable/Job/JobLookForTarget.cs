@@ -12,6 +12,7 @@ public class JobLookForTarget : Job
         timeElapsed += Time.deltaTime;
         while (timeElapsed > minTime)
         {
+            // if any possible target is nearby, attack it
             Selectable target = GameState.Instance.ClosestVisibleTarget(worker.transform.position, worker.playerId);
             if (target != null)
             {
