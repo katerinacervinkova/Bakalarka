@@ -9,12 +9,19 @@ public class Purchase
 
     public readonly string Name;
     public readonly Texture2D image;
+    protected string description;
+
+
+    // action to be invoked when paid for the purchase
     protected readonly Action<Selectable> action;
+
+    // function to determine whether the purchase is active for the given selectable
     public readonly Predicate<Selectable> IsActive;
+
     private Dictionary<Selectable, bool> wasActive = new Dictionary<Selectable, bool>();
 
+    // purchase cost
     public int food, wood, gold, population;
-    protected string description;
 
     public Purchase(string Name, int playerId, Texture2D image, string description, Action<Selectable> action, Predicate<Selectable> IsActive,
         int food, int wood, int gold, int population = 0)
@@ -31,7 +38,11 @@ public class Purchase
         this.image = image;
     }
 
-
+    /// <summary>
+    /// Invokes the action if player has enough resources and pays them.
+    /// </summary>
+    /// <param name="selectable">selectable to perform the action</param>
+    /// <returns>true if succeeded</returns>
     public virtual bool Do(Selectable selectable)
     {
         if (PlayerState.Get(playerId).Pay(food, wood, gold, population))
@@ -42,6 +53,10 @@ public class Purchase
         return false;
     }
 
+    /// <summary>
+    /// Get the payment back.
+    /// </summary>
+    /// <param name="selectable">selectable that performed the purchase</param>
     public virtual void Reset(Selectable selectable = null)
     {
         PlayerState.Get(playerId).Pay(-food, -wood, -gold, -population);
@@ -79,6 +94,11 @@ public class Purchase
         return line;
     }
 
+    /// <summary>
+    /// Returns whether the purchase activity has changed for the given selectable.
+    /// </summary>
+    /// <param name="selectable">selectable for which the purchase activity is analyzed</param>
+    /// <returns>true if the purchase activity has changed since the last call</returns>
     public bool ActiveChanged(Selectable selectable)
     {
         bool active = IsActive(selectable);
