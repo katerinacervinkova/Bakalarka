@@ -10,6 +10,9 @@ public class Bank : Building
         visibleObject.transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
+    /// <summary>
+    /// Adds some amount of gold to the player and increases unit's Gathering level.
+    /// </summary>
     protected override void UpdateUnit(Unit unit)
     {
         PlayerState.Get(playerId).Gold += unit.Gathering / 2;

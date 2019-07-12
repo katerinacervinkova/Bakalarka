@@ -6,6 +6,7 @@ public class Barracks : Building
     public override string Name => "Barracks";
     public override string UnitText(Unit unit) => $"Swordsmanship: {(int)unit.Swordsmanship}";
 
+    // true if the corresponding purchase has been already made.
     public bool Gear1;
     public bool Gear2;
     public bool Gear3;
@@ -22,6 +23,9 @@ public class Barracks : Building
         visibleObject.transform.Find("Building/Dog").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
+    /// <summary>
+    /// Increases unit's Swordsmanship level.
+    /// </summary>
     protected override void UpdateUnit(Unit unit)
     {
         if (unit.Swordsmanship < maxSwordsmanship)

@@ -14,6 +14,9 @@ public class Sawmill : Building
         visibleObject.transform.Find("Building/Roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
+    /// <summary>
+    /// Adds some amount of food to the player and increases unit's Gathering level.
+    /// </summary>
     protected override void UpdateUnit(Unit unit)
     {
         PlayerState.Get(playerId).Wood += unit.Gathering / 2;

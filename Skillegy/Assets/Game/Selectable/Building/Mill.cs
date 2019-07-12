@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Mill : Building
 {
@@ -26,6 +25,9 @@ public class Mill : Building
         visibleObject.transform.Find("Building/Big roof").GetComponent<MeshRenderer>().material.color = owner.color;
     }
 
+    /// <summary>
+    /// Adds some amount of food to the player and increases unit's Gathering level.
+    /// </summary>
     protected override void UpdateUnit(Unit unit)
     {
         PlayerState.Get(playerId).Food += unit.Gathering * Speed;

@@ -4,10 +4,12 @@ using UnityEngine;
 public class Library : Building {
 
     public override string Name => "Library";
+
     public override string UnitText(Unit unit)
     {
         switch (Focus)
         {
+            // unit description is based on the focus of the library
             case FocusEnum.Intelligence:
                 return $"Intelligence: {(int)unit.Intelligence}";
             case FocusEnum.Building:
@@ -21,9 +23,11 @@ public class Library : Building {
 
     public int maxIntelligence = 10;
 
+    // three states of the library
     public enum FocusEnum { Intelligence, Building, Healing }
     public FocusEnum Focus = FocusEnum.Intelligence;
 
+    // true if the corresponding purchase has been already made
     public bool Books1 = false;
     public bool Books2 = false;
     public bool Books3 = false;
@@ -57,6 +61,9 @@ public class Library : Building {
         AddPurchase(PurchasesEnum.Intelligence);
     }
 
+    /// <summary>
+    /// Changes unit's skill level based on the library's focus.
+    /// </summary>
     protected override void UpdateUnit(Unit unit)
     {
         switch (Focus)
