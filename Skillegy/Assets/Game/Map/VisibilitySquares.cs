@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Base class for visibility squares which is also used directly for AI visibility squares.
+/// </summary>
 public class VisibilitySquares : MonoBehaviour {
 
     public int playerId;
@@ -16,8 +19,17 @@ public class VisibilitySquares : MonoBehaviour {
 
     protected virtual void Start()
     {
+        CreateSquares();
+        AddAllResources();
+    }
+
+    /// <summary>
+    /// Creates the squares and inits adjacent squares for all of them.
+    /// </summary>
+    private void CreateSquares()
+    {
         int count = GameState.Instance.MapSize / SQUARE_SIZE;
-        for (int i = -count ; i <= count; i++)
+        for (int i = -count; i <= count; i++)
             for (int j = -count; j <= count; j++)
             {
                 Vector2 squareId = new Vector2(i, j);
@@ -40,7 +52,13 @@ public class VisibilitySquares : MonoBehaviour {
             }
             squares[key].AdjoiningSquares = AdjoiningSquares;
         }
+    }
 
+    /// <summary>
+    /// Adds all resources to the square where they belong.
+    /// </summary>
+    private void AddAllResources()
+    {
         foreach (Resource resource in FindObjectsOfType<Resource>())
         {
             var square = GetSquare(resource.FrontPosition);
@@ -49,8 +67,14 @@ public class VisibilitySquares : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Activates and uncoveres the squares which are in sight of some object that belongs to the player. 
+    /// Squares stay uncovered for the rest of the game, but the activation changes.
+    /// </summary>
     protected virtual void Update()
     {
+        foreach (var square in squares.Values)
+            square.activated = false;
         foreach (var square in squares.Values)
             if (square.ContainsFriend)
                 square.AdjoiningSquares.ForEach(s => { s.activated = true; s.uncovered = true; });
@@ -92,49 +116,22 @@ public class VisibilitySquares : MonoBehaviour {
         return resources;
     }
 
-    public Vector3 GetClosestFreePosition(Vector3 position)
-    {
-        Vector2 square = GetSquare(position);
-        if (squares.ContainsKey(square))
-        {
-            var sq = squares[square].AdjoiningSquares.
-                Where(s => s.Resources.Count == 0 && s.EnemyBuildings.Count == 0 && s.FriendlyBuildings.Count == 0 && s.EnemyTemporaryBuildings.Count == 0 && s.FriendlyTemporaryBuildings.Count == 0).
-                Select(s => GetPosition(s.squareId));
-            if (sq.Any())
-                return sq.First();
-        }
-        return Vector3.positiveInfinity;
-    }
-
+    /// <summary>
+    /// Finds the closest resource that an object on given square can see.
+    /// </summary>
+    /// <typeparam name="T">type of resource</typeparam>
+    /// <param name="resource">resource to filter out from the search</param>
     public T ClosestVisibleResource<T>(T resource, Vector2 squareID) where T : Resource => (T)squares[squareID].AdjoiningSquares.SelectMany(s => s.Resources).
         Where(r => r is T && r != resource).OrderBy(r => Vector2.Distance(squareID, r.SquareID)).FirstOrDefault();
 
-    public T ClosestGloballyVisibleResource<T>(Vector2 squareId) where T : Resource => (T)VisibleResources().Where(r => r is T).OrderBy(r => Vector2.Distance(squareId, r.SquareID)).FirstOrDefault();
+    /// <summary>
+    /// Finds the closest resource the the given square.
+    /// </summary>
+    public T ClosestVisibleResource<T>(Vector2 squareId) where T : Resource => (T)VisibleResources().Where(r => r is T).OrderBy(r => Vector2.Distance(squareId, r.SquareID)).FirstOrDefault();
 
-    public Selectable ClosestGloballyVisibleTarget(Vector2 id)
-    {
-        var unit = VisibleEnemyUnits().OrderBy(u => Vector2.Distance(id, u.SquareID)).FirstOrDefault();
-        var tempBuilding = VisibleEnemyTemporaryBuildings().OrderBy(b => Vector2.Distance(id, b.SquareID)).FirstOrDefault();
-        var building = VisibleEnemyBuildings().OrderBy(b => Vector2.Distance(id, b.SquareID)).FirstOrDefault();
-
-        var unitDist = float.PositiveInfinity;
-        var buildingDist = float.PositiveInfinity;
-        var tempBuildingDist = float.PositiveInfinity;
-
-        if (unit != null)
-            unitDist = Vector2.Distance(id, unit.SquareID);
-        if (building != null)
-            buildingDist = Vector2.Distance(id, building.SquareID);
-        if (tempBuilding != null)
-            tempBuildingDist = Vector2.Distance(id, tempBuilding.SquareID);
-
-        if (unitDist < tempBuildingDist && unitDist < buildingDist)
-            return unit;
-        if (buildingDist < tempBuildingDist && buildingDist < unitDist)
-            return building;
-        return tempBuilding;
-    }
-
+    /// <summary>
+    /// Finds the closest enemy unit, building or temporary building that an object on given square can see.
+    /// </summary>
     public Selectable ClosestVisibleTarget(Vector2 squareId)
     {
         var unit = squares[squareId].AdjoiningSquares.SelectMany(s => s.EnemyUnits).OrderBy(b => Vector2.Distance(squareId, b.SquareID)).FirstOrDefault();
@@ -146,7 +143,13 @@ public class VisibilitySquares : MonoBehaviour {
         return squares[squareId].AdjoiningSquares.SelectMany(s => s.EnemyBuildings).OrderBy(b => Vector2.Distance(squareId, b.SquareID)).FirstOrDefault();
     }
 
+    /// <summary>
+    /// Converts the world positino into square ID.
+    /// </summary>
     public Vector2 GetSquare(Vector3 position) => new Vector2((float)Math.Round(position.x / 5), (float)Math.Round(position.z / 5));
+    /// <summary>
+    /// Converts square ID into world position
+    /// </summary>
     public Vector3 GetPosition(Vector2 squareId) => new Vector3(SQUARE_SIZE * squareId.x, 0, SQUARE_SIZE * squareId.y);
 
     public void AddToSquare(Vector2 square, Unit unit)

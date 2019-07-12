@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MapSquare : MonoBehaviour {
@@ -18,9 +17,9 @@ public class MapSquare : MonoBehaviour {
     private GameObject nontransparent;
     [SerializeField]
     private GameObject transparentMinimap;
-
     [SerializeField]
     private GameObject nontransparentMinimap;
+
 
     public List<MapSquare> AdjoiningSquares;
 
@@ -32,8 +31,82 @@ public class MapSquare : MonoBehaviour {
     public List<TemporaryBuilding> FriendlyTemporaryBuildings { get; private set; } = new List<TemporaryBuilding>();
     public List<Resource> Resources { get; private set; } = new List<Resource>();
 
+
     public bool ContainsFriend => FriendlyUnits.Count > 0 || FriendlyBuildings.Count > 0 || FriendlyTemporaryBuildings.Count > 0;
 
+
+    /// <summary>
+    /// Uncoveres the square if activated and covers it if not.
+    /// </summary>
+    public void UpdateVisibility()
+    {
+        if (activated)
+            Uncover();
+        else
+            Cover();
+        activated = false;
+    }
+
+    private void Cover()
+    {
+        SetVisibility(false);
+        if (wasActive)
+            SetActiveTransparent(true);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void Uncover()
+    {
+        SetVisibility(true);
+        if (!wasActive)
+        {
+            if (!uncovered)
+            {
+                Destroy(nontransparent);
+                Destroy(nontransparentMinimap);
+                uncovered = true;
+            }
+            SetActiveTransparent(false);
+        }
+    }
+
+    /// <summary>
+    /// Shows or hides the transparent part of the square.
+    /// </summary>
+    /// <param name="active"></param>
+    private void SetActiveTransparent(bool active)
+    {
+        transparent.SetActive(active);
+        transparentMinimap.SetActive(active);
+        wasActive = !active;
+    }
+
+    /// <summary>
+    /// Sets all enemy objects and resources (in)visible.
+    /// </summary>
+    private void SetVisibility(bool visible)
+    {
+        SetVisibility(visible, EnemyUnits);
+        SetVisibility(visible, EnemyTemporaryBuildings);
+        SetVisibility(visible, EnemyBuildings);
+        SetVisibility(visible, Resources);
+    }
+
+    private void SetVisibility<T>(bool visible, List<T> selectables) where T : Selectable
+    {
+        for (int i = 0; i < selectables.Count; i++)
+        {
+            if (selectables[i] == null)
+            {
+                selectables.RemoveAt(i);
+                i--;
+                continue;
+            }
+            selectables[i].SetVisibility(visible);
+        }
+    }
 
     public void Add(Unit unit)
     {
@@ -61,66 +134,6 @@ public class MapSquare : MonoBehaviour {
 
     public void Add(Resource resource) => Resources.Add(resource);
 
-    public void UpdateVisibility()
-    {
-        if (activated)
-            Uncover();
-        else
-            Cover();
-        activated = false;
-    }
-
-    private void Cover()
-    {
-        SetVisibility(false);
-        if (wasActive)
-            ActivateTransparent(true);
-    }
-
-    private void Uncover()
-    {
-        SetVisibility(true);
-        if (!wasActive)
-        {
-            if (!uncovered)
-            {
-                Destroy(nontransparent);
-                Destroy(nontransparentMinimap);
-                uncovered = true;
-            }
-            ActivateTransparent(false);
-        }
-    }
-
-    private void SetVisibility(bool visible)
-    {
-        SetVisibility(visible, EnemyUnits);
-        SetVisibility(visible, EnemyTemporaryBuildings);
-        SetVisibility(visible, EnemyBuildings);
-        SetVisibility(visible, Resources);
-    }
-
-    private void SetVisibility<T>(bool visible, List<T> selectables) where T : Selectable
-    {
-        for (int i = 0; i < selectables.Count; i++)
-        {
-            if (selectables[i] == null)
-            {
-                selectables.RemoveAt(i);
-                i--;
-                continue;
-            }
-            selectables[i].SetVisibility(visible);
-        }
-    }
-
-    private void ActivateTransparent(bool active)
-    {
-        transparent.SetActive(active);
-        transparentMinimap.SetActive(active);
-        wasActive = !active;
-    }
-
     public void Remove(Unit unit)
     {
         if (unit.hasAuthority && unit.playerId == playerId)
@@ -146,16 +159,4 @@ public class MapSquare : MonoBehaviour {
     }
 
     public void Remove(Resource resource) => Resources.Remove(resource);
-
-    public void DestroySquare()
-    {
-        EnemyBuildings.ForEach(s => s?.SetVisibility(true));
-        EnemyTemporaryBuildings.ForEach(s => s?.SetVisibility(true));
-        EnemyUnits.ForEach(s => s?.SetVisibility(true));
-        Resources.ForEach(s => s?.SetVisibility(true));
-        FriendlyBuildings.ForEach(s => s?.SetVisibility(true));
-        FriendlyTemporaryBuildings.ForEach(s => s?.SetVisibility(true));
-        FriendlyUnits.ForEach(s => s?.SetVisibility(true));
-        Destroy(gameObject);
-    }
 }

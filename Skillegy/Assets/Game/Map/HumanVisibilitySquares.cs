@@ -8,6 +8,10 @@
         // SeeEverything();
     }
 
+    /// <summary>
+    /// If seeEverything is active, activates every square in each frame.
+    /// Else set activated to true for all squares near the player's building, unit or temporary building and then update visibility.
+    /// </summary>
 	protected override void Update ()
     {
         if (seeEverything)
