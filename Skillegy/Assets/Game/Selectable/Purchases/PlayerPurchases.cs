@@ -9,6 +9,7 @@ public class PlayerPurchases : MonoBehaviour {
     private Dictionary<PurchasesEnum, Purchase> purchases;
     private PlayerState PlayerState => PlayerState.Get(player.playerControllerId);
 
+    // all purchases images
     #region images
     [SerializeField]
     private Texture2D mainBuildingImage;
