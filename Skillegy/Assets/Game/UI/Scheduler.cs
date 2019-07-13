@@ -10,6 +10,6 @@ public class Scheduler : MonoBehaviour {
 
     public void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(() => UIManager.Instance.OnClickScheduler(index));
+        GetComponent<Button>().onClick.AddListener(() => UIManager.Instance.OnClickTransaction(index));
     }
 }

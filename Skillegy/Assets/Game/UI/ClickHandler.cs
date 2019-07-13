@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Class that handles click on the minimap.
+/// </summary>
 public class ClickHandler : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
@@ -21,6 +22,9 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
         rotationMatrix = Quaternion.Euler(-minimapButton.transform.rotation.eulerAngles);
     }
 
+    /// <summary>
+    /// Determines the world position of the minimap click and handles the click.
+    /// </summary>
     public void OnPointerClick(PointerEventData eventData)
     {
         Vector3 translatedPosition = Input.mousePosition - minimapButton.transform.position;

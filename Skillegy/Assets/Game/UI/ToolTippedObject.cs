@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Class responsible for showing the tooltip to the given object.
+/// </summary>
 public class ToolTippedObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
     [TextArea]
     [SerializeField]
     private string description;
+
+    private bool isOver = false;
 
     public string Description
     {
@@ -20,8 +25,6 @@ public class ToolTippedObject : MonoBehaviour, IPointerEnterHandler, IPointerExi
                 UIManager.Instance.ShowToolTip(transform.position, description);
         }
     }
-
-    private bool isOver = false;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

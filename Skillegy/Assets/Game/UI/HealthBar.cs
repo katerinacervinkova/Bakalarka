@@ -16,6 +16,11 @@ public class HealthBar : MonoBehaviour {
     {
         UpdatePosition();
     }
+
+    /// <summary>
+    /// Updates the position and state of the health bar.
+    /// If it is shown only temporarily, decreases remaining time and deactivates it if the time is up.
+    /// </summary>
     private void Update ()
     {
         image.fillAmount = selectable.HealthValue;
@@ -32,11 +37,17 @@ public class HealthBar : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Sets the position of the health bar so that it is located above its selectable.
+    /// </summary>
     private void UpdatePosition()
     {
         transform.position = Camera.main.WorldToScreenPoint(selectable.transform.position + positionOffset * Vector3.up);
     }
 
+    /// <summary>
+    /// Show the health bar only for a while.
+    /// </summary>
     public void HideAfter(float duration = 1)
     {
         if (gameObject == null)

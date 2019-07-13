@@ -16,22 +16,33 @@ public class UnitRow : MonoBehaviour {
     private Unit unit;
     private Building building;
 
+    /// <summary>
+    /// Initializes all variables and buttons.
+    /// </summary>
+    /// <param name="action">action to perform after clicking the action button. If null, action button is deactivated.</param>
     public void Init(Building building, Unit unit, Action<Unit> action)
     {
         this.unit = unit;
         this.building = building;
+
         if (action == null)
             actionButton.gameObject.SetActive(false);
         else
             actionButton.onClick.AddListener(() => action.Invoke(unit));
+
+        // removes the unit and updates the building window
         removeButton.onClick.AddListener(() => 
         {
             building.Exit(unit);
             building.OnUnitsChange();
         });
+
         UpdateDescription();
     }
 
+    /// <summary>
+    /// Shows unit's name and description relevant for this building.
+    /// </summary>
     public void UpdateDescription()
     {
         unitNameText.text = building.UnitName(unit);
