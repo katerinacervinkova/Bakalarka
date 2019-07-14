@@ -246,13 +246,13 @@ public class PlayerPurchases : MonoBehaviour {
 
             #region mill
             [PurchasesEnum.Flour] = new LoadingPurchase(
-                1, "Flour", player.playerControllerId, flourImage, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Flour", player.playerControllerId, flourImage, "Supply mill with better gear. Increases gathering speed.",
                 s => { (s as Mill).Speed *= 2; (s as Mill).Flour = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Stone),
                 food: 500, wood: 1000, gold: 1500, oneTimePurchase: true),
 
             [PurchasesEnum.Bread] = new LoadingPurchase(
-                1, "Bread", player.playerControllerId, breadImage, "Supply barracks with better gear. Increases maximum swordsmanship.",
+                1, "Bread", player.playerControllerId, breadImage, "Supply mill with better gear. Increases gathering speed.",
                 s => { (s as Mill).Speed *= 2; (s as Mill).Bread = true; },
                 s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Mill).Flour,
                 food: 1000, wood: 1500, gold: 2000, oneTimePurchase: true),
