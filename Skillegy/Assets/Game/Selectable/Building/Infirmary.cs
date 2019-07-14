@@ -16,7 +16,15 @@ public class Infirmary : Building
     private readonly float healthIncrease = 0.05f;
     private readonly float healingIncrease = 0.005f;
 
-    private int maxUnitsHealing = 2;
+    private int maxUnitsHealing
+    {
+        get
+        {
+            if (PlayerState.Get(playerId).MedicineBooks2)
+                return 15;
+            return 3;
+        }
+    }
     public override int UnitCapacity => 20;
 
     public override string UnitName(Unit unit)
