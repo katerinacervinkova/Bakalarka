@@ -196,7 +196,7 @@ public class PlayerPurchases : MonoBehaviour {
             [PurchasesEnum.Intelligence] = new LoadingPurchase(
                 5, "Intelligence", player.playerControllerId, intelligenceImage, "Change library focus to intelligence",
                 s => (s as Library).Focus = Library.FocusEnum.Intelligence,
-                s => ReachedAge(PlayerState.AgeEnum.Iron) && (s as Library).Focus != Library.FocusEnum.Intelligence,
+                s => ReachedAge(PlayerState.AgeEnum.Stone) && (s as Library).Focus != Library.FocusEnum.Intelligence,
                 food: 100, wood: 0, gold: 0, oneTimePurchase: false),
 
             [PurchasesEnum.Building] = new LoadingPurchase(
