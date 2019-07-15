@@ -40,7 +40,7 @@ public class SimpleAI : MonoBehaviour {
             {
                 if (aiPlayer.playerState.BuildingToBuild != null && aiPlayer.playerState.BuildingToBuild.buildingType == BuildingEnum.House)
                     return;
-                if (aiPlayer.SenseOwnTemporaryBuildings().Where(b => b.buildingType == BuildingEnum.House).Any())
+                if (aiPlayer.SenseOwnTemporaryBuildings().Where(b => b.buildingType == BuildingEnum.House || b.buildingType == BuildingEnum.MainBuilding).Any())
                     return;
 
                 AddFirst(PurchasesEnum.House);

@@ -149,7 +149,7 @@ public class Factory : MonoBehaviour
 
         int ratio = (health + gathering + intelligence + swordsmanship + healing + building);
 
-        unit.MaxHealth = 100 + health * sumOfProperties / ratio + 1;
+        unit.MaxHealth = 500 + 10 * health * sumOfProperties / ratio + 1;
         unit.Health = unit.MaxHealth;
         unit.Gathering = gathering * sumOfProperties / ratio + 1;
         unit.Intelligence = intelligence * sumOfProperties / ratio + 1;

@@ -41,7 +41,10 @@ public class JobFollow : Job
             }
 
             // follow the target
-            worker.Go(target.transform.position);
+            if (target is Unit)
+                worker.Go(Vector3.Lerp(target.transform.position, worker.transform.position, 0.5f));
+            else
+                worker.Go(target.transform.position);
 
             // repath does not need to be performed multiple times in a frame
             while (timeElapsed > minTime)

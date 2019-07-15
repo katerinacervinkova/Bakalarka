@@ -241,6 +241,7 @@ public class GameState : NetworkBehaviour {
         building.owner = tempBuilding.owner;
         building.size = tempBuilding.size;
         building.playerId = tempBuilding.playerId;
+        building.MaxHealth = tempBuilding.MaxHealth;
         building.SetHealthBar(tempBuilding.TransferHealthBar(building));
         building.Init();
 

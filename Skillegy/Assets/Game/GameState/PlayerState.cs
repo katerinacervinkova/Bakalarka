@@ -33,7 +33,7 @@ public class PlayerState : MonoBehaviour {
     private float wood = 1200;
     private float gold = 1200;
     private int population = 0;
-    private int maxPopulation = 5;
+    private int maxPopulation = 0;
 
     public int MaxPopulation
     {
@@ -309,7 +309,7 @@ public class PlayerState : MonoBehaviour {
     /// </summary>
     public bool Pay(int food, int wood, int gold, int population)
     {
-        if (Food < food || Wood < wood || Gold < gold || Population + population > MaxPopulation)
+        if (Food < food || Wood < wood || Gold < gold || (population > 0 && Population + population > MaxPopulation))
             return false;
         this.food -= food;
         this.wood -= wood;
