@@ -309,6 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c896f1fb8c94c20409083727a9dd3300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionLabel: {fileID: 114722639322607156}
   actionButton: {fileID: 114968200522032610}
   removeButton: {fileID: 114461129118801320}
   unitNameText: {fileID: 114705033713855242}
@@ -495,7 +496,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1131142392701938}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -7.500038, z: 0}
+  m_LocalPosition: {x: 34.789627, y: 0, z: 67.44099}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children:
   - {fileID: 224878833285020946}
@@ -507,7 +508,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -7.500038}
+  m_AnchoredPosition: {x: 34.789627, y: -2.9968507e-16}
   m_SizeDelta: {x: 0, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224788956853839710

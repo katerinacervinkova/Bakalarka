@@ -41,7 +41,7 @@ public class Infirmary : Building
 
     public override void ShowUnitsWindow()
     {
-        UIManager.Instance.ShowBuildingWindow(this, unitsInside, u => { if (Healer == u) Healer = null; else Healer = u; });
+        UIManager.Instance.ShowBuildingWindow(this, unitsInside, u => { if (Healer == u) Healer = null; else Healer = u; }, "Switch");
     }
     protected override void UpdateUnit(Unit unit)
     {

@@ -245,9 +245,9 @@ public class UIManager : MonoBehaviour {
     /// Shows the building window for the given building with the given list of units.
     /// </summary>
     /// <param name="action">action to be performed for the unit when the action button in its row is clicked</param>
-    public void ShowBuildingWindow(Building building, List<Unit> units, Action<Unit> action = null)
+    public void ShowBuildingWindow(Building building, List<Unit> units, Action<Unit> action = null, string actionName = null)
     {
-        buildingWindow.Show(building, units, action);
+        buildingWindow.Show(building, units, action, actionName);
         BuildingWindowShown = building;
     }
 

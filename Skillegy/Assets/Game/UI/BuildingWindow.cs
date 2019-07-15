@@ -18,13 +18,13 @@ public class BuildingWindow : MonoBehaviour {
     /// <summary>
     /// Shows the window and creates a new row for every unit in the building.
     /// </summary>
-    public void Show(Building building, List<Unit> units, Action<Unit> action)
+    public void Show(Building building, List<Unit> units, Action<Unit> action, string actionName)
     {
         nameText.text = building.Name;
         units.ForEach(u =>
         {
             UnitRow unitRow = Instantiate(unitRowPrefab, unitsArea.transform).GetComponent<UnitRow>();
-            unitRow.Init(building, u, action);
+            unitRow.Init(building, u, action, actionName);
             unitRows.Add(unitRow);
         });
         gameObject.SetActive(true);

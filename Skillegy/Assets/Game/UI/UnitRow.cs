@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class UnitRow : MonoBehaviour {
 
     [SerializeField]
+    private Text actionLabel;
+    [SerializeField]
     private Button actionButton;
     [SerializeField]
     private Button removeButton;
@@ -20,7 +22,7 @@ public class UnitRow : MonoBehaviour {
     /// Initializes all variables and buttons.
     /// </summary>
     /// <param name="action">action to perform after clicking the action button. If null, action button is deactivated.</param>
-    public void Init(Building building, Unit unit, Action<Unit> action)
+    public void Init(Building building, Unit unit, Action<Unit> action, string actionName)
     {
         this.unit = unit;
         this.building = building;
@@ -28,7 +30,11 @@ public class UnitRow : MonoBehaviour {
         if (action == null)
             actionButton.gameObject.SetActive(false);
         else
+        {
             actionButton.onClick.AddListener(() => action.Invoke(unit));
+            if (actionName != null)
+                actionLabel.text = actionName;
+        }
 
         // removes the unit and updates the building window
         removeButton.onClick.AddListener(() => 
