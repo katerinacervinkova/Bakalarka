@@ -5204,9 +5204,9 @@ MonoBehaviour:
   playerId: 0
   owner: {fileID: 0}
   Health: 0
-  MaxHealth: 100
-  size: {x: 2.2, y: 0, z: 2.2}
+  MaxHealth: 3000
   healthBarOffset: 7
+  size: {x: 2.2, y: 0, z: 2.2}
   buildingType: 3
   maxProgress: 250
   placed: 0

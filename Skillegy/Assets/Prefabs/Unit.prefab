@@ -672,11 +672,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3fa8ff04891b224d81a71753baecde4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
   owner: {fileID: 0}
   Health: 50
-  MaxHealth: 100
-  size: {x: 0, y: 0, z: 0}
+  MaxHealth: 500
   healthBarOffset: 4
+  size: {x: 0, y: 0, z: 0}
   movementController: {fileID: 0}
 --- !u!114 &114357755671034420
 MonoBehaviour:
@@ -759,6 +760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2d48415330b2043b4718018837bc9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: Infinity, y: Infinity, z: Infinity}
 --- !u!119 &119741276073041622
 Projector:
   m_ObjectHideFlags: 1
